@@ -1,5 +1,25 @@
 ﻿namespace _01_Console
 {
+    public enum Grade
+    {
+        A,
+        B, 
+        C,
+        D, 
+        F
+    }
+
+    public enum DayOfWeek
+    {
+        Monday,
+        Tueday, 
+        Wednesday,
+        Thursday,
+        Friday,
+        Saturday,
+        Sunday
+    }
+
     internal class Program
     {
         static void Main(string[] args)
@@ -82,20 +102,97 @@
             //age = int.Parse( inputAge );        // inputAge에 들어있는 글자를 int타입으로 변경하는 코드
             int.TryParse(inputAge, out age);
             AgeCheck(age);
-            
+
+            // 점수 입력 받기
+            Console.Write("점수가 얼마인가요? : ");
+            string inputScore = Console.ReadLine();
+            float score;
+            float.TryParse(inputScore, out score);
+            Grade grade = GradeCheck(score);    // GradeCheck 함수의 결과를 grade에 대입
+
+            Console.WriteLine($"당신의 등급은 [{grade}]입니다.");
+            switch (grade)
+            {
+                case Grade.A:
+                    Console.WriteLine("A등급은 ~한 해택이 있습니다.");
+                    break;
+                case Grade.B:
+                    Console.WriteLine("Ｂ등급은 ~한 해택이 있습니다.");
+                    break;
+                case Grade.C:
+                    Console.WriteLine("Ｃ등급은 ~한 해택이 있습니다.");
+                    break;
+                case Grade.D:
+                    Console.WriteLine("Ｄ등급은 ~한 해택이 있습니다.");
+                    break;
+                case Grade.F:
+                    Console.WriteLine("Ｆ등급은 해택이 없습니다.");
+                    break;
+                default:
+                    Console.WriteLine("아무 등급도 아닙니다.");
+                    break;
+            }
+
+            /// 반복문(코드를 반복하는 코드)
+
+            //int temp2 = 0;
+            //temp2 = temp2 + 1;  temp2++;    // 둘다 같은 코드
+
+            for(int temp = 0; temp<10; temp++)  // (초기화;종료조건;증가량)
+            {
+            }
+
+
+        }
+
+        /// <summary>
+        /// 구구단을 출력하는 함수
+        /// </summary>
+        /// <param name="dan">출력할 단 수</param>
+        static void GuGuDan(int dan)
+        {
+
         }
 
         /// <summary>
         /// 점수를 받아서 A~F까지 성적을 출력하는 함수
         /// </summary>
         /// <param name="score">점수</param>
-        static void GradeCheck(float score)
+        static Grade GradeCheck(float score)
         {
             // 90점 이상 => A
             // 80점 이상 => B
             // 70점 이상 => C
             // 60점 이상 => D
             // 60점 미만 => F
+
+            Grade grade = Grade.F;
+            if(score > 89) 
+            {
+                Console.WriteLine("A등급입니다.");
+                grade = Grade.A;
+            }
+            else if(score > 79)
+            {
+                Console.WriteLine("B등급입니다.");
+                grade = Grade.B;
+            }
+            else if (score > 69)
+            {
+                Console.WriteLine("C등급입니다.");
+                grade = Grade.C;
+            }
+            else if (score > 59)
+            {
+                Console.WriteLine("D등급입니다.");
+                grade = Grade.D;
+            }
+            else
+            {
+                Console.WriteLine("F등급입니다.");
+            }
+
+            return grade;
         }
 
         /// <summary>
