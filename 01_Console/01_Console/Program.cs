@@ -24,6 +24,26 @@
     {
         static void Main(string[] args)
         {
+            Random r = new Random();
+            int dice = r.Next(5) + 1;   // dice에는 1~6이 들어간다.
+
+            // 실습
+            // 주사위 게임 만들기
+            //  1. High/Low만들기
+            //      1.1. 시작하면 High와 Low중 하나를 입력받음
+            //      1.2. 주사위를 굴려서 1~3이면 low, 4~6이면 high를 출력한다.
+            //      1.3. 플레이어의 선택이 맞으면 성공으로 한 후 1.1로 돌아가 다시 시작한다.
+            //      1.4. 플레이어의 선택이 틀리면 이때까지 몇번 성공했는지 출력하고 종료한다.
+
+            //  2. 홀짝 게임 만들기
+            //      2.1. 시작하면 홀짝 중 하나를 입력받음
+            //      2.2. 주사위를 굴려서 홀이면 "홀", 짝이면 "짝"를 출력한다.
+            //      2.3. 플레이어의 선택이 맞으면 성공으로 한 후 2.1로 돌아가 다시 시작한다.
+            //      2.4. 플레이어의 선택이 틀리면 이때까지 몇번 성공했는지 출력하고 종료한다.
+        }
+
+        private static void Day_231227()
+        {
             /// 함수(function)
             /// 특정 기능을 수행하는 코드 뭉치
             /// 구성요소 : 리턴타입, 이름, 파라메터(매개변수), 함수바디(코드)
@@ -138,11 +158,61 @@
             //int temp2 = 0;
             //temp2 = temp2 + 1;  temp2++;    // 둘다 같은 코드
 
-            for(int temp = 0; temp<10; temp++)  // (초기화;종료조건;증가량)
+            //for문
+            //for(int temp = 0; temp<10; temp++)  // (초기화;종료조건;증가량)
+            //{
+            //}
+
+            Console.Write("구구단 몇 단을 출력할까요? : ");
+            int.TryParse(Console.ReadLine(), out int dan);
+            GuGuDan(dan);
+
+            //while문. ()사이의 조건이 참이면 반복하는 코드
+            //while()
+            //{
+            //}
+
+            int count = 0;
+            while (count < 10)
             {
+                count++;
             }
 
+            // do-while문. 일단 한번 실행하고 ()사이의 조건이 참이면 반복하는 코드
+            count = 0;
+            do
+            {
+                count++;
+            } while (count < 10);
 
+
+            // 대입 연산자
+            // = :  = 왼쪽에 있는 변수에, = 오른쪽에 있는 값을 대입한다.
+
+            // 산술 연산자
+            // +
+            // -
+            // *
+            // /
+            // ++
+            // --
+            // += : 왼쪽에 있는 변수에 오른쪽에 있는 값을 더해서 왼쪽에 있는 변수에 대입한다.(i += 10, i에 10을 더한 후 i에 대입)
+            // -=
+            // *=
+            // /=
+            // % : 나머지 연산( i = 10 % 3; i에는 1이 들어간다.)
+
+            // 비교 연산자
+            // == : 양쪽이 같으면 true, 다르면 false
+            // != : 양쪽이 다르면 true, 같으면 false
+            // >
+            // < 
+            // >=
+            // <=
+
+            // 논리 연산자. 결과는 무조건 bool
+            // && : 앤드(and), 양쪽이 모두 true일때만 true ( bool result = false && false; )
+            // || : 오어(or), 양쪽 중 하나라도 true이면 true ( bool result = true || true; )
         }
 
         /// <summary>
@@ -151,7 +221,11 @@
         /// <param name="dan">출력할 단 수</param>
         static void GuGuDan(int dan)
         {
-
+            Console.WriteLine($"구구단 {dan}단 출력하기");
+            for(int i=1;i<10;i++)
+            {
+                Console.WriteLine($"{dan} * {i} = {dan * i}");
+            }
         }
 
         /// <summary>
