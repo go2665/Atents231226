@@ -29,7 +29,33 @@ namespace _01_Console
             // 실습
             // 주사위 게임 만들기
             //RunHighLowDice();
-            RunOddEvenDice();
+            //RunOddEvenDice();
+
+            //Character my = new Character();     // 메모리를 할당하여 클래스를 생성(인스턴스화) 했다.
+            //my.Skill();
+            //Character enemyTemp = new Character("적");     // 메모리를 할당하여 클래스를 생성(인스턴스화) 했다.
+            //enemyTemp.Skill();
+
+            Player player = new Player("나");
+            //player.Skill();
+
+            Enemy enemy = new Enemy("적");
+            //enemy.Skill();
+
+            player.Attack(enemy);
+
+            //int i = 10;
+            //Character test = new Player();      // 자식클래스의 인스턴스는 부모타입의 변수에 저장할 수 있다.
+            //test.Skill();
+            //Character test2 = new Player();
+            //test2.Attack();
+
+            //my.HP = 100;
+
+            // 실습
+            // 적과 나 중에 한명이 죽을 때까지 한번씩 공격하기
+            // 죽을 때 누가 죽었는지 출력이 되어야 한다.
+            // 한명이 죽으면 프로그램 종료
         }
 
         static void RunOddEvenDice()
