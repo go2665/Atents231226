@@ -26,11 +26,85 @@ namespace _01_Console
     {
         static void Main(string[] args)
         {
-            
-
             // 실습
             // 주사위 게임 만들기
-            RunHighLowDice();
+            //RunHighLowDice();
+            RunOddEvenDice();
+        }
+
+        static void RunOddEvenDice()
+        {
+            Console.WriteLine("주사위 게임 - 홀짝");
+
+            Console.WriteLine("게임을 시작합니다.");
+
+            int winCount = 0;
+            int select = 0;
+            bool isLose = false;
+            while (!isLose)
+            {
+                // 입력 받기 -----------------------------------------------------------------------
+                
+                bool isSuccess = false;       // 성공적으로 입력을 받았는지 표시하는 변수
+                while (!isSuccess)  //while (isSuccess == false)
+                {
+                    Console.Write("홀짝 중 하나를 선택해 주세요(1-홀, 2-짝) : ");
+                    string temp = Console.ReadLine();
+
+                    int.TryParse(temp, out select);
+
+                    if (select == 1 || select == 2)
+                    {
+                        isSuccess = true;       // 정상적으로 입력이 되었으면 성공이라고 표시
+                    }
+                }
+
+                bool isSelectOdd;               // 선택에 따라 홀짝을 기록하기
+                switch (select)                 
+                {
+                    case 1:
+                        Console.WriteLine("당신의 선택은 홀");
+                        isSelectOdd = true;
+                        break;
+                    case 2:
+                        Console.WriteLine("당신의 선택은 짝");
+                        isSelectOdd = false;
+                        break;
+                    default:
+                        Console.WriteLine("ERROR!!!!! 있을 수 없는 선택입니다.");
+                        isSelectOdd = false;
+                        break;
+                }
+
+                // 주사위 굴리기 -----------------------------------------------------------------------                             
+
+                Random r = new Random();
+                int dice = r.Next(5) + 1;   // dice에는 1~6이 들어간다.                
+                bool isDiceOdd = ((dice % 2) == 1) ? true : false;    // 3항 연산자를 사용했을 때.
+                                                                    // (조건) ? 조건이 참일때의 값 : 조건이 거짓일 때의 값
+                Console.WriteLine($"주사위 값은 {dice}가 나왔습니다.");
+                if (isDiceOdd)
+                {
+                    Console.WriteLine("주사위 결과는 홀!");
+                }
+                else
+                {
+                    Console.WriteLine("주사위 결과는 짝!");
+                }
+
+                // 승패 확인 --------------------------------------------------------------------------------
+                if (isSelectOdd == isDiceOdd)
+                {
+                    Console.WriteLine("당신의 승리!");
+                    winCount++;
+                }
+                else
+                {
+                    Console.WriteLine("당신의 패배");
+                    Console.WriteLine($"당신은 이때까지 {winCount}연승 했었습니다.");
+                    isLose = true;
+                }
+            }
 
             //  2. 홀짝 게임 만들기
             //      2.1. 시작하면 홀짝 중 하나를 입력받음
@@ -109,10 +183,10 @@ namespace _01_Console
                 // 주사위 굴리기 -----------------------------------------------------------------------
                 Random r = new Random();
                 int dice = r.Next(5) + 1;   // dice에는 1~6이 들어간다.
-                //bool isDiceHigh = false;
+                //bool isDiceOdd = false;
                 //if( dice > 3 )
                 //{
-                //    isDiceHigh = true;
+                //    isDiceOdd = true;
                 //}
                 bool isDiceHigh = (dice > 3) ? true : false;  // 3항 연산자를 사용했을 때.
                                                           // (조건) ? 조건이 참일때의 값 : 조건이 거짓일 때의 값
