@@ -1,4 +1,6 @@
-﻿namespace _01_Console
+﻿using System.Runtime.InteropServices;
+
+namespace _01_Console
 {
     public enum Grade
     {
@@ -24,22 +26,130 @@
     {
         static void Main(string[] args)
         {
-            Random r = new Random();
-            int dice = r.Next(5) + 1;   // dice에는 1~6이 들어간다.
+            
 
             // 실습
             // 주사위 게임 만들기
-            //  1. High/Low만들기
-            //      1.1. 시작하면 High와 Low중 하나를 입력받음
-            //      1.2. 주사위를 굴려서 1~3이면 low, 4~6이면 high를 출력한다.
-            //      1.3. 플레이어의 선택이 맞으면 성공으로 한 후 1.1로 돌아가 다시 시작한다.
-            //      1.4. 플레이어의 선택이 틀리면 이때까지 몇번 성공했는지 출력하고 종료한다.
+            RunHighLowDice();
 
             //  2. 홀짝 게임 만들기
             //      2.1. 시작하면 홀짝 중 하나를 입력받음
             //      2.2. 주사위를 굴려서 홀이면 "홀", 짝이면 "짝"를 출력한다.
             //      2.3. 플레이어의 선택이 맞으면 성공으로 한 후 2.1로 돌아가 다시 시작한다.
             //      2.4. 플레이어의 선택이 틀리면 이때까지 몇번 성공했는지 출력하고 종료한다.
+        }
+
+        static void RunHighLowDice()
+        {
+            Console.WriteLine("주사위 게임 - High Low");
+
+            Console.WriteLine("게임을 시작합니다.");
+
+            int winCount = 0;
+            int select = 0;
+            bool isLose = false;
+            while(!isLose)
+            {
+                // 입력 받기 -----------------------------------------------------------------------
+                //do
+                //{
+                //    Console.Write("High와 Low 중 하나를 선택해 주세요(1-High, 2-Low) : ");
+                //    string temp = Console.ReadLine();
+
+                //    int.TryParse(temp, out select);
+                //}
+                //while (select != 1 && select != 2);   // 1 또는 2가 입력 될때까지 반복하기
+
+                //while (true)
+                //{
+                //    Console.Write("High와 Low 중 하나를 선택해 주세요(1-High, 2-Low) : ");
+                //    string temp = Console.ReadLine();
+
+                //    int.TryParse(temp, out select);
+
+                //    if(select == 1 || select == 2)
+                //    {
+                //        break;    // 1 또는 2가 들어오면 break를 이용해 while 끝내기
+                //    }
+
+                //    Console.WriteLine("잘못된 입력입니다. 1 또는 2를 입력해주세요.");  // 잘못된 입력이 있을 경우 경고 표시
+                //}
+
+                bool isSuccess = false;       // 성공적으로 입력을 받았는지 표시하는 변수
+                while (!isSuccess)  //while (isSuccess == false)
+                {
+                    Console.Write("High와 Low 중 하나를 선택해 주세요(1-High, 2-Low) : ");
+                    string temp = Console.ReadLine();
+
+                    int.TryParse(temp, out select);
+
+                    if (select == 1 || select == 2)
+                    {
+                        isSuccess = true;     // 정상적으로 입력이 되었으면 성공이라고 표시
+                    }
+                }
+
+                bool isSelectHigh;
+                switch(select)
+                {
+                    case 1:
+                        Console.WriteLine("당신의 선택은 High");
+                        isSelectHigh = true;
+                        break;
+                    case 2:
+                        Console.WriteLine("당신의 선택은 Low");
+                        isSelectHigh = false;
+                        break;
+                    default:
+                        Console.WriteLine("ERROR!!!!! 있을 수 없는 선택입니다.");
+                        isSelectHigh = false;
+                        break;
+                }
+
+                // 주사위 굴리기 -----------------------------------------------------------------------
+                Random r = new Random();
+                int dice = r.Next(5) + 1;   // dice에는 1~6이 들어간다.
+                //bool isDiceHigh = false;
+                //if( dice > 3 )
+                //{
+                //    isDiceHigh = true;
+                //}
+                bool isDiceHigh = (dice > 3) ? true : false;  // 3항 연산자를 사용했을 때.
+                                                          // (조건) ? 조건이 참일때의 값 : 조건이 거짓일 때의 값
+                Console.WriteLine($"주사위 값은 {dice}가 나왔습니다.");
+                if(isDiceHigh)
+                {
+                    Console.WriteLine("주사위 결과는 High!");
+                }
+                else
+                {
+                    Console.WriteLine("주사위 결과는 Low!");
+                }
+
+                // 승패 확인 --------------------------------------------------------------------------------
+                if( isSelectHigh == isDiceHigh) 
+                {
+                    Console.WriteLine("당신의 승리!");
+                    winCount++;
+                }
+                else
+                {
+                    Console.WriteLine("당신의 패배");
+                    Console.WriteLine($"당신은 이때까지 {winCount}연승 했었습니다.");
+                    isLose = true;
+                }
+            }
+
+            //  1. High/Low만들기
+            //      1.1. 시작하면 High와 Low중 하나를 입력받음
+            //      1.2. 주사위를 굴려서 1~3이면 low, 4~6이면 high를 출력한다.
+            //      1.3. 플레이어의 선택이 맞으면 성공으로 한 후 1.1로 돌아가 다시 시작한다.
+            //      1.4. 플레이어의 선택이 틀리면 이때까지 몇번 성공했는지 출력하고 종료한다.
+
+            //// High, high, h, H
+            //string a = "High";
+            //a = a.ToLower();    // 모든 영어를 소문자로 만들기
+            //a = a.ToUpper();    // 모든 영어를 대문자로 만들기
         }
 
         private static void Day_231227()
