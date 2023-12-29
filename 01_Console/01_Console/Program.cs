@@ -27,6 +27,27 @@ namespace _01_Console
         static void Main(string[] args)
         {
             // 실습
+            // 적과 나 중에 한명이 죽을 때까지 한번씩 공격하기(HP상황도 출력하기)
+            // 죽을 때 누가 죽었는지 출력이 되어야 한다.
+            // 한명이 죽으면 프로그램 종료
+            Player player = new Player("주인공");
+            Enemy enemy = new Enemy("오크");
+
+            while(player.IsAlive && enemy.IsAlive)
+            {
+                player.Attack(enemy);
+
+                if( enemy.IsAlive )
+                {
+                    enemy.Attack(player);
+                }
+            }
+
+        }
+
+        private static void Day_231228()
+        {
+            // 실습
             // 주사위 게임 만들기
             //RunHighLowDice();
             //RunOddEvenDice();
@@ -51,11 +72,6 @@ namespace _01_Console
             //test2.Attack();
 
             //my.HP = 100;
-
-            // 실습
-            // 적과 나 중에 한명이 죽을 때까지 한번씩 공격하기
-            // 죽을 때 누가 죽었는지 출력이 되어야 한다.
-            // 한명이 죽으면 프로그램 종료
         }
 
         static void RunOddEvenDice()

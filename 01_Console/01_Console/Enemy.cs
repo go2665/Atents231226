@@ -12,9 +12,10 @@ namespace _01_Console
         { 
         }
 
-        public override void Skill()
+        protected override float OnSkill()
         {
             Console.WriteLine("적은 도끼를 던진다.");
+            return attackPower * 3.0f;
         }
     }
 }
