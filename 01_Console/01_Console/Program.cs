@@ -26,22 +26,32 @@ namespace _01_Console
     {
         static void Main(string[] args)
         {
-            // 실습
-            // 적과 나 중에 한명이 죽을 때까지 한번씩 공격하기(HP상황도 출력하기)
-            // 죽을 때 누가 죽었는지 출력이 되어야 한다.
-            // 한명이 죽으면 프로그램 종료
-            Player player = new Player("주인공");
-            Enemy enemy = new Enemy("오크");
+            //// 실습
+            //// 적과 나 중에 한명이 죽을 때까지 한번씩 공격하기(HP상황도 출력하기)
+            //// 죽을 때 누가 죽었는지 출력이 되어야 한다.
+            //// 한명이 죽으면 프로그램 종료
+            //Player player = new Player("주인공");
+            //Enemy enemy = new Enemy("오크");
 
-            while(player.IsAlive && enemy.IsAlive)
-            {
-                player.Attack(enemy);
+            //while(player.IsAlive && enemy.IsAlive)
+            //{
+            //    player.Attack(enemy);
 
-                if( enemy.IsAlive )
-                {
-                    enemy.Attack(player);
-                }
-            }
+            //    if( enemy.IsAlive )
+            //    {
+            //        enemy.Attack(player);
+            //    }
+            //}
+
+            TestStatic.i = 20;
+            TestStatic.Test2();
+
+            TestStatic a = new TestStatic();
+            a.Test1();
+            TestStatic b = new TestStatic();
+
+            TestStatic.i = 30;
+            TestStatic.i = 40;
 
         }
 
