@@ -27,11 +27,19 @@ public class Player : MonoBehaviour
         inputActions.Player.Enable();                       // 활성화될 때 Player액션맵을 활성화
         inputActions.Player.Fire.performed += OnFire;       // Player액션맵의 Fire액션에 OnFire함수를 연결(눌렀을 때만 연결된 함수 실행)
         inputActions.Player.Fire.canceled += OnFire;        // Player액션맵의 Fire액션에 OnFire함수를 연결(땠을 때만 연결된 함수 실행)
+        inputActions.Player.Boost.performed += OnBoost;
+        inputActions.Player.Boost.canceled += OnBoost;
+        inputActions.Player.Move.performed += OnMove;
+        inputActions.Player.Move.canceled += OnMove;
     }
 
     // 이 스크립트가 포함된 게임 오브젝트가 비활성화되면 호출된다.
     private void OnDisable()
     {
+        inputActions.Player.Move.canceled -= OnMove;
+        inputActions.Player.Move.performed -= OnMove;
+        inputActions.Player.Boost.canceled -= OnBoost;
+        inputActions.Player.Boost.performed -= OnBoost;
         inputActions.Player.Fire.canceled -= OnFire;        // Player액션맵의 Fire액션에 OnFire함수를 연결해제
         inputActions.Player.Fire.performed -= OnFire;       // Player액션맵의 Fire액션에서 OnFire함수를 연결해제
         inputActions.Player.Disable();                      // Player액션맵을 비활성화
@@ -52,6 +60,38 @@ public class Player : MonoBehaviour
             Debug.Log("OnFire : 떨어짐");
         }        
     }
+
+    // 실습
+    // Boost 액션과 OnBoost 함수 연결하기
+    // Boost 액션으로 눌려졌는지 떨어졌는지 출력하기
+    private void OnBoost(InputAction.CallbackContext context)
+    {
+        if (context.performed)   // 지금 입력이 눌렀다
+        {
+            Debug.Log("OnBoost : 눌려짐");
+        }
+        if (context.canceled)    // 지금 입력이 떨어졌다
+        {
+            Debug.Log("OnBoost : 떨어짐");
+        }
+    }
+
+
+    private void OnMove(InputAction.CallbackContext context)
+    {
+        Vector2 dir = context.ReadValue<Vector2>();
+        //Debug.Log($"OnMove : ({dir})");
+
+        //this.transform.position = new Vector3(1, 0, 0); // 이 게임 오브젝트의 위치를 (1,0,0)으로 보내라
+
+        //transform.position += new Vector3(1, 0, 0);   // 이 게임 오브젝트의 위치를 현재 위치에서 (1,0,0)만큼 움직여라
+        //transform.position += Vector3.right;
+
+        transform.position += (Vector3)dir;
+    }
+
+    // 실습
+    // 누르고 있으면 [계속] 그쪽 방향으로 이동하게 만들어보기
 
     // 이 스크립트가 포함된 게임 오브젝트의 첫번째 Update함수가 실행되기 직전에 호출된다.
     private void Start()
