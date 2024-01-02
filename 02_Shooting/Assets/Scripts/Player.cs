@@ -15,6 +15,21 @@ public class Player : MonoBehaviour
 
     PlayerInputActions inputActions;
 
+    /// <summary>
+    /// 마지막으로 입력된 방향을 기록하는 변수
+    /// </summary>
+    Vector3 inputDir = Vector3.zero;
+
+    /// <summary>
+    /// 플레이어의 이동 속도
+    /// public 맴버 변수는 인스팩터 창에서 확인이 가능하다.
+    /// </summary>
+    //[Range(0.0f,1.0f)]    // 스크롤 바를 이용해 값을 조절할 수 있다.
+    public float moveSpeed = 0.01f;
+        
+    //[SerializeField]      // public이 아닌 경우에도 인스펙터 창에서 확인이 가능해진다.(권장하지 않음)
+    //float test = 1.0f;
+
     // 이 스크립트가 포함된 게임 오브젝트가 생성 완료되면 호출된다.
     private void Awake()
     {
@@ -79,7 +94,8 @@ public class Player : MonoBehaviour
 
     private void OnMove(InputAction.CallbackContext context)
     {
-        Vector2 dir = context.ReadValue<Vector2>();
+        // scope : 변수나 함수의 사용 가능한 범위
+        inputDir = context.ReadValue<Vector2>();
         //Debug.Log($"OnMove : ({dir})");
 
         //this.transform.position = new Vector3(1, 0, 0); // 이 게임 오브젝트의 위치를 (1,0,0)으로 보내라
@@ -87,12 +103,9 @@ public class Player : MonoBehaviour
         //transform.position += new Vector3(1, 0, 0);   // 이 게임 오브젝트의 위치를 현재 위치에서 (1,0,0)만큼 움직여라
         //transform.position += Vector3.right;
 
-        transform.position += (Vector3)dir;
+        //transform.position += (Vector3)dir;   // 이 게임 오브젝트의 위치를 현재 위치에서 inputDir 방향으로 움직여라
     }
-
-    // 실습
-    // 누르고 있으면 [계속] 그쪽 방향으로 이동하게 만들어보기
-
+    
     // 이 스크립트가 포함된 게임 오브젝트의 첫번째 Update함수가 실행되기 직전에 호출된다.
     private void Start()
     {
@@ -111,6 +124,13 @@ public class Player : MonoBehaviour
         //{
         //    Debug.Log("A키가 떨어졌습니다.");
         //}
+        // 실습
+        // 누르고 있으면 [계속] 그쪽 방향으로 이동하게 만들어보기
+        //transform.position += inputDir;     // OnMove에서 입력된 방향으로 움직이기
+
+        // Time.deltaTime : 프레임간의 시간 간격(가변적)
+        transform.Translate(Time.deltaTime * moveSpeed * inputDir); // 1초당 moveSpeed만큼의 속도로, inputDir 방향으로 움직여라
+        
     }
 
     //public void OnFire()
