@@ -34,6 +34,11 @@ public class Player : MonoBehaviour
     Animator anim;
     readonly int InputY_String = Animator.StringToHash("InputY");
 
+    /// <summary>
+    /// 총알의 프리팹
+    /// </summary>
+    public GameObject bulletPrefab;
+
     // 이 스크립트가 포함된 게임 오브젝트가 생성 완료되면 호출된다.
     private void Awake()
     {
@@ -74,12 +79,14 @@ public class Player : MonoBehaviour
     {
         if(context.performed)   // 지금 입력이 눌렀다
         {
-            Debug.Log("OnFire : 눌려짐");
+            //Debug.Log("OnFire : 눌려짐");
+            //Instantiate(bulletPrefab, transform); // 발사된 총알도 플레이어의 움직임에 영향을 받는다.
+            Instantiate(bulletPrefab, transform.position, Quaternion.identity);
         }
-        if(context.canceled)    // 지금 입력이 떨어졌다
-        {
-            Debug.Log("OnFire : 떨어짐");
-        }        
+        //if(context.canceled)    // 지금 입력이 떨어졌다
+        //{
+        //    Debug.Log("OnFire : 떨어짐");
+        //}        
     }
 
     // 실습
