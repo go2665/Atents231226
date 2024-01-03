@@ -39,12 +39,24 @@ public class Player : MonoBehaviour
     /// </summary>
     public GameObject bulletPrefab;
 
+    Transform fireTransform;
+
     // 이 스크립트가 포함된 게임 오브젝트가 생성 완료되면 호출된다.
     private void Awake()
     {
         inputActions = new PlayerInputActions();            // 인풋 액션 생성
         anim = GetComponent<Animator>();   // 이 스크립트가 들어있는 게임 오브젝트에서 컴포넌트를 찾아서 anim에 저장하기(없으면 null)
         // null; // 참조가 비어있다.
+
+        // 게임 오브젝트 찾는 방법
+        // GameObject.Find("FirePosition"); // 이름으로 게임 오브젝트 찾기
+        // GameObject.FindAnyObjectByType<Transform>(); // 특정 컴포넌트를 가지고 있는 게임 오브젝트 찾기
+        // GameObject.FindFirstObjectByType<Transform>();  // 특정 컴포넌트를 가지고 있는 첫번째 게임 오브젝트 찾기
+        // GameObject.FindGameObjectWithTag("Player");  // 게임 오브젝트의 태그를 기준으로 찾는 함수
+        // GameObject.FindGameObjectsWithTag("Player"); // 특정 태그를 가진 모든 게임오브젝트를 찾아주는 함수
+
+        fireTransform = transform.GetChild(0);  // 이 게임 오브젝트의 첫번째 자식 찾기
+        // transform.childCount; // 이 게임 오브젝트의 자식 숫자
     }
 
     // 이 스크립트가 포함된 게임 오브젝트가 활성화되면 호출된다.
@@ -81,7 +93,7 @@ public class Player : MonoBehaviour
         {
             //Debug.Log("OnFire : 눌려짐");
             //Instantiate(bulletPrefab, transform); // 발사된 총알도 플레이어의 움직임에 영향을 받는다.
-            Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+            Instantiate(bulletPrefab, fireTransform.position, Quaternion.identity);
         }
         //if(context.canceled)    // 지금 입력이 떨어졌다
         //{
