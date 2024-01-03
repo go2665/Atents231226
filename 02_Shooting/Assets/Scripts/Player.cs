@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(Animator))]    // 반드시 특정 컴포넌트가 필요한 경우에 추가
 public class Player : MonoBehaviour
 {
     // InputManager : 기존의 유니티 입력방식
@@ -26,14 +27,19 @@ public class Player : MonoBehaviour
     /// </summary>
     //[Range(0.0f,1.0f)]    // 스크롤 바를 이용해 값을 조절할 수 있다.
     public float moveSpeed = 0.01f;
-        
+
     //[SerializeField]      // public이 아닌 경우에도 인스펙터 창에서 확인이 가능해진다.(권장하지 않음)
     //float test = 1.0f;
+
+    Animator anim;
+    readonly int InputY_String = Animator.StringToHash("InputY");
 
     // 이 스크립트가 포함된 게임 오브젝트가 생성 완료되면 호출된다.
     private void Awake()
     {
         inputActions = new PlayerInputActions();            // 인풋 액션 생성
+        anim = GetComponent<Animator>();   // 이 스크립트가 들어있는 게임 오브젝트에서 컴포넌트를 찾아서 anim에 저장하기(없으면 null)
+        // null; // 참조가 비어있다.
     }
 
     // 이 스크립트가 포함된 게임 오브젝트가 활성화되면 호출된다.
@@ -104,6 +110,10 @@ public class Player : MonoBehaviour
         //transform.position += Vector3.right;
 
         //transform.position += (Vector3)dir;   // 이 게임 오브젝트의 위치를 현재 위치에서 inputDir 방향으로 움직여라
+
+
+        //anim.SetFloat("InputY", inputDir.y);    // 애니메이터가 가지는 InputY 파라메터에 inputDir.y값을 넣기
+        anim.SetFloat(InputY_String, inputDir.y);
     }
     
     // 이 스크립트가 포함된 게임 오브젝트의 첫번째 Update함수가 실행되기 직전에 호출된다.
