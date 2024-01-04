@@ -33,6 +33,7 @@ public class Player : MonoBehaviour
 
     Animator anim;
     readonly int InputY_String = Animator.StringToHash("InputY");
+    Rigidbody2D rigid2d;
 
     /// <summary>
     /// 총알의 프리팹
@@ -47,6 +48,7 @@ public class Player : MonoBehaviour
         inputActions = new PlayerInputActions();            // 인풋 액션 생성
         anim = GetComponent<Animator>();   // 이 스크립트가 들어있는 게임 오브젝트에서 컴포넌트를 찾아서 anim에 저장하기(없으면 null)
         // null; // 참조가 비어있다.
+        rigid2d = GetComponent<Rigidbody2D>();
 
         // 게임 오브젝트 찾는 방법
         // GameObject.Find("FirePosition"); // 이름으로 게임 오브젝트 찾기
@@ -158,8 +160,18 @@ public class Player : MonoBehaviour
         //transform.position += inputDir;     // OnMove에서 입력된 방향으로 움직이기
 
         // Time.deltaTime : 프레임간의 시간 간격(가변적)
-        transform.Translate(Time.deltaTime * moveSpeed * inputDir); // 1초당 moveSpeed만큼의 속도로, inputDir 방향으로 움직여라
+        //transform.Translate(Time.deltaTime * moveSpeed * inputDir); // 1초당 moveSpeed만큼의 속도로, inputDir 방향으로 움직여라
         
+    }
+
+    /// <summary>
+    /// 고정된 시간간격으로 호출되는 업데이트(물리연산 처리용 업데이트)
+    /// </summary>
+    private void FixedUpdate()
+    {
+        //transform.Translate(Time.deltaTime * moveSpeed * inputDir);
+        rigid2d.MovePosition(rigid2d.position + (Vector2)(Time.fixedDeltaTime * moveSpeed * inputDir));
+
     }
 
     //public void OnFire()
