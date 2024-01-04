@@ -362,7 +362,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   emenyPrefab: {fileID: 4893882955656531163, guid: d82a3116b97807a49bcaa1f35b580838, type: 3}
-  interval: 0.5
+  interval: 3
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

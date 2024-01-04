@@ -14,7 +14,7 @@ public class EnenySpawner : MonoBehaviour
     const float MinY = -4.0f;
     const float MaxY = 4.0f;
 
-    float elapsedTime = 0.0f;
+    //float elapsedTime = 0.0f;
 
     int spawnCounter = 0;
 
@@ -26,19 +26,30 @@ public class EnenySpawner : MonoBehaviour
     private void Start()
     {
         spawnCounter = 0;
-        elapsedTime = 0.0f;
-    }
+        //elapsedTime = 0.0f;
 
-    private void Update()
+        StartCoroutine(SpawnCoroutine());   // SpawnCoroutine 코루틴 실행하기
+    }  
+    
+    IEnumerator SpawnCoroutine()
     {
-        //Time.deltaTime을 누적시키기 == 시간측정
-        elapsedTime += Time.deltaTime;      // 시간 측정하기
-        if(elapsedTime > interval)
+        while(true) // 무한 반복
         {
-            elapsedTime = 0.0f;
-            Spawn();
+            yield return new WaitForSeconds(interval);  // interval만큼 기다린 후
+            Spawn();                                    // Spawn 실행
         }
     }
+
+    //private void Update()
+    //{
+    //    //Time.deltaTime을 누적시키기 == 시간측정
+    //    elapsedTime += Time.deltaTime;      // 시간 측정하기
+    //    if(elapsedTime > interval)
+    //    {
+    //        elapsedTime = 0.0f;
+    //        Spawn();
+    //    }
+    //}
 
     /// <summary>
     /// 적을 하나 스폰하는 함수
@@ -66,6 +77,7 @@ public class EnenySpawner : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;                             // 색깔 지정
+        //Gizmos.color = new Color(1f, 1f, 0f);
         Vector3 p0 = transform.position + Vector3.up * MaxY;    // 선의 시작점 계산
         Vector3 p1 = transform.position + Vector3.up * MinY;    // 선의 도착점 계산
         Gizmos.DrawLine(p0, p1);                                // 시작점에서 도착점으로 선을 긋는다.
@@ -74,5 +86,15 @@ public class EnenySpawner : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         // 이 오브젝트를 선택했을 때 사각형 그리기(색상 변경하기)
+
+        Gizmos.color = Color.red;                             // 색깔 지정        
+        Vector3 p0 = transform.position + Vector3.up * MaxY - Vector3.right * 0.5f;    
+        Vector3 p1 = transform.position + Vector3.up * MaxY + Vector3.right * 0.5f;    
+        Vector3 p2 = transform.position + Vector3.up * MinY + Vector3.right * 0.5f;    
+        Vector3 p3 = transform.position + Vector3.up * MinY - Vector3.right * 0.5f;
+        Gizmos.DrawLine(p0, p1);
+        Gizmos.DrawLine(p1, p2);
+        Gizmos.DrawLine(p2, p3);
+        Gizmos.DrawLine(p3, p0);
     }
 }
