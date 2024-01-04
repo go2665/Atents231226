@@ -8,10 +8,23 @@ public class Bullet : MonoBehaviour
 
     public float moveSpeed = 7.0f;
 
+    public GameObject effectPrefab;
+
     private void Update()
     {
         transform.Translate(Time.deltaTime * moveSpeed * Vector2.right);    // 총 곱한 수는? 3번
         //transform.Translate(Vector2.right * Time.deltaTime * moveSpeed);    // 총 곱한 수는? 4번
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.CompareTag("Enemy"))    // 부딪친 상대가 Enemy 태그를 가지고 있으면 삭제
+        {
+            Destroy(collision.gameObject);
+        }
+
+        Instantiate(effectPrefab, transform.position, Quaternion.identity); // hit 이팩트 생성
+        Destroy(gameObject);    // 자기 자신은 무조건 삭제
     }
 }
 

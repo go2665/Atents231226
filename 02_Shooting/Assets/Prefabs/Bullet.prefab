@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1346060558370015778}
   - component: {fileID: 3730469052207527737}
   - component: {fileID: 6182504846111364295}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,6 +101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 7
+  effectPrefab: {fileID: 5944300297151803503, guid: bddd6c895e12e9548afa46a8fc7155a3, type: 3}
 --- !u!95 &1346060558370015778
 Animator:
   serializedVersion: 5
