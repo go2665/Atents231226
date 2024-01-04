@@ -174,8 +174,44 @@ public class Player : MonoBehaviour
 
     }
 
-    //public void OnFire()
-    //{
-    //    Debug.Log("OnFire");
-    //}
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // 충돌이 시작했을 때 실행
+        Debug.Log($"OnCollisionEnter2D : {collision.gameObject.name}");
+
+        if( collision.gameObject.CompareTag("Enemy") )  // collision의 게임 오브젝트가 "Enemy"라는 태그를 가지는지 확인하는 함수
+        {
+            Destroy(collision.gameObject);  // 충돌한 대상을 제거하기
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        // 충돌 중인 상태에서 움직일 때 실행
+        //Debug.Log("OnCollisionStay2D");
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        // 충돌 상태에서 떨어졌을 때 실행
+        Debug.Log("OnCollisionExit2D");
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // 겹치기 시작했을 때 실행
+        Debug.Log($"OnTriggerEnter2D : {collision.gameObject.name}");
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        // 겹쳐있는 상태에서 움직일 때 실행
+        //Debug.Log("OnTriggerStay2D");
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        // 겹쳐있던 것이 떨어졌을 때 실행
+        Debug.Log("OnTriggerExit2D");
+    }
 }
