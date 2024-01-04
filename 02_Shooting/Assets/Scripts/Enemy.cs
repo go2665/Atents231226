@@ -50,3 +50,9 @@ public class Enemy : MonoBehaviour
             0.0f);
     }
 }
+
+// 실습
+// 1. 적에게 HP 추가(3대를 맞으면 폭발)
+// 2. 적이 폭발할 때 explosionEffect 생성
+// 3. 플레이어 총알 발사할때 flash 잠깐 보이기
+// 4. 연사처리
