@@ -18,10 +18,11 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Enemy"))    // 부딪친 상대가 Enemy 태그를 가지고 있으면 삭제
-        {
-            Destroy(collision.gameObject);
-        }
+        // 이제 부딪친 쪽에서 처리
+        //if(collision.gameObject.CompareTag("Enemy"))    // 부딪친 상대가 Enemy 태그를 가지고 있으면 삭제
+        //{
+        //    Destroy(collision.gameObject);
+        //}
 
         Instantiate(effectPrefab, transform.position, Quaternion.identity); // hit 이팩트 생성
         Destroy(gameObject);    // 자기 자신은 무조건 삭제

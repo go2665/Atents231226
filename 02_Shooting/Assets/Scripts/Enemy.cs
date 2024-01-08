@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,6 +34,30 @@ public class Enemy : MonoBehaviour
     /// </summary>
     float elapsedTime = 0.0f;
 
+    /// <summary>
+    /// 적의 HP
+    /// </summary>
+    public int hp = 3;
+
+    private int HP
+    {
+        get => hp;
+        set
+        {
+            hp = value;
+            if(hp <= 0) // HP가 0 이하가 되면 죽는다.
+            {
+                hp = 0;
+                OnDie();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 터질때 나올 이팩트
+    /// </summary>
+    public GameObject explosionPrefab;
+
     private void Start()
     {
         // 초기화
@@ -49,6 +74,21 @@ public class Enemy : MonoBehaviour
             spawnY + Mathf.Sin(elapsedTime) * amplitude,    // sin 그래프에 따라 높에 변동하기
             0.0f);
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.CompareTag("Bullet"))   // 총알이 부딪치면 HP가 1 감소한다.
+        {
+            HP--;
+        }
+    }
+
+    private void OnDie()
+    {
+        Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        Destroy(gameObject);    // 자기 자신 삭제
+    }
+
 }
 
 // 실습

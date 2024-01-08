@@ -124,6 +124,8 @@ MonoBehaviour:
   speed: 0
   amplitude: 0
   frequency: 0
+  hp: 3
+  explosionPrefab: {fileID: 4991071326223345852, guid: 704c0036a404f4547bfbeb4ecba69fd3, type: 3}
 --- !u!58 &9058286308366823336
 CircleCollider2D:
   m_ObjectHideFlags: 0

@@ -40,7 +40,30 @@ public class Player : MonoBehaviour
     /// </summary>
     public GameObject bulletPrefab;
 
+    /// <summary>
+    /// 총알 발사 위치 지정용
+    /// </summary>
     Transform fireTransform;
+
+    /// <summary>
+    /// 총알 발사 플래시 이팩트
+    /// </summary>
+    GameObject fireFlash;
+
+    /// <summary>
+    /// 플래시 기다리는 시간
+    /// </summary>
+    WaitForSeconds flashWait;
+
+    /// <summary>
+    /// 연사를 실행할 코루틴
+    /// </summary>
+    IEnumerator fireCoroutine;
+
+    /// <summary>
+    /// 연사 시간 간격
+    /// </summary>
+    public float fireInterval = 0.5f;
 
     // 이 스크립트가 포함된 게임 오브젝트가 생성 완료되면 호출된다.
     private void Awake()
@@ -59,14 +82,19 @@ public class Player : MonoBehaviour
 
         fireTransform = transform.GetChild(0);  // 이 게임 오브젝트의 첫번째 자식 찾기
         // transform.childCount; // 이 게임 오브젝트의 자식 숫자
+
+        fireFlash = transform.GetChild(1).gameObject;   // 이 게임 오브젝트의 두번째 자식의 게임오브젝트 찾기
+        flashWait = new WaitForSeconds(0.1f);
+
+        fireCoroutine = FireCoroutine();
     }
 
     // 이 스크립트가 포함된 게임 오브젝트가 활성화되면 호출된다.
     private void OnEnable()
     {
         inputActions.Player.Enable();                       // 활성화될 때 Player액션맵을 활성화
-        inputActions.Player.Fire.performed += OnFire;       // Player액션맵의 Fire액션에 OnFire함수를 연결(눌렀을 때만 연결된 함수 실행)
-        inputActions.Player.Fire.canceled += OnFire;        // Player액션맵의 Fire액션에 OnFire함수를 연결(땠을 때만 연결된 함수 실행)
+        inputActions.Player.Fire.performed += OnFireStart;  // Player액션맵의 Fire액션에 OnFireStart함수를 연결(눌렀을 때만 연결된 함수 실행)
+        inputActions.Player.Fire.canceled += OnFireEnd;     // Player액션맵의 Fire액션에 OnFireEnd함수를 연결(땠을 때만 연결된 함수 실행)
         inputActions.Player.Boost.performed += OnBoost;
         inputActions.Player.Boost.canceled += OnBoost;
         inputActions.Player.Move.performed += OnMove;
@@ -80,8 +108,8 @@ public class Player : MonoBehaviour
         inputActions.Player.Move.performed -= OnMove;
         inputActions.Player.Boost.canceled -= OnBoost;
         inputActions.Player.Boost.performed -= OnBoost;
-        inputActions.Player.Fire.canceled -= OnFire;        // Player액션맵의 Fire액션에 OnFire함수를 연결해제
-        inputActions.Player.Fire.performed -= OnFire;       // Player액션맵의 Fire액션에서 OnFire함수를 연결해제
+        inputActions.Player.Fire.canceled -= OnFireEnd;     // Player액션맵의 Fire액션에 OnFireEnd함수를 연결해제
+        inputActions.Player.Fire.performed -= OnFireStart;  // Player액션맵의 Fire액션에서 OnFireStart함수를 연결해제
         inputActions.Player.Disable();                      // Player액션맵을 비활성화
     }
 
@@ -89,18 +117,59 @@ public class Player : MonoBehaviour
     /// Fire액션이 발동했을 때 실행 시킬 함수
     /// </summary>
     /// <param name="context">입력 관련 정보가 들어있는 구조체 변수</param>
-    private void OnFire(InputAction.CallbackContext context)
+    private void OnFireStart(InputAction.CallbackContext _)
     {
-        if(context.performed)   // 지금 입력이 눌렀다
-        {
-            //Debug.Log("OnFire : 눌려짐");
-            //Instantiate(bulletPrefab, transform); // 발사된 총알도 플레이어의 움직임에 영향을 받는다.
-            Instantiate(bulletPrefab, fireTransform.position, Quaternion.identity);
-        }
+        //if(context.performed)   // 지금 입력이 눌렀다
+        //{
+        //Debug.Log("OnFireStart : 눌려짐");
+        //Fire(fireTransform.position);
+        //}
         //if(context.canceled)    // 지금 입력이 떨어졌다
         //{
-        //    Debug.Log("OnFire : 떨어짐");
+        //    Debug.Log("OnFireStart : 떨어짐");
         //}        
+        StartCoroutine(fireCoroutine);  // 연사시작
+    }
+
+    private void OnFireEnd(InputAction.CallbackContext _)
+    {
+        StopCoroutine(fireCoroutine);   // 연사 중지
+    }
+
+    /// <summary>
+    /// 연사용 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator FireCoroutine()
+    {
+        while (true)
+        {
+            Fire(fireTransform.position);                   // 총알 한발 쏘기
+            yield return new WaitForSeconds(fireInterval);  // 인터벌만큼 기다리기
+        }
+    }
+
+    /// <summary>
+    /// 총알을 하나 발사하는 함수
+    /// </summary>
+    /// <param name="position">총알이 발사될 위치</param>
+    /// <param name="angle">총알이 발사될 각도(디폴트로 0)</param>
+    void Fire(Vector3 position, float angle = 0.0f)
+    {
+        //플래시 켜고 끄기
+        StartCoroutine(FlashEffect());
+
+        //Instantiate(bulletPrefab, transform); // 발사된 총알도 플레이어의 움직임에 영향을 받는다.
+        Instantiate(bulletPrefab, position, Quaternion.identity);
+    }
+
+    IEnumerator FlashEffect()
+    {
+        fireFlash.SetActive(true);  // fireFlash 활성화 하기
+
+        yield return flashWait;     // 0.1초 기다리기
+
+        fireFlash.SetActive(false); // fireFlash 비활성화하기
     }
 
     // 실습
