@@ -6,9 +6,25 @@ public class Bullet : MonoBehaviour
 {
     // 시작하자마자 계속 오른쪽으로 초속 7로 움직이게 만들기
 
+    /// <summary>
+    /// 총알의 이동 속도
+    /// </summary>
     public float moveSpeed = 7.0f;
 
+    /// <summary>
+    /// 총알 터지는 이팩트용 프리팹
+    /// </summary>
     public GameObject effectPrefab;
+
+    /// <summary>
+    /// 총알의 수명
+    /// </summary>
+    public float lifeTime = 10.0f;
+
+    private void Start()
+    {
+        Destroy(gameObject, lifeTime);  // lifeTime 이후에 스스로 사라지기
+    }
 
     private void Update()
     {
