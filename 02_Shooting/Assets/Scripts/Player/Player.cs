@@ -70,10 +70,13 @@ public class Player : MonoBehaviour
     /// </summary>
     int score = 0;
 
-    int Score
+    /// <summary>
+    /// 점수 확인 및 설정용 프로퍼티
+    /// </summary>
+    public int Score
     {
-        get => score; 
-        set
+        get => score;   // 읽기는 public
+        private set     // 쓰기는 private
         {
             if( score != value)
             {
