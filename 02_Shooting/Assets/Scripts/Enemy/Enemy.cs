@@ -63,11 +63,27 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public int score = 10;
 
+    /// <summary>
+    /// 적이 죽을 때 실행될 델리게이트
+    /// </summary>
+    Action onDie;  
+
+    // 람다식, 람다함수(Lambda)
+    // 익명 함수
+    // 한 줄짜리 임시 함수, 1회용
+
     private void Start()
     {
         // 초기화
         spawnY = transform.position.y;
         elapsedTime = 0.0f;
+
+        //Action aaa = () => Debug.Log("람다함수");             // 파라메터 없는 람다식
+        //Action<int> bbb = (x) => Debug.Log($"람다함수 {x}");  // 파라메터가 하나인 람다식
+        //Func<int> ccc = () => 10;                            // 파라메터 없고 항상 10을 리턴하는 람다식        
+
+        Player player = FindAnyObjectByType<Player>();  // 시작할 때 플레이어 찾아서
+        onDie += () => player.AddScore(score);          // 죽을 때 플레이어의 AddScore함수에 파라메터로 score넣고 실행하도록 등록
     }
 
     private void Update()
@@ -92,8 +108,10 @@ public class Enemy : MonoBehaviour
     {
         Instantiate(explosionPrefab, transform.position, Quaternion.identity);
 
-        Player player = FindAnyObjectByType<Player>();
-        player.AddScore(score);
+        //Player player = FindAnyObjectByType<Player>();
+        //player.AddScore(score);
+
+        onDie?.Invoke();
 
         Destroy(gameObject);    // 자기 자신 삭제
     }

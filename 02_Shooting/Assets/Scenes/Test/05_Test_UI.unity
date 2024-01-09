@@ -632,6 +632,7 @@ GameObject:
   - component: {fileID: 1280550948}
   - component: {fileID: 1280550950}
   - component: {fileID: 1280550949}
+  - component: {fileID: 1280550951}
   m_Layer: 5
   m_Name: ScoreText
   m_TagString: Untagged
@@ -678,7 +679,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Score : 99999'
+  m_text: 'Score : 00000'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 26519adc44ce973458b57373bb86782c, type: 2}
   m_sharedMaterial: {fileID: -5381223910356486798, guid: 26519adc44ce973458b57373bb86782c, type: 2}
@@ -755,6 +756,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1280550947}
   m_CullTransparentMesh: 1
+--- !u!114 &1280550951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1280550947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af01e184d61c6174aa52ee0979586be4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1348007764
 GameObject:
   m_ObjectHideFlags: 0

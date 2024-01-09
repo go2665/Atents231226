@@ -77,7 +77,7 @@ public class Player : MonoBehaviour
         {
             if( score != value)
             {
-                score = Math.Max(value,99999);  // 최대 점수 99999
+                score = Math.Min(value,99999);  // 최대 점수 99999
                 onScoreChange?.Invoke(score);   // 이 델리게이트에 함수를 등록한 모든 대상에게 변경된 점수를 알림
             }
         }
