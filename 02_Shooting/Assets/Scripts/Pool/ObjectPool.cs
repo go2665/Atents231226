@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//where T : MonoBehaviour  // T 타입은 MonoBehaviour이거나 MonoBehaviour를 상속받은 클래스만 가능하다.
-public class ObjectPool<T> : MonoBehaviour where T : MonoBehaviour
+//where T : RecycleObject  // T 타입은 RecycleObject이거나 RecycleObject를 상속받은 클래스만 가능하다.
+public class ObjectPool<T> : MonoBehaviour where T : RecycleObject
 {
     /// <summary>
     /// 풀에서 관리할 오브젝트의 프리팹
@@ -37,7 +37,7 @@ public class ObjectPool<T> : MonoBehaviour where T : MonoBehaviour
         else
         {
             // 풀이 이미 만들어져 있는 경우(ex:씬이 추가로 로딩 or 씬이 다시 시작)
-            foreach( T obj in pool )
+            foreach( T obj in pool )    // foreach : 특정 컬랙션 안에 있는 모든 요소를 한번씩 처리해야 할 일이 있을 때 사용
             {
                 obj.gameObject.SetActive(false);
             }
@@ -100,7 +100,8 @@ public class ObjectPool<T> : MonoBehaviour where T : MonoBehaviour
             obj.name = $"{originalPrefab.name}_{i}";    // 이름바꾸고
 
             T comp = obj.GetComponent<T>();
-            readyQueue.Enqueue(comp);       // 레디큐에 추가하고
+            comp.onDisable += () => readyQueue.Enqueue(comp);   // 재활용 오브젝트가 비활성화 되면 레디큐로 되돌려라
+            //readyQueue.Enqueue(comp);       // 레디큐에 추가하고(위의 델리게이트 등록한 것 때문에 아래에서 비활성화하면 자동으로 처리)
 
             results[i] = comp;      // 배열에 저장하고
             obj.SetActive(false);   // 비활성화 시킨다.

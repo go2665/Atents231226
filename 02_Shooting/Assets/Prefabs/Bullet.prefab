@@ -102,6 +102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 7
   effectPrefab: {fileID: 5944300297151803503, guid: bddd6c895e12e9548afa46a8fc7155a3, type: 3}
+  lifeTime: 5
 --- !u!95 &1346060558370015778
 Animator:
   serializedVersion: 5
