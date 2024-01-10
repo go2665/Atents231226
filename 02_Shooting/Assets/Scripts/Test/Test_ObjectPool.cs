@@ -7,8 +7,13 @@ public class Test_ObjectPool : TestBase
 {
     public BulletPool pool;
 
-    protected override void OnTest1(InputAction.CallbackContext context)
+    private void Start()
     {
         pool.Initialize();
+    }
+
+    protected override void OnTest1(InputAction.CallbackContext context)
+    {
+        Bullet bullet = pool.GetObject();
     }
 }
