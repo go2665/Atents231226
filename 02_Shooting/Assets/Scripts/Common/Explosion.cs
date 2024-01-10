@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Explosion : MonoBehaviour
+public class Explosion : RecycleObject
 {    
     Animator animator;
     float animLength = 0.0f;
@@ -17,12 +17,12 @@ public class Explosion : MonoBehaviour
         animLength = animator.GetCurrentAnimatorClipInfo(0)[0].clip.length;         
     }
 
-    void Start()
+    protected override void OnEnable()
     {
         //Time.timeScale = 0.1f;  // 시간 진행속도 1/10로 만들기        
-
-        Destroy(this.gameObject, animLength);        
+        base.OnEnable();
+        StartCoroutine(LifeOver(animLength));
     }
 
-    
+
 }

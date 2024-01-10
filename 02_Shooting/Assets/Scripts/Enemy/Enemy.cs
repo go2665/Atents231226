@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : RecycleObject
 {
     // 실습
     // 1. 적은 위아래로 파도치듯이 움직인다.
@@ -66,14 +66,19 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// 적이 죽을 때 실행될 델리게이트
     /// </summary>
-    Action onDie;  
+    Action onDie;
 
     // 람다식, 람다함수(Lambda)
     // 익명 함수
     // 한 줄짜리 임시 함수, 1회용
 
-    private void Start()
+    Player player;
+
+    protected override void OnEnable()
     {
+        base.OnEnable();
+        OnInitialize();     // 적 초기화 작업
+
         // 초기화
         spawnY = transform.position.y;
         elapsedTime = 0.0f;
@@ -82,8 +87,24 @@ public class Enemy : MonoBehaviour
         //Action<int> bbb = (x) => Debug.Log($"람다함수 {x}");  // 파라메터가 하나인 람다식
         //Func<int> ccc = () => 10;                            // 파라메터 없고 항상 10을 리턴하는 람다식        
 
-        Player player = FindAnyObjectByType<Player>();  // 시작할 때 플레이어 찾아서
-        onDie += () => player.AddScore(score);          // 죽을 때 플레이어의 AddScore함수에 파라메터로 score넣고 실행하도록 등록
+    }
+
+    protected override void OnDisable()
+    {
+        if(player != null)
+        {
+            onDie -= PlayerAddScore;
+            onDie = null;
+            player = null;
+        }
+
+        base.OnDisable();
+
+    }
+
+    void PlayerAddScore()
+    {
+        player.AddScore(score);
     }
 
     private void Update()
@@ -101,6 +122,20 @@ public class Enemy : MonoBehaviour
         if(collision.gameObject.CompareTag("Bullet"))   // 총알이 부딪치면 HP가 1 감소한다.
         {
             HP--;
+        }
+    }
+
+    private void OnInitialize()
+    {
+        if( player == null )
+        {
+            player = FindAnyObjectByType<Player>();
+        }
+
+        if( player != null )
+        {
+            //onDie += () => player.AddScore(score);          // 죽을 때 플레이어의 AddScore함수에 파라메터로 score넣고 실행하도록 등록
+            onDie += PlayerAddScore;
         }
     }
 

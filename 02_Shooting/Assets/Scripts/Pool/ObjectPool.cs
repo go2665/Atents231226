@@ -25,6 +25,11 @@ public class ObjectPool<T> : MonoBehaviour where T : RecycleObject
     /// </summary>
     Queue<T> readyQueue;
 
+    private void Awake()
+    {
+        Initialize();
+    }
+
     public void Initialize()
     {
         if( pool == null )  // 풀이 아직 만들어지지 않은 경우
