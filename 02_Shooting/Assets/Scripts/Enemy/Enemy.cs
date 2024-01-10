@@ -129,7 +129,7 @@ public class Enemy : RecycleObject
     {
         if( player == null )
         {
-            player = FindAnyObjectByType<Player>();
+            player = GameManager.Instance.Player;
         }
 
         if( player != null )
