@@ -16,7 +16,7 @@ public class EnenySpawner : MonoBehaviour
 
     //float elapsedTime = 0.0f;
 
-    int spawnCounter = 0;
+    //int spawnCounter = 0;
 
     private void Awake()
     {
@@ -25,7 +25,7 @@ public class EnenySpawner : MonoBehaviour
 
     private void Start()
     {
-        spawnCounter = 0;
+        //spawnCounter = 0;
         //elapsedTime = 0.0f;
 
         StartCoroutine(SpawnCoroutine());   // SpawnCoroutine 코루틴 실행하기
@@ -56,10 +56,13 @@ public class EnenySpawner : MonoBehaviour
     /// </summary>
     void Spawn()
     {
-        GameObject obj = Instantiate(emenyPrefab, GetSpawnPosition(), Quaternion.identity); // 생성
-        obj.transform.SetParent(transform); // 부모 설정
-        obj.name = $"Enemy_{spawnCounter}"; // 게임 오브젝트 이름 바꾸기
-        spawnCounter++;
+        //GameObject obj = Instantiate(emenyPrefab, GetSpawnPosition(), Quaternion.identity); // 생성
+        //obj.transform.SetParent(transform); // 부모 설정
+        //obj.name = $"Enemy_{spawnCounter}"; // 게임 오브젝트 이름 바꾸기
+        //spawnCounter++;
+
+        Enemy enemy = Factory.Instance.GetEnemy(GetSpawnPosition());
+        enemy.transform.SetParent(transform);
     }
 
     /// <summary>

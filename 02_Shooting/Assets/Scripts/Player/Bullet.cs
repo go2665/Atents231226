@@ -47,7 +47,9 @@ public class Bullet : RecycleObject
         //    Destroy(collision.gameObject);
         //}
 
-        Instantiate(effectPrefab, transform.position, Quaternion.identity); // hit 이팩트 생성
+        //Instantiate(effectPrefab, transform.position, Quaternion.identity); // hit 이팩트 생성
+        Factory.Instance.GetHitEffect(transform.position);
+
         //Destroy(gameObject);    // 자기 자신은 무조건 삭제
         gameObject.SetActive(false);    // 비활성화 -> 풀로 되돌리기
     }

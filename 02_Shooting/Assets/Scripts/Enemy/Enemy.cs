@@ -74,6 +74,7 @@ public class Enemy : RecycleObject
 
     Player player;
 
+
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -149,6 +150,17 @@ public class Enemy : RecycleObject
         onDie?.Invoke();
 
         Destroy(gameObject);    // 자기 자신 삭제
+    }
+
+
+    /// <summary>
+    /// 시작 위치 설정을 위한 함수
+    /// </summary>
+    /// <param name="position">시작 위치</param>
+    public void SetStartPosition(Vector3 position)
+    {
+        transform.position = position;
+        spawnY = position.y;
     }
 
 }
