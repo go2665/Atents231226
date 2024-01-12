@@ -8,11 +8,10 @@ public class EnenySpawner : MonoBehaviour
     // 1. 일정한 시간 간격으로 한마리씩 적을 스폰한다.
     // 2. 랜덤한 높이로 생성된다.(y : +4 ~ -4)
 
-    public GameObject emenyPrefab;
     public float interval = 0.5f;
 
-    const float MinY = -4.0f;
-    const float MaxY = 4.0f;
+    protected const float MinY = -4.0f;
+    protected const float MaxY = 4.0f;
 
     //float elapsedTime = 0.0f;
 
@@ -54,22 +53,23 @@ public class EnenySpawner : MonoBehaviour
     /// <summary>
     /// 적을 하나 스폰하는 함수
     /// </summary>
-    void Spawn()
+    protected virtual void Spawn()
     {
         //GameObject obj = Instantiate(emenyPrefab, GetSpawnPosition(), Quaternion.identity); // 생성
         //obj.transform.SetParent(transform); // 부모 설정
         //obj.name = $"Enemy_{spawnCounter}"; // 게임 오브젝트 이름 바꾸기
         //spawnCounter++;
 
-        Enemy enemy = Factory.Instance.GetEnemy(GetSpawnPosition());
-        enemy.transform.SetParent(transform);
+        Factory.Instance.GetEnemy(GetSpawnPosition());
+        //Enemy enemy = Factory.Instance.GetEnemy(GetSpawnPosition());
+        //enemy.transform.SetParent(transform);
     }
 
     /// <summary>
     /// 스폰할 위치를 리턴하는 함수
     /// </summary>
     /// <returns>스폰할 위치</returns>
-    Vector3 GetSpawnPosition()
+    protected Vector3 GetSpawnPosition()
     {
         Vector3 pos = transform.position;
         pos.y += Random.Range(MinY, MaxY);  // 현재 위치에서 높이만 (-4 ~ +4) 변경
@@ -77,7 +77,7 @@ public class EnenySpawner : MonoBehaviour
         return pos;
     }
 
-    private void OnDrawGizmos()
+    protected virtual void OnDrawGizmos()
     {
         Gizmos.color = Color.green;                             // 색깔 지정
         //Gizmos.color = new Color(1f, 1f, 0f);
@@ -86,7 +86,7 @@ public class EnenySpawner : MonoBehaviour
         Gizmos.DrawLine(p0, p1);                                // 시작점에서 도착점으로 선을 긋는다.
     }
 
-    private void OnDrawGizmosSelected()
+    protected virtual void OnDrawGizmosSelected()
     {
         // 이 오브젝트를 선택했을 때 사각형 그리기(색상 변경하기)
 
