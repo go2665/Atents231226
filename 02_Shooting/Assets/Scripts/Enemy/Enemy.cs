@@ -120,7 +120,8 @@ public class Enemy : RecycleObject
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Bullet"))   // 총알이 부딪치면 HP가 1 감소한다.
+        if(collision.gameObject.CompareTag("Bullet")
+            || collision.gameObject.CompareTag("Player"))   // 총알이 부딪치거나 플레이어와 부딪치면 HP가 1 감소한다.
         {
             HP--;
         }
@@ -149,7 +150,7 @@ public class Enemy : RecycleObject
 
         onDie?.Invoke();
 
-        Destroy(gameObject);    // 자기 자신 삭제
+        gameObject.SetActive(false);    // 자기 자신 비활성화
     }
 
 

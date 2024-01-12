@@ -274,12 +274,12 @@ public class Player : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // 충돌이 시작했을 때 실행
-        Debug.Log($"OnCollisionEnter2D : {collision.gameObject.name}");
+        //Debug.Log($"OnCollisionEnter2D : {collision.gameObject.name}");
 
-        if( collision.gameObject.CompareTag("Enemy") )  // collision의 게임 오브젝트가 "Enemy"라는 태그를 가지는지 확인하는 함수
-        {
-            Destroy(collision.gameObject);  // 충돌한 대상을 제거하기
-        }
+        //if( collision.gameObject.CompareTag("Enemy") )  // collision의 게임 오브젝트가 "Enemy"라는 태그를 가지는지 확인하는 함수
+        //{
+        //    Destroy(collision.gameObject);  // 충돌한 대상을 제거하기
+        //}
     }
 
     private void OnCollisionStay2D(Collision2D collision)
