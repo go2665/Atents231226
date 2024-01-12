@@ -26,8 +26,8 @@ public class Test_Factory : TestBase
             case PoolObjectType.ExplosionEffect:
                 Factory.Instance.GetExplosionEffect(position);
                 break;
-            case PoolObjectType.Enemy:
-                Factory.Instance.GetEnemy(position);
+            case PoolObjectType.EnemyWave:
+                Factory.Instance.GetEnemyWave(position);
                 break;       
         }
     }

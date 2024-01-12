@@ -42,7 +42,7 @@ public class Bullet : RecycleObject
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // 이제 부딪친 쪽에서 처리
-        //if(collision.gameObject.CompareTag("Enemy"))    // 부딪친 상대가 Enemy 태그를 가지고 있으면 삭제
+        //if(collision.gameObject.CompareTag("Wave"))    // 부딪친 상대가 Wave 태그를 가지고 있으면 삭제
         //{
         //    Destroy(collision.gameObject);
         //}
@@ -58,7 +58,7 @@ public class Bullet : RecycleObject
 // 실습
 // 1. bullet 프리팹에 필요한 컴포넌트 추가하고 설정하기
 // 2. 총알은 다른 오브젝트와 부딪치면 자기 자신을 삭제한다.
-// 3. 총알은 "Enemy" 태그를 가진 오브젝트와 부딪치면 부딪친 대상을 삭제한다.
+// 3. 총알은 "Wave" 태그를 가진 오브젝트와 부딪치면 부딪친 대상을 삭제한다.
 
 // 4. Hit 스프라이트를 이용해 HitEffect라는 프리팹 만들기
 // 5. 총알이 부딪친 위치에 HitEffect 생성하기
