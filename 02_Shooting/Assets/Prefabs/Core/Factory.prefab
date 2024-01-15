@@ -1,51 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &933976555239349908
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 9168422088905248698}
-  - component: {fileID: 9076146293117199075}
-  m_Layer: 0
-  m_Name: AsteroidMiniPool
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &9168422088905248698
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 933976555239349908}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3230179791832193987}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9076146293117199075
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 933976555239349908}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 079cbf93997448e4999ffbaa83c19735, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  originalPrefab: {fileID: 7664621883677527709, guid: 8ec39793ca8e9c845b4c57669e134ab7, type: 3}
-  poolSize: 32
 --- !u!1 &2639857893038701583
 GameObject:
   m_ObjectHideFlags: 0
@@ -220,6 +174,68 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2117431635729798916, guid: e919adffed8fc71459934d3cc7b38c56, type: 3}
   m_PrefabInstance: {fileID: 3405906382552835668}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &3624511645214342382
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3230179791832193987}
+    m_Modifications:
+    - target: {fileID: 4520202913482662522, guid: 53b3723cfc1ad3844b8ff9b27427900a, type: 3}
+      propertyPath: m_Name
+      value: AsteroidMiniPool
+      objectReference: {fileID: 0}
+    - target: {fileID: 5579992318226641748, guid: 53b3723cfc1ad3844b8ff9b27427900a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5579992318226641748, guid: 53b3723cfc1ad3844b8ff9b27427900a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5579992318226641748, guid: 53b3723cfc1ad3844b8ff9b27427900a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5579992318226641748, guid: 53b3723cfc1ad3844b8ff9b27427900a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5579992318226641748, guid: 53b3723cfc1ad3844b8ff9b27427900a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5579992318226641748, guid: 53b3723cfc1ad3844b8ff9b27427900a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5579992318226641748, guid: 53b3723cfc1ad3844b8ff9b27427900a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5579992318226641748, guid: 53b3723cfc1ad3844b8ff9b27427900a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5579992318226641748, guid: 53b3723cfc1ad3844b8ff9b27427900a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5579992318226641748, guid: 53b3723cfc1ad3844b8ff9b27427900a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 53b3723cfc1ad3844b8ff9b27427900a, type: 3}
+--- !u!4 &9168422088905248698 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5579992318226641748, guid: 53b3723cfc1ad3844b8ff9b27427900a, type: 3}
+  m_PrefabInstance: {fileID: 3624511645214342382}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5396768570777629671
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -270,7 +286,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2124012951465063489, guid: 35f958f59f122034986f9c112cb75aa5, type: 3}
       propertyPath: m_Name
-      value: EnemyPool
+      value: WavePool
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -21,7 +21,7 @@ public class Factory : Singleton<Factory>
     BulletPool bullet;
     HitEffectPool hit;
     ExplosionEffectPool explosion;
-    EnemyPool enemy;
+    WavePool enemy;
     AsteroidPool asteroid;
     AsteroidMiniPool asteroidMini;
 
@@ -47,7 +47,7 @@ public class Factory : Singleton<Factory>
         if(explosion != null )
             explosion.Initialize();
         
-        enemy = GetComponentInChildren<EnemyPool>();
+        enemy = GetComponentInChildren<WavePool>();
         if(enemy != null)
             enemy.Initialize();
 
@@ -62,58 +62,35 @@ public class Factory : Singleton<Factory>
     /// 풀에 있는 게임 오브젝트 하나 가져오기
     /// </summary>
     /// <param name="type">가져올 오브젝트의 종류</param>
+    /// <param name="position">오브젝트가 배치될 위치</param>
+    /// <param name="angle">오브젝트의 초기 각도</param>
     /// <returns>활성화된 오브젝트</returns>
-    public GameObject GetObject(PoolObjectType type)
+    public GameObject GetObject(PoolObjectType type, Vector3? position = null, Vector3? euler = null)
     {
         GameObject result = null;
         switch (type)
         {
             case PoolObjectType.PlayerBullet:
-                result = bullet.GetObject().gameObject;
+                result = bullet.GetObject(position, euler).gameObject;
                 break;
             case PoolObjectType.HitEffect:
-                result = hit.GetObject().gameObject;
+                result = hit.GetObject(position, euler).gameObject;
                 break;
             case PoolObjectType.ExplosionEffect:
-                result = explosion.GetObject().gameObject;
+                result = explosion.GetObject(position, euler).gameObject;
                 break;
             case PoolObjectType.EnemyWave:
-                result = enemy.GetObject().gameObject;
+                result = enemy.GetObject(position, euler).gameObject;
                 break;
             case PoolObjectType.EnemyAsteroid:
-                result = asteroid.GetObject().gameObject;
+                result = asteroid.GetObject(position, euler).gameObject;
                 break;
             case PoolObjectType.EnemyAsteroidMini:
-                result = asteroidMini.GetObject().gameObject;
+                result = asteroidMini.GetObject(position, euler).gameObject;
                 break;
         }
 
         return result;
-    }
-
-    /// <summary>
-    /// 풀에 있는 게임 오브젝트 하나 가져와서 특정 위치에 배치하기
-    /// </summary>
-    /// <param name="type">가져올 오브젝트의 종류</param>
-    /// <param name="position">오브젝트가 배치될 위치</param>
-    /// <param name="angle">오브젝트의 초기 각도</param>
-    /// <returns>활성화된 오브젝트</returns>
-    public GameObject GetObject(PoolObjectType type, Vector3 position, float angle = 0.0f) 
-    {
-        GameObject obj = GetObject(type);       // 가져와서 
-        obj.transform.position = position;      // 위치 적용
-        obj.transform.Rotate(angle * Vector3.forward);  // 회전 적용
-
-        // 개별적으로 추가 처리가 필요한 오브젝트들
-        switch (type)    
-        {
-            case PoolObjectType.EnemyWave:
-                Wave enemy = obj.GetComponent<Wave>();
-                enemy.SetStartPosition(position);   // 적의 spawnY 지정
-                break;
-        }
-
-        return obj;
     }
 
     /// <summary>
@@ -132,10 +109,7 @@ public class Factory : Singleton<Factory>
     /// <returns>활성화된 총알</returns>
     public Bullet GetBullet(Vector3 position, float angle = 0.0f)
     {
-        Bullet comp = bullet.GetObject();
-        comp.transform.position = position;
-        comp.transform.Rotate(angle * Vector3.forward);
-        return comp;
+        return bullet.GetObject(position, angle * Vector3.forward);
     }
 
     public Explosion GetHitEffect()
@@ -145,10 +119,7 @@ public class Factory : Singleton<Factory>
 
     public Explosion GetHitEffect(Vector3 position, float angle = 0.0f)
     {
-        Explosion comp = hit.GetObject();
-        comp.transform.position = position;
-        comp.transform.Rotate(angle * Vector3.forward);
-        return comp;
+        return hit.GetObject(position, angle * Vector3.forward);
     }
 
     public Explosion GetExplosionEffect()
@@ -158,10 +129,7 @@ public class Factory : Singleton<Factory>
 
     public Explosion GetExplosionEffect(Vector3 position, float angle = 0.0f)
     {
-        Explosion comp = explosion.GetObject();
-        comp.transform.position = position;
-        comp.transform.Rotate(angle * Vector3.forward);
-        return comp;
+        return explosion.GetObject(position, angle * Vector3.forward); 
     }
 
     public Wave GetEnemyWave()
@@ -171,10 +139,7 @@ public class Factory : Singleton<Factory>
 
     public Wave GetEnemyWave(Vector3 position, float angle = 0.0f)
     {
-        Wave comp = enemy.GetObject();
-        comp.SetStartPosition(position);    // spawnY 지정하기 위한 용도
-        comp.transform.Rotate(angle * Vector3.forward);
-        return comp;
+        return enemy.GetObject(position, angle * Vector3.forward);
     }
 
     public Asteroid GetAsteroid()
@@ -184,10 +149,7 @@ public class Factory : Singleton<Factory>
 
     public Asteroid GetAsteroid(Vector3 position, float angle = 0.0f)
     {
-        Asteroid comp = asteroid.GetObject();
-        comp.transform.position = position;
-        comp.transform.Rotate(angle * Vector3.forward);
-        return comp;
+        return asteroid.GetObject(position, angle * Vector3.forward);
     }
 
     public AsteroidMini GetAsteroidMini()
@@ -197,11 +159,7 @@ public class Factory : Singleton<Factory>
 
     public AsteroidMini GetAsteroidMini(Vector3 position, float angle = 0.0f)
     {
-        AsteroidMini comp = asteroidMini.GetObject();
-        comp.transform.position = position;
-        comp.transform.Rotate(angle * Vector3.forward);
-        comp.Direction = -comp.transform.right;             // 이동 방향 지정
-        return comp;
+        return asteroidMini.GetObject(position, angle * Vector3.forward);
     }
 
 }

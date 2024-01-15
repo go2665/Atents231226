@@ -51,7 +51,6 @@ public class Wave : EnemyBase
     /// <param name="position">시작 위치</param>
     public void SetStartPosition(Vector3 position)
     {
-        transform.position = position;
         spawnY = position.y;
     }
 

@@ -291,13 +291,13 @@ public class Player : MonoBehaviour
     private void OnCollisionExit2D(Collision2D collision)
     {
         // 충돌 상태에서 떨어졌을 때 실행
-        Debug.Log("OnCollisionExit2D");
+        //Debug.Log("OnCollisionExit2D");
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // 겹치기 시작했을 때 실행
-        Debug.Log($"OnTriggerEnter2D : {collision.gameObject.name}");
+        //Debug.Log($"OnTriggerEnter2D : {collision.gameObject.name}");
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -309,7 +309,7 @@ public class Player : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collision)
     {
         // 겹쳐있던 것이 떨어졌을 때 실행
-        Debug.Log("OnTriggerExit2D");
+        //Debug.Log("OnTriggerExit2D");
     }
 
     /// <summary>

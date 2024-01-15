@@ -248,7 +248,7 @@ GameObject:
   - component: {fileID: 1086606674}
   - component: {fileID: 1086606675}
   m_Layer: 0
-  m_Name: Test_AsteroidMini
+  m_Name: Test_FactoryRefactoring
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -280,9 +280,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1086606673}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a37994611b00be4faeac3e53c1c17ab, type: 3}
+  m_Script: {fileID: 11500000, guid: ee1527fc4e59ac242bff688fc793d29c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objectType: 0
+  angle: 0
 --- !u!1 &1193505293
 GameObject:
   m_ObjectHideFlags: 0
