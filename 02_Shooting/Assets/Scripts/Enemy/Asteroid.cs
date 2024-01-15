@@ -7,11 +7,27 @@ public class Asteroid : EnemyBase
     [Header("큰 운석 데이터")]
     // 이동 속도가 랜덤해야 한다.
     // 회전 속도도 랜덤이어야 한다.
-    public float minMoveSpeed;
-    public float maxMoveSpeed;
+    // 큰 운석은 수명을 가진다.(수명이 다되면 죽는다)
+    //  수명도 랜덤이다.
+    // 큰 운석은 죽을 때 작은 운석을 랜덤한 개수를 생성한다.
+    //  모든 작은 운석은 서로 같은 사이각을 가진다.(작은 운석이 6개 생성 = 사이각 60도)
+    //  criticalRate 확률로 작은 운석을 20개 생성한다.
 
-    public float minRotateSpeed;
-    public float maxRotateSpeed;
+    public float minMoveSpeed = 2.0f;
+    public float maxMoveSpeed = 4.0f;
+
+    public float minRotateSpeed = 30.0f;
+    public float maxRotateSpeed = 360.0f;
+
+    public float minLifeTime = 4.0f;
+    public float maxLifeTime = 7.0f;
+
+    public int minMiniCount = 3;
+    public int maxMiniCount = 8;
+
+    [Range(0f, 1f)]
+    public float criticalRate = 0.05f;
+    public int criticalMiniCount = 20;
 
     /// <summary>
     /// 회전 속도
