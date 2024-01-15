@@ -100,7 +100,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 3
-  rotateSpeed: 360
+  maxHP: 1
+  score: 10
+  minMoveSpeed: 2
+  maxMoveSpeed: 4
+  minRotateSpeed: 30
+  maxRotateSpeed: 360
+  minLifeTime: 4
+  maxLifeTime: 7
+  minMiniCount: 3
+  maxMiniCount: 8
+  criticalRate: 1
+  criticalMiniCount: 20
 --- !u!58 &5573675628119075040
 CircleCollider2D:
   m_ObjectHideFlags: 0

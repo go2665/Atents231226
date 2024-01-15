@@ -200,6 +200,7 @@ public class Factory : Singleton<Factory>
         AsteroidMini comp = asteroidMini.GetObject();
         comp.transform.position = position;
         comp.transform.Rotate(angle * Vector3.forward);
+        comp.Direction = -comp.transform.right;             // 이동 방향 지정
         return comp;
     }
 

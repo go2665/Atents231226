@@ -47,13 +47,18 @@ public class ObjectPool<T> : MonoBehaviour where T : RecycleObject
     /// <summary>
     /// 풀에서 사용하지 않는 오브젝트를 하나 꺼낸 후 리턴 하는 함수
     /// </summary>
+    /// <param name="position">배치될 위치(월드좌표)</param>
+    /// <param name="eulerAngle">배치될 때의 각도</param>
     /// <returns>풀에서 꺼낸 오브젝트(활성화됨)</returns>
-    public T GetObject()
+    public T GetObject(Vector3? position = null, Vector3? eulerAngle = null)
     {
-        if( readyQueue.Count > 0 )          // 레디큐에 오브젝트가 남아있는지 확인
+        if (readyQueue.Count > 0)          // 레디큐에 오브젝트가 남아있는지 확인
         {
             T comp = readyQueue.Dequeue();  // 남아있으면 하나 꺼내고
+            comp.transform.position = position.GetValueOrDefault(); // 지정된 위치로 이동
+            comp.transform.Rotate(eulerAngle.GetValueOrDefault());  // 지정된 각도로 회전
             comp.gameObject.SetActive(true);// 활성화 시키고
+            OnGetObject(comp);              // 오브젝트별 추가 처리
             return comp;                    // 리턴
         }
         else
@@ -62,6 +67,13 @@ public class ObjectPool<T> : MonoBehaviour where T : RecycleObject
             ExpandPool();           // 풀을 두배로 확장한다.
             return GetObject();     // 새로 하나 꺼낸다.
         }
+    }
+
+    /// <summary>
+    /// 각 오브젝트 별로 특별히 처리해야 할 일이 있을 경우 실행하는 함수
+    /// </summary>
+    protected virtual void OnGetObject(T component)
+    {
     }
 
     /// <summary>
