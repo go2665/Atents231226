@@ -5,10 +5,18 @@ using UnityEngine;
 public class Asteroid : EnemyBase
 {
     [Header("큰 운석 데이터")]
+    // 이동 속도가 랜덤해야 한다.
+    // 회전 속도도 랜덤이어야 한다.
+    public float minMoveSpeed;
+    public float maxMoveSpeed;
+
+    public float minRotateSpeed;
+    public float maxRotateSpeed;
+
     /// <summary>
     /// 회전 속도
     /// </summary>
-    public float rotateSpeed = 360.0f;
+    float rotateSpeed = 360.0f;
 
     /// <summary>
     /// 이동 방향
