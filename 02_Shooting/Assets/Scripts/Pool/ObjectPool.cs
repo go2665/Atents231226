@@ -64,8 +64,8 @@ public class ObjectPool<T> : MonoBehaviour where T : RecycleObject
         else
         {
             // 레디큐가 비어있다 == 남아있는 오브젝트가 없다
-            ExpandPool();           // 풀을 두배로 확장한다.
-            return GetObject();     // 새로 하나 꺼낸다.
+            ExpandPool();                           // 풀을 두배로 확장한다.
+            return GetObject(position, eulerAngle); // 새로 하나 꺼낸다.
         }
     }
 
