@@ -5,10 +5,11 @@ using UnityEngine;
 
 public class EnemyBase : RecycleObject
 {
+    [Header("적 기본 데이터")]
     /// <summary>
     /// 이동 속도
     /// </summary>
-    public float speed = 1.0f;
+    public float moveSpeed = 1.0f;
 
     /// <summary>
     /// 적의 HP
@@ -85,7 +86,7 @@ public class EnemyBase : RecycleObject
     /// <summary>
     /// EnemyWave 계열의 초기화 함수
     /// </summary>
-    private void OnInitialize()
+    protected virtual void OnInitialize()
     {
         if( player == null )
         {
@@ -106,7 +107,7 @@ public class EnemyBase : RecycleObject
     /// <param name="deltaTime">프레임간의 간격</param>
     protected virtual void OnMoveUpdate(float deltaTime)
     {
-        transform.Translate(deltaTime * speed * -transform.right, Space.World); // 기본동작(왼쪽으로 이동)
+        transform.Translate(deltaTime * moveSpeed * -transform.right, Space.World); // 기본동작(왼쪽으로 이동)
     }
 
     /// <summary>

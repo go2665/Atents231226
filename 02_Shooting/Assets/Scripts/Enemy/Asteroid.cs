@@ -2,11 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Asteroid : RecycleObject
+public class Asteroid : EnemyBase
 {
-    public float moveSpeed = 3.0f;
+    [Header("큰 운석 데이터")]
+    /// <summary>
+    /// 회전 속도
+    /// </summary>
     public float rotateSpeed = 360.0f;
 
+    /// <summary>
+    /// 이동 방향
+    /// </summary>
     Vector3 direction = Vector3.zero;
 
     /// <summary>
@@ -20,10 +26,10 @@ public class Asteroid : RecycleObject
         direction = (destination - transform.position).normalized;  
     }
 
-    void Update()
+    protected override void OnMoveUpdate(float deltaTime)
     {
         transform.Translate(Time.deltaTime * moveSpeed * direction, Space.World);    // direction 방향으로 이동하기(월드기준)
-        transform.Rotate(0, 0, Time.deltaTime * rotateSpeed);        
+        transform.Rotate(0, 0, Time.deltaTime * rotateSpeed);
     }
 
     private void OnDrawGizmos()

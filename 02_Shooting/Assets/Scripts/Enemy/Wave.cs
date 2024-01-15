@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Wave : EnemyBase
 {
+    [Header("Wave 데이터")]
     // 실습
     // 1. 적은 위아래로 파도치듯이 움직인다.
     // 2. 적은 계속 왼쪽 방향으로 이동한다.
@@ -59,7 +60,7 @@ public class Wave : EnemyBase
         //elapsedTime += Time.deltaTime;  // 시작부터 진행된 시간 측정
         elapsedTime += deltaTime * frequency;  // sin 그래프의 진행을 더 빠르게 만들기
 
-        transform.position = new Vector3(transform.position.x - deltaTime * speed, // 계속 왼쪽으로 진행
+        transform.position = new Vector3(transform.position.x - deltaTime * moveSpeed, // 계속 왼쪽으로 진행
             spawnY + Mathf.Sin(elapsedTime) * amplitude,    // sin 그래프에 따라 높에 변동하기
             0.0f);
     }
