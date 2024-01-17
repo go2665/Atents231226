@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - Bullet
+  - PowerUp
   layers:
   - Default
   - TransparentFX
@@ -16,7 +17,7 @@ TagManager:
   - Player
   - Enmey
   - PlayerBullet
-  - 
+  - Border
   - 
   - 
   - 
