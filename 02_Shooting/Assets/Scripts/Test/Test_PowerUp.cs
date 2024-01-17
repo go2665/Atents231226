@@ -21,4 +21,9 @@ public class Test_PowerUp : TestBase
     {
         player.Test_PowerDown();
     }
+
+    protected override void OnTest3(InputAction.CallbackContext context)
+    {
+        Factory.Instance.GetPowerUp();
+    }
 }

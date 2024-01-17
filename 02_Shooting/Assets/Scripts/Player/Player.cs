@@ -276,14 +276,14 @@ public class Player : MonoBehaviour
     {
         // scope : 변수나 함수의 사용 가능한 범위
         inputDir = context.ReadValue<Vector2>();
-        //Debug.Log($"OnMove : ({dir})");
+        //Debug.Log($"OnMove : ({direction})");
 
         //this.transform.position = new Vector3(1, 0, 0); // 이 게임 오브젝트의 위치를 (1,0,0)으로 보내라
 
         //transform.position += new Vector3(1, 0, 0);   // 이 게임 오브젝트의 위치를 현재 위치에서 (1,0,0)만큼 움직여라
         //transform.position += Vector3.right;
 
-        //transform.position += (Vector3)dir;   // 이 게임 오브젝트의 위치를 현재 위치에서 inputDir 방향으로 움직여라
+        //transform.position += (Vector3)direction;   // 이 게임 오브젝트의 위치를 현재 위치에서 inputDir 방향으로 움직여라
 
 
         //anim.SetFloat("InputY", inputDir.y);    // 애니메이터가 가지는 InputY 파라메터에 inputDir.y값을 넣기

@@ -10,6 +10,7 @@ public enum PoolObjectType
     PlayerBullet = 0,   // 플레이어의 총알
     HitEffect,          // 총알이 터지는 이펙트
     ExplosionEffect,    // 적이 터지는 이펙트
+    PowerUp,            // 파워업 아이템
     EnemyWave,          // 적(파도)
     EnemyAsteroid,      // 적(큰 운석)
     EnemyAsteroidMini,  // 적(작은 운석)
@@ -21,6 +22,7 @@ public class Factory : Singleton<Factory>
     BulletPool bullet;
     HitEffectPool hit;
     ExplosionEffectPool explosion;
+    PowerUpPool powerUp;
     WavePool enemy;
     AsteroidPool asteroid;
     AsteroidMiniPool asteroidMini;
@@ -46,7 +48,11 @@ public class Factory : Singleton<Factory>
         explosion = GetComponentInChildren<ExplosionEffectPool>();
         if(explosion != null )
             explosion.Initialize();
-        
+
+        powerUp = GetComponentInChildren<PowerUpPool>();
+        if (powerUp != null)
+            powerUp.Initialize();
+
         enemy = GetComponentInChildren<WavePool>();
         if(enemy != null)
             enemy.Initialize();
@@ -78,6 +84,9 @@ public class Factory : Singleton<Factory>
                 break;
             case PoolObjectType.ExplosionEffect:
                 result = explosion.GetObject(position, euler).gameObject;
+                break;
+            case PoolObjectType.PowerUp:
+                result = powerUp.GetObject(position, euler).gameObject;
                 break;
             case PoolObjectType.EnemyWave:
                 result = enemy.GetObject(position, euler).gameObject;
@@ -130,6 +139,16 @@ public class Factory : Singleton<Factory>
     public Explosion GetExplosionEffect(Vector3 position, float angle = 0.0f)
     {
         return explosion.GetObject(position, angle * Vector3.forward); 
+    }
+
+    public PowerUp GetPowerUp()
+    {
+        return powerUp.GetObject();
+    }
+
+    public PowerUp GetPowerUp(Vector3 position, float angle = 0.0f)
+    {
+        return powerUp.GetObject(position, angle * Vector3.forward);
     }
 
     public Wave GetEnemyWave()
