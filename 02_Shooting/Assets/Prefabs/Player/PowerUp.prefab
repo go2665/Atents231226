@@ -351,6 +351,7 @@ GameObject:
   - component: {fileID: 7904646864893801106}
   - component: {fileID: 2195550403722798938}
   - component: {fileID: 6235138963115225978}
+  - component: {fileID: 8990005855560502917}
   m_Layer: 10
   m_Name: PowerUp
   m_TagString: PowerUp
@@ -451,5 +452,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 2
-  dirChangeInterval: 1
+  dirChangeInterval: 3
   dirChangeCountMax: 5
+--- !u!95 &8990005855560502917
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7371476480627676297}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 46926419beb12064b81f5b688bd0912d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

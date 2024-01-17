@@ -25,6 +25,27 @@ public class PowerUp : RecycleObject
     int dirChangeCount = 5;
 
     /// <summary>
+    /// 방향 전환 회수 설정 및 확인용 프로퍼티
+    /// </summary>
+    int DirChangeCount
+    {
+        get => dirChangeCount;
+        set
+        {
+            dirChangeCount = value;                         // 값을 변경시키고
+            animator.SetInteger("Count", dirChangeCount);   // 애니메이터의 파라메터 수정
+
+            StopAllCoroutines();        // 이전에 돌아가던 코루틴 정지(벽에 부딪쳤을 떄 필요)
+
+            if(dirChangeCount > 0 && gameObject.activeSelf) // 방향전환 회수가 남아있고 활성화 중이면
+            {
+                //Debug.Log($"방향전환 남은 회수 : {DirChangeCount}");
+                StartCoroutine(DirectionChange());          // 일정 시간 후에 방향을 전환하는 코루틴 실행
+            }
+        }
+    }
+
+    /// <summary>
     /// 현재 이동 방향
     /// </summary>
     Vector3 direction;
@@ -34,6 +55,16 @@ public class PowerUp : RecycleObject
     /// </summary>
     Transform playerTransform;
 
+    /// <summary>
+    /// 애니메이터
+    /// </summary>
+    Animator animator;
+
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
+
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -42,7 +73,7 @@ public class PowerUp : RecycleObject
 
         playerTransform = GameManager.Instance.Player.transform;
         direction = Vector3.zero;           // 방향 0로 해서 안움직이게 
-        StartCoroutine(DirectionChange());  // 코루틴 실행
+        DirChangeCount = dirChangeCountMax; // 방향전환 회수 초기화
     }
 
     /// <summary>
@@ -51,26 +82,25 @@ public class PowerUp : RecycleObject
     /// <returns></returns>
     IEnumerator DirectionChange()
     {
-        while (true)
+        yield return new WaitForSeconds(dirChangeInterval);
+            
+        // 약 70% 확률로 플레이어 반대방향으로 움직임
+        if(Random.value < 0.4f)
         {
-            yield return new WaitForSeconds(dirChangeInterval);
-            
-            // 약 70% 확률로 플레이어 반대방향으로 움직임
-            if(Random.value < 0.4f)
-            {
-                // 플레이어 반대방향
-                Vector2 playerToPowerUp = transform.position - playerTransform.position;    // 방향 백터 구하고
-                direction = Quaternion.Euler(0, 0, Random.Range(-90.0f, 90.0f)) * playerToPowerUp;  // +-90도 사이로 회전    
-            }
-            else
-            {
-                direction = Random.insideUnitCircle;    // 반지름 1짜리 원 내부의 랜덤한지점으로 가는 방향 저장
-                // 모든 방향이니 50%확률로 플레이어 반대방향
-            }            
-            
-            direction.Normalize();                  // 구한 방향의 크기를 1로 설정
-            //direction = Vector3.up; // 테스트코드
+            // 플레이어 반대방향
+            Vector2 playerToPowerUp = transform.position - playerTransform.position;    // 방향 백터 구하고
+            direction = Quaternion.Euler(0, 0, Random.Range(-90.0f, 90.0f)) * playerToPowerUp;  // +-90도 사이로 회전    
         }
+        else
+        {
+            direction = Random.insideUnitCircle;    // 반지름 1짜리 원 내부의 랜덤한지점으로 가는 방향 저장
+            // 모든 방향이니 50%확률로 플레이어 반대방향
+        }            
+            
+        direction.Normalize();                  // 구한 방향의 크기를 1로 설정
+                                                //direction = Vector3.up; // 테스트코드
+        
+        DirChangeCount--;                       // 방향전환 회수 감소
     }
 
     private void Update()
@@ -80,13 +110,10 @@ public class PowerUp : RecycleObject
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Border"))   // 보더랑 부딪치면
+        if(DirChangeCount > 0 && collision.gameObject.CompareTag("Border"))   // 보더랑 부딪치면
         {
             direction = Vector2.Reflect(direction, collision.contacts[0].normal);   // 이동 방향 반사시키기
+            DirChangeCount--;
         }
     }
 }
-
-// 실습
-// 1. 파워업 아이템은 최대 회수만큼만 방향전환을 할 수 있다(벽에 부딪쳐서 방향이 전횐된 것도 1회로 취급)
-// 2. 애니메이터를 이용해서 남아있는 방향전환 회수에 비례해서 빠르게 깜박인다.
