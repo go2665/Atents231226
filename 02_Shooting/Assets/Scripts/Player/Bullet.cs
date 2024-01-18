@@ -12,11 +12,6 @@ public class Bullet : RecycleObject
     public float moveSpeed = 7.0f;
 
     /// <summary>
-    /// 총알 터지는 이팩트용 프리팹
-    /// </summary>
-    public GameObject effectPrefab;
-
-    /// <summary>
     /// 총알의 수명
     /// </summary>
     public float lifeTime = 10.0f;

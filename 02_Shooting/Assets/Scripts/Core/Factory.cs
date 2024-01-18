@@ -16,6 +16,7 @@ public enum PoolObjectType
     EnemyAsteroidMini,  // 적(작은 운석)
     EnemyBonus,         // 적(파워업 아이템 드랍)
     EnemyCurve,         // 적(회전하는 적)
+    EnemyBossBullet,    // 적 보스용 총알
 }
 
 public class Factory : Singleton<Factory>
@@ -30,6 +31,7 @@ public class Factory : Singleton<Factory>
     AsteroidMiniPool asteroidMini;
     BonusPool bonus;
     CurvePool curve;
+    BossBulletPool bossBullet;
 
     /// <summary>
     /// 씬이 로딩 완료될 때마다 실행되는 초기화 함수
@@ -71,7 +73,10 @@ public class Factory : Singleton<Factory>
         if (bonus != null) bonus.Initialize();
 
         curve = GetComponentInChildren<CurvePool>();
-        if (bonus != null) curve.Initialize();
+        if (curve != null) curve.Initialize();
+
+        bossBullet = GetComponentInChildren<BossBulletPool>();
+        if (bossBullet != null) bossBullet.Initialize();
     }
 
     /// <summary>
@@ -112,6 +117,9 @@ public class Factory : Singleton<Factory>
                 break;
             case PoolObjectType.EnemyCurve:
                 result = curve.GetObject(position, euler).gameObject;
+                break;
+            case PoolObjectType.EnemyBossBullet:
+                result = bossBullet.GetObject(position, euler).gameObject;
                 break;
         }
 
@@ -215,6 +223,16 @@ public class Factory : Singleton<Factory>
     public Curve GetCurve(Vector3 position, float angle = 0.0f)
     {
         return curve.GetObject(position, angle * Vector3.forward);
+    }
+
+    public BossBullet GetBossBullet()
+    {
+        return bossBullet.GetObject();
+    }
+
+    public BossBullet GetBossBullet(Vector3 position, float angle = 0.0f)
+    {
+        return bossBullet.GetObject(position, angle * Vector3.forward);
     }
 
 }

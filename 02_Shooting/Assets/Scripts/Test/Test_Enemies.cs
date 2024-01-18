@@ -25,6 +25,17 @@ public class Test_Enemies : TestBase
 
     protected override void OnTest3(InputAction.CallbackContext context)
     {
-        // 보스
+        // 보스(총알)
+        Factory.Instance.GetBossBullet(spawnPoint.position);
+    }
+
+    protected override void OnTest4(InputAction.CallbackContext context)
+    {
+        // 보스(미사일)
+    }
+
+    protected override void OnTest5(InputAction.CallbackContext context)
+    {
+        // 보스(본체)
     }
 }
