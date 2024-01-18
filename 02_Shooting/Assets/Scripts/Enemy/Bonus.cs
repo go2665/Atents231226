@@ -29,6 +29,15 @@ public class Bonus : EnemyBase
     /// </summary>
     public PoolObjectType bonusType = PoolObjectType.PowerUp;
 
+    Animator aniamtor;
+
+    readonly int SpeedHash = Animator.StringToHash("Speed");
+        
+    private void Awake()
+    {
+        aniamtor = GetComponent<Animator>();
+    }
+
     protected override void OnInitialize()
     {
         base.OnInitialize();
@@ -39,10 +48,15 @@ public class Bonus : EnemyBase
 
     IEnumerator AppearProcess()
     {
+        aniamtor.SetFloat(SpeedHash, moveSpeed);
+
         yield return new WaitForSeconds(appearTime);
         moveSpeed = 0.0f;
+        aniamtor.SetFloat(SpeedHash, moveSpeed);
+
         yield return new WaitForSeconds(waitTime);
         moveSpeed = secondSpeed;
+        aniamtor.SetFloat(SpeedHash, moveSpeed);
     }
 
     protected override void OnDie()
@@ -53,5 +67,7 @@ public class Bonus : EnemyBase
 }
 
 // 실습
-// 1. 움직일 때 뒤 스러스트 부분의 alpha가 깜박인다.
-// 2. 대기할 때는 스러스트가 보이지 않는다.
+// 3. 커브 적 만들기
+//  3.1. 생성 위치의 y가 0보다 크면 좌회전
+//  3.2. 생성 위치의 y가 0보다 작으면 우회전
+//  

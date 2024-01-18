@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 2418848481554738339}
   - component: {fileID: 3125452977937939399}
   - component: {fileID: 4204477883767429255}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AsteroidMini
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
