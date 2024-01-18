@@ -14,6 +14,7 @@ public enum PoolObjectType
     EnemyWave,          // 적(파도)
     EnemyAsteroid,      // 적(큰 운석)
     EnemyAsteroidMini,  // 적(작은 운석)
+    EnemyBonus,         // 적(파워업 아이템 드랍)
 }
 
 public class Factory : Singleton<Factory>
@@ -26,6 +27,7 @@ public class Factory : Singleton<Factory>
     WavePool enemy;
     AsteroidPool asteroid;
     AsteroidMiniPool asteroidMini;
+    BonusPool bonus;
 
     /// <summary>
     /// 씬이 로딩 완료될 때마다 실행되는 초기화 함수
@@ -62,6 +64,9 @@ public class Factory : Singleton<Factory>
         
         asteroidMini = GetComponentInChildren<AsteroidMiniPool>();
         if (asteroidMini != null) asteroidMini.Initialize();
+
+        bonus = GetComponentInChildren<BonusPool>();
+        if (bonus != null) bonus.Initialize();
     }
 
     /// <summary>
@@ -96,6 +101,9 @@ public class Factory : Singleton<Factory>
                 break;
             case PoolObjectType.EnemyAsteroidMini:
                 result = asteroidMini.GetObject(position, euler).gameObject;
+                break;
+            case PoolObjectType.EnemyBonus:
+                result = bonus.GetObject(position, euler).gameObject;
                 break;
         }
 
@@ -179,6 +187,16 @@ public class Factory : Singleton<Factory>
     public AsteroidMini GetAsteroidMini(Vector3 position, float angle = 0.0f)
     {
         return asteroidMini.GetObject(position, angle * Vector3.forward);
+    }
+
+    public Bonus GetBonus()
+    {
+        return bonus.GetObject();
+    }
+
+    public Bonus GetBonus(Vector3 position, float angle = 0.0f)
+    {
+        return bonus.GetObject(position, angle * Vector3.forward);
     }
 
 }
