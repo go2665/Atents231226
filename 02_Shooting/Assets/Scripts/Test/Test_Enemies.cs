@@ -20,6 +20,7 @@ public class Test_Enemies : TestBase
     protected override void OnTest2(InputAction.CallbackContext context)
     {
         // 커브 적
+        Factory.Instance.GetCurve(spawnPoint.position);
     }
 
     protected override void OnTest3(InputAction.CallbackContext context)

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Bonus : EnemyBase
 {
-    [Header("파워업 아이템을 주는 적 정보")]
+    [Header("파워업 아이템을 주는 적 데이터")]
 
     // 등장하고 약간의 시간이 지난 후 일정시간동안 대기한다.
     // 죽을때 파워업 아이템을 떨군다.
@@ -65,9 +65,3 @@ public class Bonus : EnemyBase
         base.OnDie();
     }
 }
-
-// 실습
-// 3. 커브 적 만들기
-//  3.1. 생성 위치의 y가 0보다 크면 좌회전
-//  3.2. 생성 위치의 y가 0보다 작으면 우회전
-//  
