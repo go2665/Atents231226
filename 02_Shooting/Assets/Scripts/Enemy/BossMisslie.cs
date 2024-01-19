@@ -32,7 +32,12 @@ public class BossMisslie : EnemyBase
         base.OnMoveUpdate(deltaTime);
         if(onGuided)    // 유도 중이면
         {
-            Vector3 dir = target.position - transform.position; // 타겟으로 가는 방향 구하고
+            Vector3 dir = Vector3.left;
+            if( target != null ) 
+            {
+                dir = target.position - transform.position; // 타겟으로 가는 방향 구하고
+            }
+
             //transform.right = -dir;
             transform.right = -Vector3.Slerp(-transform.right, dir, deltaTime * guidedPerformance);   // 그쪽방향으로 회전 시키기            
         }

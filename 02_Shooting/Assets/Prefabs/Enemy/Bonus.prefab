@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 7
-  maxHP: 3
+  maxHP: 2
   score: 10
   appearTime: 0.5
   waitTime: 5
