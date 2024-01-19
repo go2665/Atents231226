@@ -17,6 +17,7 @@ public enum PoolObjectType
     EnemyBonus,         // 적(파워업 아이템 드랍)
     EnemyCurve,         // 적(회전하는 적)
     EnemyBossBullet,    // 적 보스용 총알
+    EnemyBossMisslie,   // 적 보스용 유도 미사일
 }
 
 public class Factory : Singleton<Factory>
@@ -32,6 +33,7 @@ public class Factory : Singleton<Factory>
     BonusPool bonus;
     CurvePool curve;
     BossBulletPool bossBullet;
+    BossMissliePool bossMisslie;
 
     /// <summary>
     /// 씬이 로딩 완료될 때마다 실행되는 초기화 함수
@@ -77,6 +79,9 @@ public class Factory : Singleton<Factory>
 
         bossBullet = GetComponentInChildren<BossBulletPool>();
         if (bossBullet != null) bossBullet.Initialize();
+
+        bossMisslie= GetComponentInChildren<BossMissliePool>();
+        if (bossMisslie != null) bossMisslie.Initialize();
     }
 
     /// <summary>
@@ -120,6 +125,9 @@ public class Factory : Singleton<Factory>
                 break;
             case PoolObjectType.EnemyBossBullet:
                 result = bossBullet.GetObject(position, euler).gameObject;
+                break;
+            case PoolObjectType.EnemyBossMisslie:
+                result = bossMisslie.GetObject(position, euler).gameObject;
                 break;
         }
 
@@ -233,6 +241,16 @@ public class Factory : Singleton<Factory>
     public BossBullet GetBossBullet(Vector3 position, float angle = 0.0f)
     {
         return bossBullet.GetObject(position, angle * Vector3.forward);
+    }
+
+    public BossMisslie GetBossMisslie()
+    {
+        return bossMisslie.GetObject();
+    }
+
+    public BossMisslie GetBossMisslie(Vector3 position, float angle = 0.0f)
+    {
+        return bossMisslie.GetObject(position, angle * Vector3.forward);
     }
 
 }

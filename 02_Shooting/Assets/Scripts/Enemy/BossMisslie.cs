@@ -6,6 +6,11 @@ public class BossMisslie : EnemyBase
 {
     [Header("추적 미사일 데이터")]
     /// <summary>
+    /// 미사일의 유도 성능. 높일 수록 유도 성능이 좋아짐
+    /// </summary>
+    public float guidedPerformance = 1.5f;
+
+    /// <summary>
     /// 추적 대상(플레이어)
     /// </summary>
     Transform target;
@@ -29,8 +34,7 @@ public class BossMisslie : EnemyBase
         {
             Vector3 dir = target.position - transform.position; // 타겟으로 가는 방향 구하고
             //transform.right = -dir;
-            transform.right = -Vector3.Lerp(-transform.right, dir, deltaTime * 0.5f);   // 그쪽방향으로 회전 시키기
-            // 시작방향에서 목표로 하는 방향으로 대략 2초에 걸쳐서 변경되는 속도
+            transform.right = -Vector3.Slerp(-transform.right, dir, deltaTime * guidedPerformance);   // 그쪽방향으로 회전 시키기            
         }
     }
 

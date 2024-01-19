@@ -32,6 +32,7 @@ public class Test_Enemies : TestBase
     protected override void OnTest4(InputAction.CallbackContext context)
     {
         // 보스(미사일)
+        Factory.Instance.GetBossMisslie(spawnPoint.position);
     }
 
     protected override void OnTest5(InputAction.CallbackContext context)
