@@ -32,5 +32,5 @@ public class RecycleObject : MonoBehaviour
     {
         yield return new WaitForSeconds(delay); // delay만큼 기ㅏ리고
         gameObject.SetActive(false);            // 비활성화 
-    }    
+    }
 }
