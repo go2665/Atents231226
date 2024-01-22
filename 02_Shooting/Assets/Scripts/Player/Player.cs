@@ -34,6 +34,7 @@ public class Player : MonoBehaviour
     Animator anim;
     readonly int InputY_String = Animator.StringToHash("InputY");
     Rigidbody2D rigid2d;
+    SpriteRenderer spriteRenderer;
 
     /// <summary>
     /// 총알의 프리팹
@@ -139,52 +140,66 @@ public class Player : MonoBehaviour
         }
     }
 
-    private int life = 0;
+    /// <summary>
+    /// 플레이어의 남은 생명
+    /// </summary>
+    private int life = 3;
     
-    public int startLife = 3;
+    /// <summary>
+    /// 시작시 플레이어의 생명
+    /// </summary>
+    const int StartLife = 3;
 
+    /// <summary>
+    /// 생명을 설정하고 확인하기 위한 프로퍼티
+    /// </summary>
     private int Life
     {
         get => life;
         set
         {
-            life = value;
-            if(IsAlive)
+            if(life != value)   // 변화가 있을 때만 처리
             {
-                OnHit();
-            }
-            else
-            {
-                OnDie();
-            }
+                life = value;
+                if(IsAlive)
+                {
+                    OnHit();    // 맞고 나서 살아있으면 맞은 처리
+                }
+                else
+                {
+                    OnDie();    // 맞고 나서 죽었으면 죽은 처리
+                }
 
-            onLifeChange?.Invoke(life);
+                life = Mathf.Clamp(life, 0, StartLife); // 항상 0~3
+                onLifeChange?.Invoke(life); // 생명 변화가 있었음을 알림
+            }
         }
     }
 
+    /// <summary>
+    /// 살았는지 죽었는지 확인하기 위한 프로퍼티
+    /// </summary>
     private bool IsAlive => life > 0;
 
+    /// <summary>
+    /// 생명에 변화가 있음을 알리는 델리게이트
+    /// </summary>
     public Action<int> onLifeChange;
 
-    void OnHit()
-    {
-        Debug.Log($"플레이어의 생명이 {life}남았다.");
-    }
-
-    void OnDie()
-    {
-        Debug.Log("플레이어가 죽었다.");
-    }
-
+    /// <summary>
+    /// 맞았을 때 무적시간
+    /// </summary>
+    public float invincibleTime = 2.0f;
 
 
     // 이 스크립트가 포함된 게임 오브젝트가 생성 완료되면 호출된다.
     private void Awake()
     {
-        inputActions = new PlayerInputActions();            // 인풋 액션 생성
+        inputActions = new PlayerInputActions();        // 인풋 액션 생성
         anim = GetComponent<Animator>();   // 이 스크립트가 들어있는 게임 오브젝트에서 컴포넌트를 찾아서 anim에 저장하기(없으면 null)
         // null; // 참조가 비어있다.
         rigid2d = GetComponent<Rigidbody2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
         // 게임 오브젝트 찾는 방법
         // GameObject.Find("FirePosition"); // 이름으로 게임 오브젝트 찾기
@@ -232,6 +247,96 @@ public class Player : MonoBehaviour
         inputActions.Player.Fire.performed -= OnFireStart;  // Player액션맵의 Fire액션에서 OnFireStart함수를 연결해제
         inputActions.Player.Disable();                      // Player액션맵을 비활성화
     }
+    
+    // 이 스크립트가 포함된 게임 오브젝트의 첫번째 Update함수가 실행되기 직전에 호출된다.
+    private void Start()
+    {
+        // 파워와 생명 초기화
+        Power = 1;
+        Life = StartLife;
+    }
+
+    //private void Update()
+    //{
+    //    // 인풋매니저 방식
+    //    //if (Input.GetKeyDown(KeyCode.A))
+    //    //{
+    //    //    Debug.Log("A키가 눌러졌습니다.");
+    //    //}
+
+    //    //if (Input.GetKeyUp(KeyCode.A))
+    //    //{
+    //    //    Debug.Log("A키가 떨어졌습니다.");
+    //    //}
+    //    // 실습
+    //    // 누르고 있으면 [계속] 그쪽 방향으로 이동하게 만들어보기
+    //    //transform.position += inputDir;     // OnMove에서 입력된 방향으로 움직이기
+
+    //    // Time.deltaTime : 프레임간의 시간 간격(가변적)
+    //    //transform.Translate(Time.deltaTime * moveSpeed * inputDir); // 1초당 moveSpeed만큼의 속도로, inputDir 방향으로 움직여라
+        
+    //}
+
+    /// <summary>
+    /// 고정된 시간간격으로 호출되는 업데이트(물리연산 처리용 업데이트)
+    /// </summary>
+    private void FixedUpdate()
+    {
+        //transform.Translate(Time.deltaTime * moveSpeed * inputDir);
+        rigid2d.MovePosition(rigid2d.position + (Vector2)(Time.fixedDeltaTime * moveSpeed * inputDir));
+
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // 충돌이 시작했을 때 실행
+        //Debug.Log($"OnCollisionEnter2D : {collision.gameObject.name}");
+
+        //if( collision.gameObject.CompareTag("Wave") )  // collision의 게임 오브젝트가 "Wave"라는 태그를 가지는지 확인하는 함수
+        //{
+        //    Destroy(collision.gameObject);  // 충돌한 대상을 제거하기
+        //}
+        if(collision.gameObject.CompareTag("Enemy"))
+        {
+            Life--;
+        }
+        else if( collision.gameObject.CompareTag("PowerUp") )
+        {
+            Power++;
+            collision.gameObject.SetActive(false);
+        }
+    }
+
+    //private void OnCollisionStay2D(Collision2D collision)
+    //{
+    //    // 충돌 중인 상태에서 움직일 때 실행
+    //    //Debug.Log("OnCollisionStay2D");
+    //}
+
+    //private void OnCollisionExit2D(Collision2D collision)
+    //{
+    //    // 충돌 상태에서 떨어졌을 때 실행
+    //    //Debug.Log("OnCollisionExit2D");
+    //}
+
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    // 겹치기 시작했을 때 실행
+    //    //Debug.Log($"OnTriggerEnter2D : {collision.gameObject.name}");
+    //}
+
+    //private void OnTriggerStay2D(Collider2D collision)
+    //{
+    //    // 겹쳐있는 상태에서 움직일 때 실행
+    //    //Debug.Log("OnTriggerStay2D");
+    //}
+
+    //private void OnTriggerExit2D(Collider2D collision)
+    //{
+    //    // 겹쳐있던 것이 떨어졌을 때 실행
+    //    //Debug.Log("OnTriggerExit2D");
+    //}
+
 
     /// <summary>
     /// Fire액션이 발동했을 때 실행 시킬 함수
@@ -264,7 +369,7 @@ public class Player : MonoBehaviour
     {
         while (true)
         {
-            for(int i=0;i<Power;i++)
+            for (int i = 0; i < Power; i++)
             {
                 Fire(fireTransforms[i]);                   // 총알 한발 쏘기
             }
@@ -311,7 +416,6 @@ public class Player : MonoBehaviour
         }
     }
 
-
     private void OnMove(InputAction.CallbackContext context)
     {
         // scope : 변수나 함수의 사용 가능한 범위
@@ -329,95 +433,6 @@ public class Player : MonoBehaviour
         //anim.SetFloat("InputY", inputDir.y);    // 애니메이터가 가지는 InputY 파라메터에 inputDir.y값을 넣기
         anim.SetFloat(InputY_String, inputDir.y);
     }
-    
-    // 이 스크립트가 포함된 게임 오브젝트의 첫번째 Update함수가 실행되기 직전에 호출된다.
-    private void Start()
-    {
-        // 파워와 생명 초기화
-        Power = 1;
-        Life = startLife;
-    }
-
-    private void Update()
-    {
-        // 인풋매니저 방식
-        //if (Input.GetKeyDown(KeyCode.A))
-        //{
-        //    Debug.Log("A키가 눌러졌습니다.");
-        //}
-
-        //if (Input.GetKeyUp(KeyCode.A))
-        //{
-        //    Debug.Log("A키가 떨어졌습니다.");
-        //}
-        // 실습
-        // 누르고 있으면 [계속] 그쪽 방향으로 이동하게 만들어보기
-        //transform.position += inputDir;     // OnMove에서 입력된 방향으로 움직이기
-
-        // Time.deltaTime : 프레임간의 시간 간격(가변적)
-        //transform.Translate(Time.deltaTime * moveSpeed * inputDir); // 1초당 moveSpeed만큼의 속도로, inputDir 방향으로 움직여라
-        
-    }
-
-    /// <summary>
-    /// 고정된 시간간격으로 호출되는 업데이트(물리연산 처리용 업데이트)
-    /// </summary>
-    private void FixedUpdate()
-    {
-        //transform.Translate(Time.deltaTime * moveSpeed * inputDir);
-        rigid2d.MovePosition(rigid2d.position + (Vector2)(Time.fixedDeltaTime * moveSpeed * inputDir));
-
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        // 충돌이 시작했을 때 실행
-        //Debug.Log($"OnCollisionEnter2D : {collision.gameObject.name}");
-
-        //if( collision.gameObject.CompareTag("Wave") )  // collision의 게임 오브젝트가 "Wave"라는 태그를 가지는지 확인하는 함수
-        //{
-        //    Destroy(collision.gameObject);  // 충돌한 대상을 제거하기
-        //}
-        if(collision.gameObject.CompareTag("Enemy"))
-        {
-            Life--;
-        }
-        else if( collision.gameObject.CompareTag("PowerUp") )
-        {
-            Power++;
-            collision.gameObject.SetActive(false);
-        }
-    }
-
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        // 충돌 중인 상태에서 움직일 때 실행
-        //Debug.Log("OnCollisionStay2D");
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        // 충돌 상태에서 떨어졌을 때 실행
-        //Debug.Log("OnCollisionExit2D");
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        // 겹치기 시작했을 때 실행
-        //Debug.Log($"OnTriggerEnter2D : {collision.gameObject.name}");
-    }
-
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        // 겹쳐있는 상태에서 움직일 때 실행
-        //Debug.Log("OnTriggerStay2D");
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        // 겹쳐있던 것이 떨어졌을 때 실행
-        //Debug.Log("OnTriggerExit2D");
-    }
 
     /// <summary>
     /// 점수를 추가해주는 변수
@@ -427,8 +442,6 @@ public class Player : MonoBehaviour
     {
         Score += getScore;
     }
-
-
 
     /// <summary>
     /// 파워 단계에 따라 총알 발사 위치 조정
@@ -458,6 +471,48 @@ public class Player : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// 맞았을 때 실행되는 함수
+    /// </summary>
+    void OnHit()
+    {
+        //Debug.Log($"플레이어의 생명이 {life}남았다.");
+
+        Power--;    // 파워 1감소
+        StartCoroutine(InvinvibleMode());   // 무적모드에 들어감
+    }
+
+    /// <summary>
+    /// 무적 모드 처리용 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator InvinvibleMode()
+    {
+        gameObject.layer = LayerMask.NameToLayer("Invincible"); // 레이어를 무적 레이어로 변경
+
+        float timeElapsed = 0.0f;
+        while (timeElapsed < invincibleTime) // 2초동안 계속하기
+        {
+            timeElapsed += Time.deltaTime;
+
+            float alpha = (Mathf.Cos(timeElapsed * 30.0f) + 1.0f) * 0.5f;   // 코사인 결과를 1 ~ 0 사이로 변경
+            spriteRenderer.color = new Color(1, 1, 1, alpha);               // 알파에 지정(깜박거리게 된다.)
+
+            yield return null;
+        }
+
+        // 2초가 지난후
+        gameObject.layer = LayerMask.NameToLayer("Player"); // 레이어를 다시 플레이어로 되돌리기
+        spriteRenderer.color = Color.white;                 // 알파값도 원상복구
+
+    }
+
+    void OnDie()
+    {
+        Debug.Log("플레이어가 죽었다.");
+    }
+
 
 #if UNITY_EDITOR    // unity 에디터에서 실행한 경우만 true
     public void Test_PowerUp()
