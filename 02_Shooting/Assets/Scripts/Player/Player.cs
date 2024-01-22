@@ -207,9 +207,6 @@ public class Player : MonoBehaviour
 
         fireCoroutine = FireCoroutine();
 
-        // 파워와 생명 초기화
-        Power = 1;
-        Life = startLife;
     }
 
     // 이 스크립트가 포함된 게임 오브젝트가 활성화되면 호출된다.
@@ -336,7 +333,9 @@ public class Player : MonoBehaviour
     // 이 스크립트가 포함된 게임 오브젝트의 첫번째 Update함수가 실행되기 직전에 호출된다.
     private void Start()
     {
-        
+        // 파워와 생명 초기화
+        Power = 1;
+        Life = startLife;
     }
 
     private void Update()

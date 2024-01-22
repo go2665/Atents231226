@@ -712,6 +712,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bea6456034693bd4893cd8ccc6550524, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  disableColor: {r: 0, g: 0, b: 0, a: 0.4745098}
 --- !u!1 &1434005108
 GameObject:
   m_ObjectHideFlags: 0
