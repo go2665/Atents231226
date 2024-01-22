@@ -112,9 +112,9 @@ GameObject:
   - component: {fileID: 1690656298998055285}
   - component: {fileID: 8654671957050528568}
   - component: {fileID: 8866958478316482620}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Boss
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -355,6 +355,10 @@ MonoBehaviour:
   score: 300
   bullet: 9
   misslie: 10
+  bulletInterval: 1
+  areaMin: {x: 2, y: -3}
+  areaMax: {x: 7, y: 3}
+  barrageCount: 3
 --- !u!1 &6937580881816389776
 GameObject:
   m_ObjectHideFlags: 0

@@ -97,9 +97,9 @@ GameObject:
   - component: {fileID: 3121246565520739188}
   - component: {fileID: 1584527879286658811}
   - component: {fileID: 3008609244378860109}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BossMisslie
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -232,3 +232,4 @@ MonoBehaviour:
   moveSpeed: 5
   maxHP: 1
   score: 0
+  guidedPerformance: 1.5

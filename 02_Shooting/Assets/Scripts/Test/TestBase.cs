@@ -6,11 +6,18 @@ using UnityEngine.InputSystem;
 
 public class TestBase : MonoBehaviour
 {
+    public int seed = -1;
+    const int allRandom = -1;
     TestInputActions inputActions;
 
     private void Awake()
     {
         inputActions = new TestInputActions();
+
+        if( seed != allRandom ) // -1일 때는 완전 랜덤. 그 외에 값은 시드로 설정됨
+        {
+            UnityEngine.Random.InitState(seed);
+        }
     }
 
     private void OnEnable()

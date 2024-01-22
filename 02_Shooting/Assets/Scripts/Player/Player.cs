@@ -139,6 +139,45 @@ public class Player : MonoBehaviour
         }
     }
 
+    private int life = 0;
+    
+    public int startLife = 3;
+
+    private int Life
+    {
+        get => life;
+        set
+        {
+            life = value;
+            if(IsAlive)
+            {
+                OnHit();
+            }
+            else
+            {
+                OnDie();
+            }
+
+            onLifeChange?.Invoke(life);
+        }
+    }
+
+    private bool IsAlive => life > 0;
+
+    public Action<int> onLifeChange;
+
+    void OnHit()
+    {
+        Debug.Log($"플레이어의 생명이 {life}남았다.");
+    }
+
+    void OnDie()
+    {
+        Debug.Log("플레이어가 죽었다.");
+    }
+
+
+
     // 이 스크립트가 포함된 게임 오브젝트가 생성 완료되면 호출된다.
     private void Awake()
     {
@@ -167,6 +206,10 @@ public class Player : MonoBehaviour
         flashWait = new WaitForSeconds(0.1f);
 
         fireCoroutine = FireCoroutine();
+
+        // 파워와 생명 초기화
+        Power = 1;
+        Life = startLife;
     }
 
     // 이 스크립트가 포함된 게임 오브젝트가 활성화되면 호출된다.
@@ -336,8 +379,11 @@ public class Player : MonoBehaviour
         //{
         //    Destroy(collision.gameObject);  // 충돌한 대상을 제거하기
         //}
-
-        if( collision.gameObject.CompareTag("PowerUp") )
+        if(collision.gameObject.CompareTag("Enemy"))
+        {
+            Life--;
+        }
+        else if( collision.gameObject.CompareTag("PowerUp") )
         {
             Power++;
             collision.gameObject.SetActive(false);

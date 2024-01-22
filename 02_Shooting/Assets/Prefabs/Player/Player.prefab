@@ -227,7 +227,7 @@ GameObject:
   - component: {fileID: 8671759987363275962}
   m_Layer: 6
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -317,6 +317,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 1359541853487380318, guid: fa2834c4afb08064ba4698532dcad32f, type: 3}
   fireInterval: 0.5
   powerBonus: 1000
+  startLife: 3
 --- !u!95 &3665819313954389974
 Animator:
   serializedVersion: 5
