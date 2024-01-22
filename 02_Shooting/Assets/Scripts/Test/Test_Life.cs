@@ -26,4 +26,9 @@ public class Test_Life : TestBase
     {
         Factory.Instance.GetObject(type, spawn.position);
     }
+
+    protected override void OnTest2(InputAction.CallbackContext context)
+    {
+        GameManager.Instance.Player.Test_Die();
+    }
 }

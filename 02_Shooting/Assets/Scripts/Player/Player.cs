@@ -191,6 +191,11 @@ public class Player : MonoBehaviour
     /// </summary>
     public float invincibleTime = 2.0f;
 
+    /// <summary>
+    /// 죽었음을 알리는 델리게이트(점수도 같이 전달)
+    /// </summary>
+    public Action<int> onDie;
+
 
     // 이 스크립트가 포함된 게임 오브젝트가 생성 완료되면 호출된다.
     private void Awake()
@@ -282,8 +287,11 @@ public class Player : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
-        //transform.Translate(Time.deltaTime * moveSpeed * inputDir);
-        rigid2d.MovePosition(rigid2d.position + (Vector2)(Time.fixedDeltaTime * moveSpeed * inputDir));
+        if( IsAlive )   // 살아있을 때만 이동하기
+        {
+            //transform.Translate(Time.deltaTime * moveSpeed * inputDir);
+            rigid2d.MovePosition(rigid2d.position + (Vector2)(Time.fixedDeltaTime * moveSpeed * inputDir));
+        }
 
     }
 
@@ -508,9 +516,33 @@ public class Player : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// 플레이어 사망 처리용 함수
+    /// </summary>
     void OnDie()
     {
         Debug.Log("플레이어가 죽었다.");
+
+        // 충돌이 안 일어나야함
+        Collider2D body = GetComponent<Collider2D>();
+        body.enabled = false;       // 이 컴포넌트만 끄기. 더 이상 충돌이 안일어나게 만들기        
+
+        // 내가 터지는 이팩트
+        Factory.Instance.GetExplosionEffect(transform.position);
+
+        // 입력도 안되어야 함
+        inputActions.Player.Disable();
+
+        // 이동 초기화, 총알 발사 코루틴 정지 => disable하면서 자동으로 입력이 디폴트로 돌아가서 안해도 된다.
+
+        // 튕겨나가는 듯한 연출을 보여줘야 한다.
+        rigid2d.gravityScale = 1.0f;
+        rigid2d.freezeRotation = false;
+        rigid2d.AddTorque(10000);
+        rigid2d.AddForce(Vector2.left * 10.0f, ForceMode2D.Impulse);
+
+        // 사망했음을 알림
+        onDie?.Invoke(Score);
     }
 
 
@@ -523,6 +555,11 @@ public class Player : MonoBehaviour
     public void Test_PowerDown()
     {
         Power--;
+    }
+
+    public void Test_Die()
+    {
+        Life = 0;
     }
 #endif
 }
