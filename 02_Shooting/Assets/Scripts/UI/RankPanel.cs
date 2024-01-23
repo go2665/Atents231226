@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Windows;
 
 public class RankPanel : MonoBehaviour
 {
@@ -65,6 +66,26 @@ public class RankPanel : MonoBehaviour
     /// </summary>
     void SaveRankData()
     {
+        SaveData data = new SaveData();                 // 저장용 클래스 인스턴스 만들기
+        data.rankerNames = rankerNames;                 // 저장용 객체에 데이터 넣기
+        data.highScores = highScores;
+        string jsonText = JsonUtility.ToJson(data);     // 저장용 객체의 내용을 json형식의 문자열로 변경
+
+        string path = $"{Application.dataPath}/Save/";
+        if( !Directory.Exists(path))            // Exists : true면 폴더가 있다. false면 폴더가 없다.
+        {
+            // path 폴더가 없다.
+            Directory.CreateDirectory(path);    // path에 지정된 폴더를 만든다.
+        }
+
+        //string fullPath = $"{path}Save.txt";
+        //System.IO.File.WriteAllText(fullPath, "AAA,1000000,BBB,100000,CCC,10000");
+
+        // json
+        string fullPath = $"{path}Save.json";               // 전체 경로 만들기
+        System.IO.File.WriteAllText(fullPath, jsonText);    // 파일로 저장
+
+        
 
     }
 
@@ -102,5 +123,12 @@ public class RankPanel : MonoBehaviour
     {
         SetDefaultData();
         RefreshRankLines();
+    }
+
+    public void Test_SaveRankPanel()
+    {
+        SetDefaultData();
+        RefreshRankLines();
+        SaveRankData();
     }
 }

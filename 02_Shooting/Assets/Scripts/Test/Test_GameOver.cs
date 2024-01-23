@@ -35,4 +35,10 @@ public class Test_GameOver : TestBase
     {
         panel.Test_DefaultRankPanel();
     }
+
+    protected override void OnTest5(InputAction.CallbackContext context)
+    {
+        panel.Test_SaveRankPanel();
+
+    }
 }

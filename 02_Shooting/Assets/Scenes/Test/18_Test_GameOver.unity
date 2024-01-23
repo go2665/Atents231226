@@ -1565,6 +1565,7 @@ MonoBehaviour:
   seed: -1
   score: 100
   line: {fileID: 79675394}
+  panel: {fileID: 1715000840}
 --- !u!1 &787423453
 GameObject:
   m_ObjectHideFlags: 0
