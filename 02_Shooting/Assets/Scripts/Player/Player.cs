@@ -561,5 +561,10 @@ public class Player : MonoBehaviour
     {
         Life = 0;
     }
+
+    public void Test_AddScore(int score)
+    {
+        Score += score;
+    }
 #endif
 }
