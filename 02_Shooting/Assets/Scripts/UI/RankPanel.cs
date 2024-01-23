@@ -38,14 +38,26 @@ public class RankPanel : MonoBehaviour
     {
         for(int i = 0; i < rankCount; i++)
         {
+            // rankerNames 채우기
+            char temp = 'A';    // temp = 65
+            temp = (char)((byte)temp + (byte)i);
+            rankerNames[i] = $"{temp}{temp}{temp}"; // AAA ~ EEE            
 
+            // highScores 채우기
+            int score = 10;
+            for(int j=rankCount-i; j>0; j--)
+            {
+                score *= 10;
+            }
+            highScores[i] = score;
         }
 
         // 1st AAA 1000000
         // 2nd BBB 100000
         // 3rd CCC 10000
         // 4th DDD 1000
-        // 3th CCC 100
+        // 3th EEE 100
+        RefreshRankLines(); // UI 갱신
     }
 
     /// <summary>
@@ -80,7 +92,10 @@ public class RankPanel : MonoBehaviour
     /// </summary>
     void RefreshRankLines()
     {
-        //rankLines[0].SetData()
+        for(int i=0;i < rankCount; i++)
+        {
+            rankLines[i].SetData(rankerNames[i], highScores[i]);
+        }
     }
 
     public void Test_DefaultRankPanel()
