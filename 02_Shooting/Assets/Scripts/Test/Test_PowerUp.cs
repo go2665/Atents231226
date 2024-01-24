@@ -7,6 +7,7 @@ public class Test_PowerUp : TestBase
 {
     Player player;
 
+#if UNITY_EDITOR
     private void Start()
     {
         player = GameManager.Instance.Player;
@@ -26,4 +27,5 @@ public class Test_PowerUp : TestBase
     {
         Factory.Instance.GetPowerUp();
     }
+#endif
 }

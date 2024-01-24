@@ -16,7 +16,7 @@ public class Test_Delegate : TestBase
                                             // (이 델리게이트는 파라메터가 없고 리턴값도 없는 함수만 저장할 수 있다.)
 
     TestDelegate1 aaa;   // TestDelegate타입으로 함수를 저장할 수 있는 aaa라는 변수를 만듬)
-
+#if UNITY_EDITOR
     void TestRun1()
     {
         Debug.Log("TestRun1");
@@ -95,6 +95,7 @@ public class Test_Delegate : TestBase
     {
         u1.AddListener(Test_Unity_Del);        
     }
+#endif
 }
 
 

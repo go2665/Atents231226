@@ -9,6 +9,7 @@ public class Test_Life : TestBase
     public PoolObjectType type;
     Transform spawn;
 
+#if UNITY_EDITOR
     private void Start()
     {
         spawn = transform.GetChild(0);
@@ -31,4 +32,5 @@ public class Test_Life : TestBase
     {
         GameManager.Instance.Player.Test_Die();
     }
+#endif
 }

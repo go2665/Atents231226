@@ -10,6 +10,7 @@ public class Test_SaveLoad : TestBase
 
     Player player;
 
+#if UNITY_EDITOR
     private void Start()
     {
         player = GameManager.Instance.Player;
@@ -42,4 +43,5 @@ public class Test_SaveLoad : TestBase
         player.Test_SetScore(score);
         player.Test_Die();
     }
+#endif
 }

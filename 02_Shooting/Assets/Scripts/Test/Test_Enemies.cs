@@ -7,6 +7,7 @@ public class Test_Enemies : TestBase
 {
     Transform spawnPoint;
 
+#if UNITY_EDITOR
     private void Start()
     {
         spawnPoint = transform.GetChild(0);
@@ -40,4 +41,5 @@ public class Test_Enemies : TestBase
         // 보스(본체)
         Factory.Instance.GetBoss(spawnPoint.position);
     }
+#endif
 }

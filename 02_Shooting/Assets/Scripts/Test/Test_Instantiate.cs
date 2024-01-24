@@ -7,6 +7,7 @@ public class Test_Instantiate : TestBase
 {
     public GameObject prefab;
 
+#if UNITY_EDITOR
     protected override void OnTest1(InputAction.CallbackContext context)
     {
         new GameObject();   // 비어있는 게임 오브젝트 만들기
@@ -60,4 +61,5 @@ public class Test_Instantiate : TestBase
         yield return new WaitForSeconds(3.0f);
         Debug.Log("종료");
     }
+#endif
 }

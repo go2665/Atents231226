@@ -7,6 +7,7 @@ public class Test_Score : TestBase
 {
     Player player;
 
+#if UNITY_EDITOR
     void Start()
     {
         player = FindAnyObjectByType<Player>();
@@ -26,4 +27,5 @@ public class Test_Score : TestBase
     {
         player.AddScore(1000);
     }
+#endif
 }

@@ -13,7 +13,7 @@ public class Test_FactoryRefactoring : TestBase
     Transform target;
     Transform spawnPoint;
 
-
+#if UNITY_EDITOR
     private void Start()
     {
         target = transform.GetChild(0);
@@ -24,4 +24,5 @@ public class Test_FactoryRefactoring : TestBase
     {
         Factory.Instance.GetObject(objectType, spawnPoint.position, new Vector3(0, 0, angle));
     }
+#endif
 }

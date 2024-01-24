@@ -10,6 +10,7 @@ public class Test_ObjectPool : TestBase
     public HitEffectPool pool3;
     public ExplosionEffectPool pool4;
 
+#if UNITY_EDITOR
     private void Start()
     {
         //pool.Initialize();                  // 시작할 때 초기화
@@ -37,4 +38,5 @@ public class Test_ObjectPool : TestBase
         // explosion
         pool4.GetObject();
     }
+#endif
 }

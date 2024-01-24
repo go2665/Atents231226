@@ -10,7 +10,7 @@ public class Test_GameOver : TestBase
     public RankPanel panel;
 
     Player player;
-
+#if UNITY_EDITOR
     private void Start()
     {
         player = GameManager.Instance.Player;
@@ -41,4 +41,5 @@ public class Test_GameOver : TestBase
         panel.Test_SaveRankPanel();
 
     }
+#endif
 }

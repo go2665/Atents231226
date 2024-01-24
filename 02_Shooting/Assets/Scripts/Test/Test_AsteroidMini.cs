@@ -8,7 +8,7 @@ public class Test_AsteroidMini : TestBase
     Transform target;
     Transform spawnPoint;
 
-
+#if UNITY_EDITOR
     private void Start()
     {
         target = transform.GetChild(0);
@@ -25,4 +25,5 @@ public class Test_AsteroidMini : TestBase
     {
         Factory.Instance.GetAsteroid(spawnPoint.position);
     }
+#endif
 }

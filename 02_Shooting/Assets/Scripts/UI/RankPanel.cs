@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Windows;
 
 public class RankPanel : MonoBehaviour
 {
@@ -95,10 +94,10 @@ public class RankPanel : MonoBehaviour
         string jsonText = JsonUtility.ToJson(data);     // 저장용 객체의 내용을 json형식의 문자열로 변경
 
         string path = $"{Application.dataPath}/Save/";
-        if( !Directory.Exists(path))            // Exists : true면 폴더가 있다. false면 폴더가 없다.
+        if( !System.IO.Directory.Exists(path))            // Exists : true면 폴더가 있다. false면 폴더가 없다.
         {
             // path 폴더가 없다.
-            Directory.CreateDirectory(path);    // path에 지정된 폴더를 만든다.
+            System.IO.Directory.CreateDirectory(path);    // path에 지정된 폴더를 만든다.
         }
 
         //string fullPath = $"{path}Save.txt";
@@ -118,10 +117,10 @@ public class RankPanel : MonoBehaviour
         bool result = false;
 
         string path = $"{Application.dataPath}/Save/";
-        if (Directory.Exists(path))            // Exists : true면 폴더가 있다. false면 폴더가 없다.
+        if (System.IO.Directory.Exists(path))            // Exists : true면 폴더가 있다. false면 폴더가 없다.
         {
             string fullPath = $"{path}Save.json";               // 전체 경로 만들기
-            if (File.Exists(fullPath))
+            if (System.IO.File.Exists(fullPath))
             {
                 string json = System.IO.File.ReadAllText(fullPath);
 
@@ -136,9 +135,9 @@ public class RankPanel : MonoBehaviour
 
         if(!result) // 로딩 실패(폴더가 없거나 파일이 없다)
         {            
-            if (!Directory.Exists(path))            // 폴더가 없으면
+            if (!System.IO.Directory.Exists(path))            // 폴더가 없으면
             {
-                Directory.CreateDirectory(path);    // path에 지정된 폴더를 만든다.
+                System.IO.Directory.CreateDirectory(path);    // path에 지정된 폴더를 만든다.
             }
             SetDefaultData();   // 기본 데이터 설정
         }
@@ -200,7 +199,7 @@ public class RankPanel : MonoBehaviour
         RefreshRankLines();                     // UI 갱신
         SaveRankData();                         // 저장
     }
-
+#if UNITY_EDITOR
     public void Test_DefaultRankPanel()
     {
         SetDefaultData();
@@ -221,4 +220,5 @@ public class RankPanel : MonoBehaviour
     {
         UpdateRankData(score);
     }
+#endif
 }
