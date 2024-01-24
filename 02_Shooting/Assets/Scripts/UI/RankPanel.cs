@@ -83,10 +83,7 @@ public class RankPanel : MonoBehaviour
 
         // json
         string fullPath = $"{path}Save.json";               // 전체 경로 만들기
-        System.IO.File.WriteAllText(fullPath, jsonText);    // 파일로 저장
-
-        
-
+        System.IO.File.WriteAllText(fullPath, jsonText);    // 파일로 저장  
     }
 
     /// <summary>
@@ -96,6 +93,35 @@ public class RankPanel : MonoBehaviour
     bool LoadRankData()
     {
         bool result = false;
+
+        string path = $"{Application.dataPath}/Save/";
+        if (Directory.Exists(path))            // Exists : true면 폴더가 있다. false면 폴더가 없다.
+        {
+            string fullPath = $"{path}Save.json";               // 전체 경로 만들기
+            if (File.Exists(fullPath))
+            {
+                string json = System.IO.File.ReadAllText(fullPath);
+
+                SaveData loadedData = JsonUtility.FromJson<SaveData>(json);
+
+                rankerNames = loadedData.rankerNames;
+                highScores = loadedData.highScores;
+
+                result = true ;
+            }
+        }
+
+        if(!result) // 로딩 실패(폴더가 없거나 파일이 없다)
+        {            
+            if (!Directory.Exists(path))            // 폴더가 없으면
+            {
+                Directory.CreateDirectory(path);    // path에 지정된 폴더를 만든다.
+            }
+            SetDefaultData();   // 기본 데이터 설정
+        }
+
+        RefreshRankLines(); // UI 갱신
+
         return result;
     }
 
@@ -130,5 +156,10 @@ public class RankPanel : MonoBehaviour
         SetDefaultData();
         RefreshRankLines();
         SaveRankData();
+    }
+
+    public void Test_LoadRankPanel()
+    {
+        LoadRankData();
     }
 }
