@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Windows;
 
@@ -25,11 +27,24 @@ public class RankPanel : MonoBehaviour
     /// </summary>
     const int rankCount = 5;
 
+    /// <summary>
+    /// 이름 입력을 받기 위한 인풋 필드
+    /// </summary>
+    TMP_InputField inputField;
+
+    /// <summary>
+    /// 갱신된 랭킹의 인덱스
+    /// </summary>
+    int updatedIndex = -1;
+
     private void Awake()
     {
         rankLines = GetComponentsInChildren<RankLine>();
         highScores = new int[rankCount];
         rankerNames = new string[rankCount];
+
+        inputField = GetComponentInChildren<TMP_InputField>(true);
+        inputField.onEndEdit.AddListener(OnNameInputEnd);
     }
 
     /// <summary>
@@ -128,10 +143,31 @@ public class RankPanel : MonoBehaviour
     /// <summary>
     /// 랭킹 데이터를 업데이트하는 함수
     /// </summary>
-    /// <param name="score"></param>
+    /// <param name="score">새 점수</param>
     void UpdateRankData(int score)
     {
+        for(int i=0;i<rankCount;i++)
+        {
+            if (highScores[i] < score)  // i번째 등수에 끼어 들면 된다.
+            {
+                for(int j = rankCount-1; j > i; j--)
+                {
+                    highScores[j] = highScores[j - 1];
+                    rankerNames[j] = rankerNames[j - 1];
+                    rankLines[j].SetData(rankerNames[j], highScores[j]);
+                }
+                highScores[i] = score;                      // 점수 기록
+                rankLines[i].SetData("새 랭커", score);      // 이름은 임시로 초리
+                updatedIndex = i;                           // 업데이트 중인 인덱스 저장
 
+                Vector3 newPos = inputField.transform.position; // 인풋 필드 위치 조정
+                newPos.y = rankLines[i].transform.position.y;
+                inputField.transform.position = newPos;
+                inputField.gameObject.SetActive(true);          // 인풋 필드 보이게 만들기
+
+                break;
+            }
+        }
     }
 
     /// <summary>
@@ -145,6 +181,18 @@ public class RankPanel : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 인풋필드에 입력이 끝났을 때 실행될 함수
+    /// </summary>
+    /// <param name="text">인풋 필드에 기록되어 있는 문자열</param>
+    private void OnNameInputEnd(string text)
+    {
+        inputField.gameObject.SetActive(false); // 입력 완료되었으니 인풋필드 안보이게 만들기
+        rankerNames[updatedIndex] = text;       // 랭커 이름 설정
+        RefreshRankLines();                     // UI 갱신
+        SaveRankData();                         // 저장
+    }
+
     public void Test_DefaultRankPanel()
     {
         SetDefaultData();
@@ -153,8 +201,6 @@ public class RankPanel : MonoBehaviour
 
     public void Test_SaveRankPanel()
     {
-        SetDefaultData();
-        RefreshRankLines();
         SaveRankData();
     }
 
@@ -162,4 +208,11 @@ public class RankPanel : MonoBehaviour
     {
         LoadRankData();
     }
+
+    public void Test_UpdateRankPanel(int score)
+    {
+        UpdateRankData(score);
+    }
 }
+
+// 플레이어가 죽을 때 랭킹 처리하기

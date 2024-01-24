@@ -13,6 +13,7 @@ public class Test_SaveLoad : TestBase
     private void Start()
     {
         player = GameManager.Instance.Player;
+        panel.Test_LoadRankPanel();
     }
 
     protected override void OnTest1(InputAction.CallbackContext context)
@@ -27,10 +28,12 @@ public class Test_SaveLoad : TestBase
 
     protected override void OnTest3(InputAction.CallbackContext context)
     {
+        panel.Test_UpdateRankPanel(score);
     }
 
     protected override void OnTest4(InputAction.CallbackContext context)
     {
+        panel.Test_DefaultRankPanel();
     }
 
     protected override void OnTest5(InputAction.CallbackContext context)
