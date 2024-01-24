@@ -110,7 +110,7 @@ MonoBehaviour:
   maxLifeTime: 7
   minMiniCount: 3
   maxMiniCount: 8
-  criticalRate: 1
+  criticalRate: 0.05
   criticalMiniCount: 20
 --- !u!58 &5573675628119075040
 CircleCollider2D:
