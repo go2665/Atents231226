@@ -39,12 +39,20 @@ public class RankPanel : MonoBehaviour
 
     private void Awake()
     {
-        rankLines = GetComponentsInChildren<RankLine>();
+        rankLines = GetComponentsInChildren<RankLine>(true);
         highScores = new int[rankCount];
         rankerNames = new string[rankCount];
 
         inputField = GetComponentInChildren<TMP_InputField>(true);
         inputField.onEndEdit.AddListener(OnNameInputEnd);
+    }
+
+    private void Start()
+    {
+        Player player = GameManager.Instance.Player;
+        player.onDie += UpdateRankData;
+
+        LoadRankData();
     }
 
     /// <summary>
@@ -214,5 +222,3 @@ public class RankPanel : MonoBehaviour
         UpdateRankData(score);
     }
 }
-
-// 플레이어가 죽을 때 랭킹 처리하기
