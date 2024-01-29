@@ -35,6 +35,11 @@ public class Player : MonoBehaviour
     /// </summary>
     readonly int IsMoveHash = Animator.StringToHash("IsMove");
 
+    /// <summary>
+    /// 점프력
+    /// </summary>
+    public float jumpPower = 6.0f;
+
     private void Awake()
     {
         //inputActions = new PlayerInputActions();
@@ -66,9 +71,9 @@ public class Player : MonoBehaviour
         SetInput(context.ReadValue<Vector2>(), !context.canceled);
     }
 
-    private void OnJumpInput(InputAction.CallbackContext context)
+    private void OnJumpInput(InputAction.CallbackContext _)
     {
-        throw new NotImplementedException();
+        Jump();
     }
 
     private void OnUseInput(InputAction.CallbackContext context)
@@ -121,5 +126,10 @@ public class Player : MonoBehaviour
         // Quaternion.Lerp() : 시작 회전에서 목표 회전으로 보간하는 함수
         // Quaternion.Slerp(): 시작 회전에서 목표 회전으로 보간하는 함수(곡선으로 보간)
         // Quaternion.LookRotation() : 특정 방향을 바라보는 회전을 만들어주는 함수
+    }
+
+    void Jump()
+    {
+        rigid.AddForce(jumpPower * Vector3.up, ForceMode.Impulse);
     }
 }
