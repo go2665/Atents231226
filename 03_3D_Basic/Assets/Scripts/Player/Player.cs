@@ -40,6 +40,26 @@ public class Player : MonoBehaviour
     /// </summary>
     public float jumpPower = 6.0f;
 
+    /// <summary>
+    /// 점프 중인지 아닌지 나타내는 변수
+    /// </summary>
+    bool isJumping = false;
+
+    /// <summary>
+    /// 점프 쿨 타임
+    /// </summary>
+    public float jumpCoolTime = 5.0f;
+
+    /// <summary>
+    /// 남아있는 쿨타임
+    /// </summary>
+    float jumpCoolRemains = -1.0f;
+
+    /// <summary>
+    /// 점프가 가능한지 확인하는 프로퍼티(점프중이 아니고 쿨타임이 다 지났다.)
+    /// </summary>
+    bool IsJumpAvailable => !isJumping && (jumpCoolRemains < 0.0f);
+
     private void Awake()
     {
         //inputActions = new PlayerInputActions();
@@ -81,10 +101,23 @@ public class Player : MonoBehaviour
         throw new NotImplementedException();
     }
 
+    private void Update()
+    {
+        jumpCoolRemains -= Time.deltaTime;
+    }
+
     private void FixedUpdate()
     {
         Move();
         Rotate();           
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Ground"))
+        {
+            isJumping = false;
+        }
     }
 
     /// <summary>
@@ -128,8 +161,16 @@ public class Player : MonoBehaviour
         // Quaternion.LookRotation() : 특정 방향을 바라보는 회전을 만들어주는 함수
     }
 
+    /// <summary>
+    /// 실제 점프 처리를 하는 함수
+    /// </summary>
     void Jump()
     {
-        rigid.AddForce(jumpPower * Vector3.up, ForceMode.Impulse);
+        if(IsJumpAvailable) // 점프가 가능할 때만 점프
+        {
+            rigid.AddForce(jumpPower * Vector3.up, ForceMode.Impulse);  // 위쪽으로 jumpPower만큼 힘을 더하기
+            jumpCoolRemains = jumpCoolTime; // 쿨타임 초기화
+            isJumping = true;               // 점프했다고 표시
+        }
     }
 }
