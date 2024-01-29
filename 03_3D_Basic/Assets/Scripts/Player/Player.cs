@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
 {
     PlayerInputActions inputActions;
     Rigidbody rigid;
+    Animator animator;
 
     /// <summary>
     /// 이동 방향(1 : 전진, -1 : 후진, 0 : 정지)
@@ -29,11 +30,17 @@ public class Player : MonoBehaviour
     /// </summary>
     public float rotateSpeed = 180.0f;
 
+    /// <summary>
+    /// 애니메이터용 해시값
+    /// </summary>
+    readonly int IsMoveHash = Animator.StringToHash("IsMove");
+
     private void Awake()
     {
         //inputActions = new PlayerInputActions();
         inputActions = new();
         rigid = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
     }
 
     private void OnEnable()
@@ -75,17 +82,30 @@ public class Player : MonoBehaviour
         Rotate();           
     }
 
+    /// <summary>
+    /// 이동 입력 처리용 함수
+    /// </summary>
+    /// <param name="input">입력된 방향</param>
+    /// <param name="isMove">이동 중이면 true, 이동 중이 아니면 false</param>
     void SetInput(Vector2 input, bool isMove)
     {
         rotateDirection = input.x;
         moveDirection = input.y;
+
+        animator.SetBool(IsMoveHash, isMove);
     }
 
+    /// <summary>
+    /// 실제 이동 처리 함수(FixedUpdate에서 사용)
+    /// </summary>
     void Move()
     {
         rigid.MovePosition(rigid.position + Time.fixedDeltaTime * moveSpeed * moveDirection * transform.forward);     
     }
 
+    /// <summary>
+    /// 실제 회전 처리 함수(FixedUpdate에서 사용)
+    /// </summary>
     void Rotate()
     {
         // 이번 fixedUpdate에서 추가로 회전할 회전(delta)
@@ -102,13 +122,4 @@ public class Player : MonoBehaviour
         // Quaternion.Slerp(): 시작 회전에서 목표 회전으로 보간하는 함수(곡선으로 보간)
         // Quaternion.LookRotation() : 특정 방향을 바라보는 회전을 만들어주는 함수
     }
-
-
-    // 실습
-    // 1. 플레이어는 WS키로 전진/후진을 한다.
-    // 2. 플레이어는 AD키로 좌회전/우회전을 한다.
-    // 3. 프레이어가 움직이면(전진/후진/좌회전/우회전) Player_Move 애니메이션이 재생된다.
-    // 4. 이동 입력이 없으면 Player_Idle 애니메이션이 재생된다.
-    // 5. Player_Move 애니메이션은 팔 다리가 앞뒤로 흔들린다.
-    // 6. Player_Idle 애니메이션은 머리가 살짝 앞뒤로 까딱거린다.
 }
