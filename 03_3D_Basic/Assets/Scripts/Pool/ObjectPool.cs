@@ -56,7 +56,7 @@ public class ObjectPool<T> : MonoBehaviour where T : RecycleObject
         {
             T comp = readyQueue.Dequeue();  // 남아있으면 하나 꺼내고
             comp.transform.position = position.GetValueOrDefault(); // 지정된 위치로 이동
-            comp.transform.Rotate(eulerAngle.GetValueOrDefault());  // 지정된 각도로 회전
+            comp.transform.rotation = Quaternion.Euler(eulerAngle.GetValueOrDefault());  // 지정된 각도로 회전
             comp.gameObject.SetActive(true);// 활성화 시키고
             OnGetObject(comp);              // 오브젝트별 추가 처리
             return comp;                    // 리턴
