@@ -6,18 +6,8 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-public class TurretTrace : MonoBehaviour
-{
-    /// <summary>
-    /// 터렛이 발사할 총알 종류
-    /// </summary>
-    public PoolObjectType bulletType = PoolObjectType.Bullet;
-    
-    /// <summary>
-    /// 총알 발사 간격
-    /// </summary>
-    public float fireInterval = 1.0f;
-
+public class TurretTrace : TurretBase
+{   
     /// <summary>
     /// 시야 범위
     /// </summary>
@@ -33,16 +23,8 @@ public class TurretTrace : MonoBehaviour
     /// </summary>
     public float fireAngle = 10.0f;
 
-    /// <summary>
-    /// 총몸의 트랜스폼
-    /// </summary>
-    Transform barrelBody;
-
-    /// <summary>
-    /// 총알 발사 위치 설정용 트랜스폼
-    /// </summary>
-    Transform fireTransform;
-
+    
+    
     /// <summary>
     /// 시야범위 체크용 트리거
     /// </summary>
@@ -58,17 +40,11 @@ public class TurretTrace : MonoBehaviour
     /// </summary>
     bool isFiring = false;
 
-    /// <summary>
-    /// 총알을 주기적으로 발사하는 코루틴
-    /// </summary>
-    IEnumerator fireCoroutine;
-
-    private void Awake()
+    protected override void Awake()
     {
-        sightTrigger = GetComponent<SphereCollider>();
-        barrelBody = transform.GetChild(2);
-        fireTransform = barrelBody.GetChild(1);
-        fireCoroutine = PeriodFire();
+        // base : 부모 클래스의 인스턴스에 접근하는 참조
+        base.Awake();   
+        sightTrigger = GetComponent<SphereCollider>();        
     }
 
     private void Start()
@@ -129,15 +105,6 @@ public class TurretTrace : MonoBehaviour
         }
     }
 
-    IEnumerator PeriodFire()
-    {
-        while (true)
-        {
-            Factory.Instance.GetObject(bulletType, fireTransform.position, fireTransform.rotation.eulerAngles);
-            yield return new WaitForSeconds(fireInterval);
-        }
-    }
-
     /// <summary>
     /// 총알을 발사하기 시작(중복 실행 없음)
     /// </summary>
@@ -164,9 +131,11 @@ public class TurretTrace : MonoBehaviour
 
 
 #if UNITY_EDITOR
-    private void OnDrawGizmos()
+    protected override void OnDrawGizmos()
     {
-        //Gizmos
+        base.OnDrawGizmos();
+
+        // sightRange 범위 그리기
         Handles.DrawWireDisc(transform.position, transform.up, sightRange, 3.0f);
 
         if(barrelBody == null)
@@ -176,10 +145,16 @@ public class TurretTrace : MonoBehaviour
 
         Vector3 from = transform.position;
         Vector3 to = transform.position + barrelBody.forward * sightRange;
+
+        // 중심 선 그리기
         Handles.color = Color.yellow;
         Handles.DrawDottedLine(from, to, 2.0f);
 
-        Handles.color = Color.red;
+        // 시야 각 내부 그리기
+        Handles.color = Color.green;
+
+        // 평소(녹색), 플레이어 쪽으로 머리 돌리는 중(주황색), 플레이어를 공격하는 상황(빨간색)
+
         Vector3 dir1 = Quaternion.AngleAxis(-fireAngle, transform.up) * barrelBody.forward;
         Vector3 dir2 = Quaternion.AngleAxis(fireAngle, transform.up) * barrelBody.forward;
 
@@ -190,9 +165,3 @@ public class TurretTrace : MonoBehaviour
     }
 #endif
 }
-
-// 실습 : 추적용 터렛 만들기
-// 1. 플레이어가 터렛으로 부터 일정 거리안에 있으면 플레이어쪽으로 BarrelBody가 회전한다(플레이어를 바라보기, y축으로만 회전)
-// 2. 플레이어가 터렛의 발사각 안에 있으면 총알을 주기적으로 발사한다.
-// 3. 플레이어가 터렛의 발사각 안에 없으면 총알 발사를 정지한다.
-// 4. Gizmos를 통해 시야 범위와 발사각을 그린다.(Handles 추천)
