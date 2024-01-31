@@ -34,4 +34,12 @@ public class Bullet : RecycleObject
         StopAllCoroutines();
         StartCoroutine(LifeOver(2.0f));     // 충돌하고 2초 뒤에 사라짐
     }
+
+    private void FixedUpdate()
+    {
+        if(rigid.velocity.sqrMagnitude > 0.1f)
+        {
+            transform.forward = rigid.velocity;
+        }
+    }
 }

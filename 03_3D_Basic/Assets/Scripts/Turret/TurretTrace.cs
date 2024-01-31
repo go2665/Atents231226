@@ -47,7 +47,12 @@ public class TurretTrace : TurretBase
     /// <summary>
     /// 내 공격 영역안에 플레이어가 있는 상태인지 아닌지 확인하기 위한 프로퍼티
     /// </summary>
-    bool IsOrangeState => (target != null);
+    bool IsOrangeState => isTargetVisible;
+
+    /// <summary>
+    /// 플레이어가 보이는지 아닌지 표시해 놓은 변수(true면 무조건 target이 설정되어 있다.)
+    /// </summary>
+    bool isTargetVisible = false;
 #endif
 
     protected override void Awake()
@@ -86,22 +91,26 @@ public class TurretTrace : TurretBase
     private void LookTargetAndAttack()
     {
         bool isStartFire = false;
-        if (target != null)
+        if (target != null)     // 플레이어가 내 트리거 안에 들어왔다.
         {
-            Vector3 dir = target.transform.position - transform.position;
+            Vector3 dir = target.transform.position - transform.position;   // 터렛에서 플레이어로 가는 방향 계산
             dir.y = 0.0f;
 
-            //barrelBody.forward = dir; // 즉시 바라보기
-            barrelBody.rotation = Quaternion.Slerp(
-                barrelBody.rotation,
-                Quaternion.LookRotation(dir),
-                Time.deltaTime * turnSpeed);
-
-            //Vector3.SignedAngle : 두 벡터의 사이각을 구하는데 방향을 고려하여 계산한다.            
-            float angle = Vector3.Angle(barrelBody.forward, dir);
-            if( angle < fireAngle )
+            if( IsVisibleTarget(dir) )  // 장애물이 있는지 없는지 확인
             {
-                isStartFire = true; // 발사 결정
+                // 장애물이 없이 플레이어가 보이면 그쪽으로 방향을 돌린다.
+                //barrelBody.forward = dir; // 즉시 바라보기
+                barrelBody.rotation = Quaternion.Slerp(
+                    barrelBody.rotation,
+                    Quaternion.LookRotation(dir),
+                    Time.deltaTime * turnSpeed);
+
+                //Vector3.SignedAngle : 두 벡터의 사이각을 구하는데 방향을 고려하여 계산한다.            
+                float angle = Vector3.Angle(barrelBody.forward, dir);
+                if (angle < fireAngle)
+                {
+                    isStartFire = true; // 발사 결정
+                }
             }
         }
         
@@ -116,11 +125,38 @@ public class TurretTrace : TurretBase
     }
 
     /// <summary>
+    /// Target이 보이는지 확인하는 함수
+    /// </summary>
+    /// <param name="lookDirection">바라보는 방향</param>
+    /// <returns>true면 target이 보인다. false면 target이 보이지 않는다.</returns>
+    private bool IsVisibleTarget(Vector3 lookDirection)
+    {
+        bool result = false;
+
+        Ray ray = new Ray(barrelBody.position, lookDirection);
+
+        // out : 출력용 파라메터라고 알려주는 키워드, 무조건 함수가 실행되었을 때 초기화 된다.
+        // int layerMask = LayerMask.GetMask("Deufalt", "Player"); RayCast를 할 때 특정 레이어만 체크하고 싶을 때 사용
+        if ( Physics.Raycast(ray, out RaycastHit hitInfo, sightRange) )
+        {
+            if( hitInfo.transform == target.transform )
+            {
+                result = true;
+            }
+        }
+
+#if UNITY_EDITOR
+        isTargetVisible = result;
+#endif
+        return result;
+    }
+
+    /// <summary>
     /// 총알을 발사하기 시작(중복 실행 없음)
     /// </summary>
     void StartFire()
     {
-        if(!isFiring)
+        if (!isFiring)
         {
             StartCoroutine(fireCoroutine);
             isFiring = true;
@@ -138,9 +174,6 @@ public class TurretTrace : TurretBase
             isFiring = false;
         }
     }
-
-    public Color a;
-
 
 #if UNITY_EDITOR
     protected override void OnDrawGizmos()

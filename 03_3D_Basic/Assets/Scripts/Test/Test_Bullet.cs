@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Test_Turret : TestBase
+public class Test_Bullet : TestBase
 {
     public GameObject bulletPrefab;
     public PoolObjectType type;
