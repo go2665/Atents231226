@@ -21,9 +21,7 @@ public class TurretTrace : TurretBase
     /// <summary>
     /// 터렛이 총알을 발사를 시작하는 좌우발사각(10이면 +-10도)
     /// </summary>
-    public float fireAngle = 10.0f;
-
-    
+    public float fireAngle = 10.0f;    
     
     /// <summary>
     /// 시야범위 체크용 트리거
@@ -39,6 +37,18 @@ public class TurretTrace : TurretBase
     /// 발사 중인지 아닌지 표시하는 변수(true면 발사 중)
     /// </summary>
     bool isFiring = false;
+
+#if UNITY_EDITOR
+    /// <summary>
+    /// 내 공격 영역안에 플레이어가 있고 발사각안에 플레이어가 있는 상태인지 아닌지 확인하기 위한 프로퍼티
+    /// </summary>
+    bool IsRedState => isFiring;
+
+    /// <summary>
+    /// 내 공격 영역안에 플레이어가 있는 상태인지 아닌지 확인하기 위한 프로퍼티
+    /// </summary>
+    bool IsOrangeState => (target != null);
+#endif
 
     protected override void Awake()
     {
@@ -129,6 +139,8 @@ public class TurretTrace : TurretBase
         }
     }
 
+    public Color a;
+
 
 #if UNITY_EDITOR
     protected override void OnDrawGizmos()
@@ -153,15 +165,29 @@ public class TurretTrace : TurretBase
         // 시야 각 내부 그리기
         Handles.color = Color.green;
 
-        // 평소(녹색), 플레이어 쪽으로 머리 돌리는 중(주황색), 플레이어를 공격하는 상황(빨간색)
+        // 녹색 : 내 공격 영역안에 플레이어가 없는 상태
+        // 주황색 : 내 공격 영역안에 플레이어가 있는 상태
+        // 빨간색 : 내 공격 영역안에 플레이어가 있고 발사각안에 플레이어가 있는 상태
+        if(IsRedState)
+        {
+            Handles.color = Color.red;
+        }
+        else if(IsOrangeState)
+        {
+            Handles.color = new Color(1.0f, 0.5f, 0.0f);    // (255, 165, 0) : 주황색
+        }
 
         Vector3 dir1 = Quaternion.AngleAxis(-fireAngle, transform.up) * barrelBody.forward;
         Vector3 dir2 = Quaternion.AngleAxis(fireAngle, transform.up) * barrelBody.forward;
 
+        // 시야각의 가장자리 선 그리기
         to = transform.position + dir1 * sightRange;
-        Handles.DrawLine(from, to, 2.0f);
+        Handles.DrawLine(from, to, 3.0f);
         to = transform.position + dir2 * sightRange;
-        Handles.DrawLine(from, to, 2.0f);
+        Handles.DrawLine(from, to, 3.0f);
+
+        // 시야각의 호 그리기
+        Handles.DrawWireArc(from, transform.up, dir1, fireAngle * 2.0f, sightRange, 3.0f);
     }
 #endif
 }
