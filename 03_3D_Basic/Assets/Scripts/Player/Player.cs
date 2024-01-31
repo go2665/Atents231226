@@ -150,7 +150,7 @@ public class Player : MonoBehaviour
         Quaternion rotate = Quaternion.AngleAxis(Time.fixedDeltaTime * rotateSpeed * rotateDirection, transform.up);
 
         // 현재 회전에서 rotate만큼 추가로 회전
-        rigid.MoveRotation(rigid.rotation * rotate);        
+        rigid.MoveRotation(rigid.rotation * rotate);
 
         // 회전을 표현하는 클래스 : Quaternion
         // Quaternion.Euler() : x, y, z 축으로 얼마만큼 회전 시킬 것인지를 파라메터로 받아서 회전을 생성하는 함수
@@ -159,6 +159,13 @@ public class Player : MonoBehaviour
         // Quaternion.Lerp() : 시작 회전에서 목표 회전으로 보간하는 함수
         // Quaternion.Slerp(): 시작 회전에서 목표 회전으로 보간하는 함수(곡선으로 보간)
         // Quaternion.LookRotation() : 특정 방향을 바라보는 회전을 만들어주는 함수
+
+        // Quaternion.identity;    아무런 회전도 하지 않았다.
+        // Quaternion.Inverse() : 역회전을 계산하는 함수
+
+        // Quaternion.RotateTowards() : from에서 to로 회전 회전 시키는 함수. 한번 실행될 때마다 maxDegreesDelta만 큼 회전.
+
+        // transform.RotateAround : 특정 위치에서 특정 축을 기준으로 회전하기
     }
 
     /// <summary>
