@@ -113,7 +113,13 @@ public class TurretTrace : TurretBase
                 }
             }
         }
-        
+#if UNITY_EDITOR
+        else
+        {
+            isTargetVisible = false;
+        }
+#endif
+
         if(isStartFire)     // 발사해야 하는 상황인지 확인
         {
             StartFire();    // 발사 시작

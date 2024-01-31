@@ -58,6 +58,3 @@ public class Factory : Singleton<Factory>
         return bulletPool.GetObject(position, angle * Vector3.forward);
     }
 }
-
-// 팩토리 만들기
-//  - 이전 프로젝트의 팩토리를 무사히 이식하기
