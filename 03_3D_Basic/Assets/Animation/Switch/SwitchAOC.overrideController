@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SwitchAOC
+  m_Controller: {fileID: 9100000, guid: 786207829949e874fae80f9d0369dd38, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: aa67cf1570b1283418835d4d1f148edd, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 2b3bd041478e81d4899b9874bcd9822f, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 739b6308e69e9da4ebba7734bda658ee, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: b7a5a21bbd0b5bb429487b03fbbc988b, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: aabe8809abec3cc41b75e5b3d845d1ca, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 43bf20b84ffdf70449a8f115e46cf234, type: 2}
