@@ -6,12 +6,10 @@ AnimatorOverrideController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SwingDoorAOC
+  m_Name: SlidingDoorAOC
   m_Controller: {fileID: 9100000, guid: 786207829949e874fae80f9d0369dd38, type: 2}
   m_Clips:
-  - m_OriginalClip: {fileID: 7400000, guid: 739b6308e69e9da4ebba7734bda658ee, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: 739b6308e69e9da4ebba7734bda658ee, type: 2}
   - m_OriginalClip: {fileID: 7400000, guid: aa67cf1570b1283418835d4d1f148edd, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: db2f465a30c02c8499394365435adc41, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: e76a401bfdb3e0848bd575953cd44e31, type: 2}
   - m_OriginalClip: {fileID: 7400000, guid: aabe8809abec3cc41b75e5b3d845d1ca, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: c58fa8d87fc3b8f4d88e6413e981f4cc, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 883b44531a52a7c43a8aa200c5bd9b4f, type: 2}
