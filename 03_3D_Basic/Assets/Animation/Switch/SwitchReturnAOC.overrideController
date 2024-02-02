@@ -6,7 +6,7 @@ AnimatorOverrideController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SwitchAOC
+  m_Name: SwitchReturnAOC
   m_Controller: {fileID: 9100000, guid: 786207829949e874fae80f9d0369dd38, type: 2}
   m_Clips:
   - m_OriginalClip: {fileID: 7400000, guid: aa67cf1570b1283418835d4d1f148edd, type: 2}

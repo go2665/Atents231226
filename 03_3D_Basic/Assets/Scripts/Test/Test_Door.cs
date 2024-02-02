@@ -8,7 +8,8 @@ public class Test_Door : TestBase
 {
     public TextMeshPro text;
     public DoorBase door;
-
+    public DoorSwitch testSwitch;
+    
     protected override void OnTest1(InputAction.CallbackContext context)
     {
         Vector3 cameraForward = Camera.main.transform.forward;
@@ -23,5 +24,17 @@ public class Test_Door : TestBase
 
         float angle = Vector3.Angle(door.transform.forward, cameraForward);
         Debug.Log(angle);
+    }
+
+    protected override void OnTest3(InputAction.CallbackContext context)
+    {
+        IInteracable inter = door.GetComponent<IInteracable>();
+        inter.Use();
+    }
+
+    protected override void OnTest4(InputAction.CallbackContext context)
+    {
+        IInteracable inter = testSwitch.GetComponent<IInteracable>();
+        inter.Use();
     }
 }

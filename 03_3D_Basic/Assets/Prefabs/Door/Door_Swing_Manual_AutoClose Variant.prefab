@@ -221,7 +221,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3156154663188067838, guid: 14897c6f9e916714aaaa154e077ddba2, type: 3}
       propertyPath: m_Name
-      value: Door_Swing_Manual Variant
+      value: Door_Swing_Manual_AutoClose Variant
       objectReference: {fileID: 0}
     - target: {fileID: 6426722712824080058, guid: 14897c6f9e916714aaaa154e077ddba2, type: 3}
       propertyPath: m_Controller
@@ -230,7 +230,7 @@ PrefabInstance:
     - target: {fileID: 6859050183401388155, guid: 14897c6f9e916714aaaa154e077ddba2, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 15bd484e13e40e34a9071a4768aa4c69, type: 2}
+      objectReference: {fileID: 2100000, guid: aad97186cf6d5944885bc34e2db69e6e, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
