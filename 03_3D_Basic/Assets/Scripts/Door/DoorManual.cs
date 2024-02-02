@@ -27,7 +27,7 @@ public class DoorManual : DoorBase, IInteracable
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
@@ -48,7 +48,7 @@ public class DoorManual : DoorBase, IInteracable
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    protected virtual void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {

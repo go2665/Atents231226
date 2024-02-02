@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IAlive
 {
     PlayerInputActions inputActions;
     Rigidbody rigid;
@@ -183,5 +183,13 @@ public class Player : MonoBehaviour
             jumpCoolRemains = jumpCoolTime; // 쿨타임 초기화
             isJumping = true;               // 점프했다고 표시
         }
+    }
+
+    /// <summary>
+    /// 사망 처리용 함수
+    /// </summary>
+    public void Die()
+    {
+        Debug.Log("죽었음");
     }
 }
