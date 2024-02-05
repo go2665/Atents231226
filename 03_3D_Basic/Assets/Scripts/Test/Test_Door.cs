@@ -37,4 +37,10 @@ public class Test_Door : TestBase
         IInteracable inter = testSwitch.GetComponent<IInteracable>();
         inter.Use();
     }
+
+    protected override void OnTest5(InputAction.CallbackContext context)
+    {
+        // 플레이어 죽이기
+        GameManager.Instance.Player.Die();
+    }
 }

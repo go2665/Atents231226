@@ -35,6 +35,7 @@ public class Player : MonoBehaviour, IAlive
     /// </summary>
     readonly int IsMoveHash = Animator.StringToHash("IsMove");
     readonly int UseHash = Animator.StringToHash("Use");
+    readonly int DieHash = Animator.StringToHash("Die");
 
     /// <summary>
     /// 점프력
@@ -60,6 +61,16 @@ public class Player : MonoBehaviour, IAlive
     /// 점프가 가능한지 확인하는 프로퍼티(점프중이 아니고 쿨타임이 다 지났다.)
     /// </summary>
     bool IsJumpAvailable => !isJumping && (jumpCoolRemains < 0.0f);
+
+    /// <summary>
+    /// 플레이어의 생존 여부
+    /// </summary>
+    bool isAlive = true;
+
+    /// <summary>
+    /// 플레이어의 사망을 알리는 델리게이트
+    /// </summary>
+    public Action onDie;
 
     private void Awake()
     {
@@ -190,6 +201,26 @@ public class Player : MonoBehaviour, IAlive
     /// </summary>
     public void Die()
     {
-        Debug.Log("죽었음");
+        if(isAlive)
+        {
+            Debug.Log("죽었음");
+
+            // 죽는 애니메이션이 나온다.
+            animator.SetTrigger(DieHash);
+
+            // 더 이상 조종이 안되어야 한다.
+            inputActions.Player.Disable();
+
+            // 대굴대굴 구른다.(뒤로 넘어가면서 y축으로 스핀을 먹는다.)
+            rigid.constraints = RigidbodyConstraints.None;  // 물리 잠금을 전부 해제하기
+            Transform head = transform.GetChild(0);
+            rigid.AddForceAtPosition(-transform.forward, head.position, ForceMode.Impulse);
+            rigid.AddTorque(transform.up * 1.5f, ForceMode.Impulse);
+
+            // 죽었다고 신호보내기(onDie 델리게이트 실행)
+            onDie?.Invoke();
+
+            isAlive = false;
+        }
     }
 }
