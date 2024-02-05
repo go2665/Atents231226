@@ -20,6 +20,11 @@ public class FollowCamera : MonoBehaviour
     /// </summary>
     Vector3 offset;
 
+    /// <summary>
+    /// 플레이어와 카메라 간의 거리
+    /// </summary>
+    float length;
+
     private void Start()
     {
         if(target == null)
@@ -28,6 +33,7 @@ public class FollowCamera : MonoBehaviour
         }
 
         offset = transform.position - target.position;  // target에서 카메라로 가는 방향 벡터
+        length = offset.magnitude;
     }
 
     private void FixedUpdate()
@@ -39,7 +45,11 @@ public class FollowCamera : MonoBehaviour
 
 
         // 플레이어와 카메라 사이에 장애물이 있으면 충돌지점에 카메라를 이동시킨다.
-        // raycast를 활용한다.
+        Ray ray = new Ray(target.position, transform.position - target.position);
+        if( Physics.Raycast(ray, out RaycastHit hitInfo, length) )
+        {
+            transform.position = hitInfo.point;
+        }    
 
     }
 }
