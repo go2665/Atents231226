@@ -11,5 +11,10 @@ using UnityEngine;
 
 public interface IInteracable
 {
+    bool CanUse    // 사용 가능한지를 확인하는 프로퍼티
+    {
+        get;
+    }
+
     void Use(); // 사용하는 기능이 있다고 선언해 놓은 것
 }

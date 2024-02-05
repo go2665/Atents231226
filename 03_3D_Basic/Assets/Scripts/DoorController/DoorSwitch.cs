@@ -37,6 +37,21 @@ public class DoorSwitch : MonoBehaviour, IInteracable
     /// </summary>
     readonly int SwitchOnHash = Animator.StringToHash("SwitchOn");
 
+    /// <summary>
+    /// 재사용 쿨타임
+    /// </summary>
+    public float coolTime = 0.5f;
+
+    /// <summary>
+    /// 현재 남아있는 쿨타임
+    /// </summary>
+    float currentCoolTime = 0;
+
+    /// <summary>
+    /// 사용 가능 여부. 쿨타임이 0 미만일 때 사용 가능
+    /// </summary>
+    public bool CanUse => currentCoolTime < 0.0f;
+
     void Awake()
     {
         animator = GetComponent<Animator>();
@@ -50,12 +65,17 @@ public class DoorSwitch : MonoBehaviour, IInteracable
         }
     }
 
+    void Update()
+    {
+        currentCoolTime -= Time.deltaTime;
+    }
+
     /// <summary>
     /// 스위치 사용
     /// </summary>
     public void Use()
     {
-        if(targetDoor != null)  // 조작할 문이 있어야 한다.
+        if(targetDoor != null && CanUse)  // 조작할 문이 있어야 한다. 그리고 사용 가능할 때만 사용
         {
             switch (state)
             {

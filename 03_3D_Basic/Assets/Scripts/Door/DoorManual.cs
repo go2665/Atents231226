@@ -5,7 +5,26 @@ using UnityEngine;
 public class DoorManual : DoorBase, IInteracable
 {
     TextMeshPro text;   // 3D 글자(UI아님)
+    
+    /// <summary>
+    /// 문이 열려있는 상태(true면 문이 열려있다, false면 문이 닫혀있다.)
+    /// </summary>
     bool isOpen = false;
+
+    /// <summary>
+    /// 재사용 쿨타임
+    /// </summary>
+    public float coolTime = 0.5f;
+
+    /// <summary>
+    /// 현재 남아있는 쿨타임
+    /// </summary>
+    float currentCoolTime = 0;
+
+    /// <summary>
+    /// 사용 가능 여부. 쿨타임이 0 미만일 때 사용 가능
+    /// </summary>
+    public bool CanUse => currentCoolTime < 0.0f;
 
     protected override void Awake()
     {
@@ -13,18 +32,27 @@ public class DoorManual : DoorBase, IInteracable
         text = GetComponentInChildren<TextMeshPro>(true);
     }
 
+    void Update()
+    {
+        currentCoolTime -= Time.deltaTime;
+    }
+
     public void Use()
     {
-        if (isOpen)
+        if(CanUse)  // 사용 가능할 때만 사용
         {
-            Close();
-            isOpen = false;
-        }
-        else
-        {
-            Open();
-            isOpen = true;
-        }
+            if (isOpen)
+            {
+                Close();
+                isOpen = false;
+            }
+            else
+            {
+                Open();
+                isOpen = true;
+            }
+            currentCoolTime = coolTime; // 쿨타임 초기화
+        }        
     }
 
     protected virtual void OnTriggerEnter(Collider other)
