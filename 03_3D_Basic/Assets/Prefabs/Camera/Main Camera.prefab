@@ -33,7 +33,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 15, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 20, y: 0, z: 0}
 --- !u!20 &6545234110832091896
 Camera:
   m_ObjectHideFlags: 0
@@ -120,7 +120,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  m_CustomBlends: {fileID: 0}
+  m_CustomBlends: {fileID: 11400000, guid: 0e2a924d51a8e2140ad8dc72e50faf8c, type: 2}
   m_CameraCutEvent:
     m_PersistentCalls:
       m_Calls: []
