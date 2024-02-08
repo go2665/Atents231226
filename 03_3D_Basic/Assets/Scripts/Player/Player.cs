@@ -153,6 +153,33 @@ public class Player : MonoBehaviour, IAlive
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        PlatformBase platform = other.GetComponent<PlatformBase>();
+        if(platform != null)
+        {
+            platform.onMove += OnRideMovingObject;  // 플랫폼 트리거에 들어갔을 때 함수 연결
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        PlatformBase platform = other.GetComponent<PlatformBase>();
+        if (platform != null)
+        {
+            platform.onMove -= OnRideMovingObject;  // 플랫폼 트리거에서 나왔을 때 연결 해제
+        }
+    }
+
+    /// <summary>
+    /// 움직이는 물체에 탑승했을 때 연결될 함수
+    /// </summary>
+    /// <param name="delta">움직인 양</param>
+    void OnRideMovingObject(Vector3 delta)
+    {
+        rigid.MovePosition(rigid.position + delta);
+    }
+
     /// <summary>
     /// 이동 입력 처리용 함수
     /// </summary>

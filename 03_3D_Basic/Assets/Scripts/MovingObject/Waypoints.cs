@@ -31,11 +31,14 @@ public class Waypoints : MonoBehaviour
     /// <summary>
     /// 다음 웨이포인트 지점을 돌려주면서 index를 새로 지정하는 함수
     /// </summary>
-    /// <returns></returns>
+    /// <returns>다음 웨이포인트 지점의 트랜스폼</returns>
     public Transform GetNextWaypoint()
     {
         // index를 0 -> 1 -> 2 -> 0 ...
 
-        return null;
+        index++;
+        index %= waypoints.Length;
+
+        return waypoints[index];
     }
 }
