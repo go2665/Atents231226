@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 562480816023808508, guid: a4e67d6f51fcd3f4e831a04170d7c18a, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
     - target: {fileID: 2097070310402111947, guid: a4e67d6f51fcd3f4e831a04170d7c18a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -50,7 +54,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6533613053873434844, guid: a4e67d6f51fcd3f4e831a04170d7c18a, type: 3}
       propertyPath: m_Name
-      value: TriggerStationSet Variant
+      value: StationSet_Trigger Variant
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

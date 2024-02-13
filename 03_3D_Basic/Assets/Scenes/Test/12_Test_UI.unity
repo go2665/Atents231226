@@ -449,6 +449,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1086003677}
   - component: {fileID: 1086003678}
+  - component: {fileID: 1086003679}
   m_Layer: 5
   m_Name: LifeTimeGauge
   m_TagString: Untagged
@@ -529,6 +530,18 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1086003679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1086003676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42215447528edc945bb68315d4471a8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1182834942 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2333294348032608985, guid: d6a3a96da53dccf48a56cc2b719ea96b, type: 3}
