@@ -105,21 +105,37 @@ public class Player : MonoBehaviour, IAlive
     /// </summary>
     public Action onDie;
 
+    /// <summary>
+    /// 시작했을 때의 플레이어 수명
+    /// </summary>
     public float startLifeTime = 10.0f;
+
+    /// <summary>
+    /// 현재 플레이어의 수명
+    /// </summary>
     float lifeTime = 0.0f;
 
+    /// <summary>
+    /// 플레이어의 수명을 확인하고 설정하기 위한 프로퍼티
+    /// </summary>
     float LifeTime
     {
         get => lifeTime;
         set
         {
-            // 추가 코드 필요
             lifeTime = value;
+            if( lifeTime < 0.0f )
+            {
+                lifeTime = 0.0f;    // 수명이 다 되었으면 0.0으로 숫자 정리 및 사망처리
+                Die();
+            }
+            onLifeTimeChange?.Invoke( lifeTime / startLifeTime );   // 현재 수명 비율을 알림
         }
     }
 
-    // 그라운드 체크하기
-
+    /// <summary>
+    /// 수명이 변경될 때 실행될 델리게이트
+    /// </summary>
     public Action<float> onLifeTimeChange;
 
     private void Awake()
