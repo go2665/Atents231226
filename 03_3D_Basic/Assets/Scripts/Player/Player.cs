@@ -77,6 +77,21 @@ public class Player : MonoBehaviour, IAlive
     /// </summary>
     public Action onDie;
 
+    public float startLifeTime = 10.0f;
+    float lifeTime = 0.0f;
+
+    float LifeTime
+    {
+        get => lifeTime;
+        set
+        {
+            // 추가 코드 필요
+            lifeTime = value;
+        }
+    }
+
+    public Action<float> onLifeTimeChange;
+
     private void Awake()
     {
         //inputActions = new PlayerInputActions();
@@ -91,6 +106,7 @@ public class Player : MonoBehaviour, IAlive
     void Start()
     {
         currentMoveSpeed = moveSpeed;
+        LifeTime = startLifeTime;
     }
 
     private void OnEnable()
@@ -129,6 +145,7 @@ public class Player : MonoBehaviour, IAlive
     private void Update()
     {
         jumpCoolRemains -= Time.deltaTime;
+        LifeTime -= Time.deltaTime;
     }
 
     private void FixedUpdate()
