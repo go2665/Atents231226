@@ -300,7 +300,7 @@ public class Player : MonoBehaviour, IAlive
         {
             rigid.AddForce(jumpPower * Vector3.up, ForceMode.Impulse);  // 위쪽으로 jumpPower만큼 힘을 더하기
             jumpCoolRemains = jumpCoolTime; // 쿨타임 초기화
-            GroundCount = 0;                // 모든 땅에서 떨어졌음
+            //GroundCount = 0;                // 모든 땅에서 떨어졌음
         }
     }
 
