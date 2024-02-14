@@ -153,6 +153,13 @@ public class Player : MonoBehaviour, IAlive
     {
         currentMoveSpeed = moveSpeed;
         LifeTime = startLifeTime;
+
+        // 가상 스틱 연결하기
+        VirtualStick stick = GameManager.Instance.Stick;
+        if( stick != null )
+        {
+            stick.onMoveInput += (inputDelta) => SetInput(inputDelta, inputDelta.sqrMagnitude > 0.0025f);
+        }
     }
 
     private void OnEnable()

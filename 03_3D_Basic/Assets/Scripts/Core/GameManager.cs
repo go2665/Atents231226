@@ -15,8 +15,21 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    VirtualStick stick;
+    public VirtualStick Stick
+    {
+        get
+        {
+            if(stick == null)
+                stick = FindAnyObjectByType<VirtualStick>();
+            return stick;
+        }
+    }
+
+
     protected override void OnInitialize()
     {
         player = FindAnyObjectByType<Player>();
+        stick = FindAnyObjectByType<VirtualStick>();
     }
 }
