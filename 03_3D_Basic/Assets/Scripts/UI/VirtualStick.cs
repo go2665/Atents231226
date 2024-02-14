@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
-public class VirtualStick : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerDownHandler
+public class VirtualStick : MonoBehaviour, IDragHandler, IEndDragHandler
 {
     RectTransform handleRect;
     RectTransform containerRect;
@@ -42,20 +42,31 @@ public class VirtualStick : MonoBehaviour, IDragHandler, IPointerUpHandler, IPoi
         InputUpdate(position);
     }
 
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        //if(eventData.button == PointerEventData.InputButton.Left)   // 왼쪽 버튼이 떨어졌을 때
-        InputUpdate(Vector2.zero);
-    }
+    //public void OnPointerUp(PointerEventData eventData)
+    //{
+    //    //if(eventData.button == PointerEventData.InputButton.Left)   // 왼쪽 버튼이 떨어졌을 때
+    //    InputUpdate(Vector2.zero);
+    //}
 
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        // IPointerUpHandler와 IPointerDownHandler는 항상 쌍으로 있어야 한다.
-    }
+    //public void OnPointerDown(PointerEventData eventData)
+    //{
+    //    // IPointerUpHandler와 IPointerDownHandler는 항상 쌍으로 있어야 한다.
+    //}
 
     private void InputUpdate(Vector2 inputDelta)
     {
         handleRect.anchoredPosition = inputDelta;
         onMoveInput?.Invoke(inputDelta/stickRange); // 크기를 1로 변환해서 보냄
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        // IBeginDragHandler와 IEndDragHandler를 사용하려면 IDragHandler 필수
+        InputUpdate(Vector2.zero);
+    }
+
+    public void Stop()
+    {
+        onMoveInput = null;
     }
 }

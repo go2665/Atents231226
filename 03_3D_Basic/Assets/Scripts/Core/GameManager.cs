@@ -26,10 +26,22 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    VirtualButton jumpButton;
+    public VirtualButton JumpButton
+    {
+        get
+        {
+            if (jumpButton == null)
+                jumpButton = FindAnyObjectByType<VirtualButton>();
+            return jumpButton;
+        }
+    }
+
 
     protected override void OnInitialize()
     {
         player = FindAnyObjectByType<Player>();
         stick = FindAnyObjectByType<VirtualStick>();
+        jumpButton = FindAnyObjectByType<VirtualButton>();
     }
 }

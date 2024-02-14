@@ -90,10 +90,22 @@ public class Player : MonoBehaviour, IAlive
     /// </summary>
     float jumpCoolRemains = -1.0f;
 
+    float JumpCoolRemains
+    {
+        get => jumpCoolRemains;
+        set
+        {
+            jumpCoolRemains = value;
+            onJumpCoolTimeChange?.Invoke(jumpCoolRemains / jumpCoolTime);
+        }
+    }
+
+    public Action<float> onJumpCoolTimeChange;
+
     /// <summary>
     /// 점프가 가능한지 확인하는 프로퍼티(점프중이 아니고 쿨타임이 다 지났다.)
     /// </summary>
-    bool IsJumpAvailable => !InAir && (jumpCoolRemains < 0.0f);
+    bool IsJumpAvailable => !InAir && (JumpCoolRemains < 0.0f) && isAlive;
 
     /// <summary>
     /// 플레이어의 생존 여부
@@ -158,8 +170,19 @@ public class Player : MonoBehaviour, IAlive
         VirtualStick stick = GameManager.Instance.Stick;
         if( stick != null )
         {
-            stick.onMoveInput += (inputDelta) => SetInput(inputDelta, inputDelta.sqrMagnitude > 0.0025f);
+            stick.onMoveInput += (inputDelta) => SetInput(inputDelta, inputDelta.sqrMagnitude > 0.0025f);   // 이동 입력 전달
+            onDie += stick.Stop;    // 플레이어 죽으면 정지
         }
+
+        // 가상 버튼 연결하기
+        VirtualButton jump = GameManager.Instance.JumpButton;
+        if(jump != null )
+        {
+            jump.onClick += Jump;   // 점프 입력 전달
+            onJumpCoolTimeChange += jump.RefreshCoolTime;   // 점프 쿨타임 전달
+            onDie += jump.Stop;     // 플레이어 죽으면 정지
+        }
+
     }
 
     private void OnEnable()
@@ -197,7 +220,7 @@ public class Player : MonoBehaviour, IAlive
 
     private void Update()
     {
-        jumpCoolRemains -= Time.deltaTime;
+        JumpCoolRemains -= Time.deltaTime;
         LifeTime -= Time.deltaTime;
     }
 
@@ -306,7 +329,7 @@ public class Player : MonoBehaviour, IAlive
         if(IsJumpAvailable) // 점프가 가능할 때만 점프
         {
             rigid.AddForce(jumpPower * Vector3.up, ForceMode.Impulse);  // 위쪽으로 jumpPower만큼 힘을 더하기
-            jumpCoolRemains = jumpCoolTime; // 쿨타임 초기화
+            JumpCoolRemains = jumpCoolTime; // 쿨타임 초기화
             //GroundCount = 0;                // 모든 땅에서 떨어졌음
         }
     }
