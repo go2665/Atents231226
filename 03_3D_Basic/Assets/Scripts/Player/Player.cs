@@ -134,14 +134,17 @@ public class Player : MonoBehaviour, IAlive
     {
         get => lifeTime;
         set
-        {
-            lifeTime = value;
-            if( lifeTime < 0.0f )
+        {            
+            if(isPlaying)   // 플레이 중일 때만 수명 감소
             {
-                lifeTime = 0.0f;    // 수명이 다 되었으면 0.0으로 숫자 정리 및 사망처리
-                Die();
+                lifeTime = value;
+                if( lifeTime < 0.0f )
+                {
+                    lifeTime = 0.0f;    // 수명이 다 되었으면 0.0으로 숫자 정리 및 사망처리
+                    Die();
+                }
+                onLifeTimeChange?.Invoke( lifeTime / startLifeTime );   // 현재 수명 비율을 알림
             }
-            onLifeTimeChange?.Invoke( lifeTime / startLifeTime );   // 현재 수명 비율을 알림
         }
     }
 
@@ -149,6 +152,11 @@ public class Player : MonoBehaviour, IAlive
     /// 수명이 변경될 때 실행될 델리게이트
     /// </summary>
     public Action<float> onLifeTimeChange;
+
+    /// <summary>
+    /// 게임 플레이 중인지 확인용 변수
+    /// </summary>
+    bool isPlaying = true;
 
     private void Awake()
     {
@@ -183,6 +191,8 @@ public class Player : MonoBehaviour, IAlive
             onDie += jump.Stop;     // 플레이어 죽으면 정지
         }
 
+        GameManager.Instance.onGameClear += OnGameClear;
+        GameManager.Instance.onGameOver += OnGameOver;
     }
 
     private void OnEnable()
@@ -358,6 +368,9 @@ public class Player : MonoBehaviour, IAlive
             // 죽었다고 신호보내기(onDie 델리게이트 실행)
             onDie?.Invoke();
 
+            // 게임 오버
+            GameManager.Instance.GameOver();
+
             isAlive = false;
         }
     }
@@ -377,5 +390,26 @@ public class Player : MonoBehaviour, IAlive
     public void RestoreMoveSpeed()
     {
         currentMoveSpeed = moveSpeed;
+    }
+
+    /// <summary>
+    /// 게임 클리어가 되었을 때 플레이어가 처리해야 할 일을 수항하는 함수
+    /// </summary>
+    private void OnGameClear()
+    {
+        // 수명 감소 정지
+        isPlaying = false;
+
+        // 더 이상 조종이 안되어야 한다.
+        inputActions.Player.Disable();
+    }
+
+    /// <summary>
+    /// 게임 오버가 되었을 때 플레이어가 처리해야 할 일을 수항하는 함수
+    /// </summary>
+    private void OnGameOver()
+    {
+        // 수명 감소 정지
+        isPlaying = false;
     }
 }
