@@ -50,3 +50,6 @@ TagManager:
   - name: Road
     uniqueID: 1098137915
     locked: 0
+  - name: Object
+    uniqueID: 2293755933
+    locked: 0
