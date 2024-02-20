@@ -11,6 +11,11 @@ public class Player : MonoBehaviour
     public float speed = 3.0f;
 
     /// <summary>
+    /// 현재 이동 속도
+    /// </summary>
+    float currentSpeed = 3.0f;
+
+    /// <summary>
     /// 현재 입력된 이동 방향
     /// </summary>
     Vector2 inputDirection = Vector2.zero;
@@ -19,6 +24,21 @@ public class Player : MonoBehaviour
     /// 지금 움직이고 있는지 확인하는 변수(true면 움직인다.)
     /// </summary>
     bool isMove = false;
+
+    /// <summary>
+    /// 공격 쿨타임
+    /// </summary>
+    public float attackCoolTime = 1.0f;
+
+    /// <summary>
+    /// 현재 남아있는 공격 쿨타임
+    /// </summary>
+    float currentAttackCoolTime = 0.0f;
+
+    /// <summary>
+    /// 공격 쿨타임이 다 되었는지 확인하기 위한 프로퍼티 
+    /// </summary>
+    bool IsAttackReady => currentAttackCoolTime < 0.0f;
 
     // 컴포넌트들
     Rigidbody2D rigid;
@@ -31,12 +51,15 @@ public class Player : MonoBehaviour
     readonly int InputX_Hash = Animator.StringToHash("InputX");
     readonly int InputY_Hash = Animator.StringToHash("InputY");
     readonly int IsMove_Hash = Animator.StringToHash("IsMove");
+    readonly int Attack_Hash = Animator.StringToHash("Attack");
 
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         inputActions = new PlayerInputAction();
+
+        currentSpeed = speed;
     }
 
     private void OnEnable()
@@ -44,19 +67,26 @@ public class Player : MonoBehaviour
         inputActions.Player.Enable();
         inputActions.Player.Move.performed += OnMove;
         inputActions.Player.Move.canceled += OnStop;
+        inputActions.Player.Attack.performed += OnAttack;
     }
 
     private void OnDisable()
     {
+        inputActions.Player.Attack.performed -= OnAttack;
         inputActions.Player.Move.canceled -= OnStop;
         inputActions.Player.Move.performed -= OnMove;
         inputActions.Player.Disable();
     }
 
+    private void Update()
+    {
+        currentAttackCoolTime -= Time.deltaTime;
+    }
+
     private void FixedUpdate()
     {
-        // 물리 프레임마다 inputDirection방향으로 초당 speed만큼 이동
-        rigid.MovePosition(rigid.position + Time.fixedDeltaTime * speed * inputDirection);
+        // 물리 프레임마다 inputDirection방향으로 초당 currentSpeed만큼 이동
+        rigid.MovePosition(rigid.position + Time.fixedDeltaTime * currentSpeed * inputDirection);
     }
 
     private void OnMove(UnityEngine.InputSystem.InputAction.CallbackContext context)
@@ -82,4 +112,23 @@ public class Player : MonoBehaviour
         isMove = false;     // 정지
         animator.SetBool(IsMove_Hash, isMove);
     }
+
+    private void OnAttack(UnityEngine.InputSystem.InputAction.CallbackContext _)
+    {
+        if( IsAttackReady ) // 공격 쿨타임이 다 되었으면
+        {
+            animator.SetTrigger(Attack_Hash);       // 애니메이션 재생
+            currentAttackCoolTime = attackCoolTime; // 쿨타임 초기화
+            currentSpeed = 0.0f;                    // 이동 정지
+        }
+    }
+
+    /// <summary>
+    /// 이동 속도를 원래대로 되돌리는 함수
+    /// </summary>
+    public void RestoreSpeed()
+    {
+        currentSpeed = speed;
+    }
 }
+
