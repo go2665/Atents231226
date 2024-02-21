@@ -125,4 +125,14 @@ public class Test_Slime : TestBase
         // Phase와 ReversePhase의 두깨 변경하기
         phaseThicknessChange = !phaseThicknessChange;
     }
+
+    protected override void OnTest4(InputAction.CallbackContext context)
+    {
+        // InnerLine 두깨 조정하기
+    }
+
+    protected override void OnTest5(InputAction.CallbackContext context)
+    {
+        // Dissolve의 fade 조정하기
+    }
 }
