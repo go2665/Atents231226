@@ -41,7 +41,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _ReverseSplit: 1
+    - _ReverseSplit: 0
     - _ReverseThickness: 0.1
     m_Colors:
     - _ReverseColor: {r: 0, g: 1.292176, b: 2, a: 0}
