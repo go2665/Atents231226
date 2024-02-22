@@ -99,6 +99,9 @@ public class Player : MonoBehaviour
         animator.SetFloat(InputY_Hash, inputDirection.y);
         isMove = true;
         animator.SetBool(IsMove_Hash, isMove);
+
+        // 공격 범위 회전시키기
+        AttackSensorRotate(inputDirection);
     }
 
     private void OnStop(UnityEngine.InputSystem.InputAction.CallbackContext _)
@@ -129,6 +132,11 @@ public class Player : MonoBehaviour
     public void RestoreSpeed()
     {
         currentSpeed = speed;
+    }
+
+    void AttackSensorRotate(Vector2 direction)
+    {
+        // attackSensorAxis
     }
 }
 

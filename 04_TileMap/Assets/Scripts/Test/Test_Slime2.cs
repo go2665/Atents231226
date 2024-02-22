@@ -112,7 +112,7 @@ public class Test_Slime2 : TestBase
 
             yield return null;
         }
-        mainMaterial.SetFloat(PhaseSplitID, 0);
+        mainMaterial.SetFloat(DissolveFadeID, 0);
     }
 
     protected override void OnTest1(InputAction.CallbackContext context)
