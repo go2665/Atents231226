@@ -40,6 +40,11 @@ public class Player : MonoBehaviour
     /// </summary>
     bool IsAttackReady => currentAttackCoolTime < 0.0f;
 
+    /// <summary>
+    /// AttackSensor의 회전 축
+    /// </summary>
+    Transform attackSensorAxis;
+
     // 컴포넌트들
     Rigidbody2D rigid;
     Animator animator;
@@ -60,6 +65,8 @@ public class Player : MonoBehaviour
         inputActions = new PlayerInputAction();
 
         currentSpeed = speed;
+
+        attackSensorAxis = transform.GetChild(0);
     }
 
     private void OnEnable()
@@ -134,9 +141,34 @@ public class Player : MonoBehaviour
         currentSpeed = speed;
     }
 
+
+    /// <summary>
+    /// 입력 방향에 따라 AttackSensor를 회전시키는 함수
+    /// </summary>
+    /// <param name="direction">입력 방향</param>
     void AttackSensorRotate(Vector2 direction)
     {
-        // attackSensorAxis
+        // 대각선은 위아래를 우선
+        if( direction.y < 0 )
+        {
+            attackSensorAxis.rotation = Quaternion.identity;            // 아래
+        }
+        else if( direction.y > 0 )
+        {
+            attackSensorAxis.rotation = Quaternion.Euler(0, 0, 180);    // 위
+        }
+        else if( direction.x < 0 )
+        {
+            attackSensorAxis.rotation = Quaternion.Euler(0, 0, -90);    // 왼쪽
+        }
+        else if(direction.x > 0 )
+        {
+            attackSensorAxis.rotation = Quaternion.Euler(0, 0, 90);     // 오른쪽
+        }
+        else
+        {
+            attackSensorAxis.rotation = Quaternion.identity;            // 입력이 없음(0,0)
+        }
     }
 }
 

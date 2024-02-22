@@ -80,7 +80,7 @@ public class Slime : RecycleObject
     /// 아웃라인 켜고 끄는 함수
     /// </summary>
     /// <param name="isShow">true면 보이고 false면 보이지 않는다.</param>
-    void ShowOutline(bool isShow)
+    public void ShowOutline(bool isShow = true)
     {
         //  - Outline on/off
         if (isShow)
