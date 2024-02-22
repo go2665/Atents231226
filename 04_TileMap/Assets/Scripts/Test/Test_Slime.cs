@@ -74,7 +74,7 @@ public class Test_Slime : TestBase
         {
             float min = 0.0f;
             float max = 0.01f;
-            num = min + (max - min) * num;      // num값에 따라 최소~최대로 변경
+            float result = min + (max - min) * num;      // num값에 따라 최소~최대로 변경
 
             // min = 5;
             // max = 10;
@@ -82,7 +82,7 @@ public class Test_Slime : TestBase
             // num이 0.5이면 7.5
             // num이 1이면 10
 
-            materials[0].SetFloat(OutlineThicknessID, num);
+            materials[0].SetFloat(OutlineThicknessID, result);
             outlineThickness = num;
         }
         if( phaseSplitChange )
@@ -95,10 +95,10 @@ public class Test_Slime : TestBase
         {
             float min = 0.1f;
             float max = 0.2f;
-            num = min + (max - min) * num;
+            float result = min + (max - min) * num;
 
-            materials[1].SetFloat(PhaseThicknessID, num);
-            materials[2].SetFloat(ReverseThicknessID, num);
+            materials[1].SetFloat(PhaseThicknessID, result);
+            materials[2].SetFloat(ReverseThicknessID, result);
         }
     }
 
