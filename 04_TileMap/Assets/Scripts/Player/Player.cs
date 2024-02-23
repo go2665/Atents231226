@@ -45,6 +45,16 @@ public class Player : MonoBehaviour
     /// </summary>
     Transform attackSensorAxis;
 
+    /// <summary>
+    /// 현재 내 공격 범위 안에 들어있는 적의 목록
+    /// </summary>
+    List<Slime> attackTargetList;
+
+    /// <summary>
+    /// 지금 공격이 유효한 상태인지 확인하는 변수
+    /// </summary>
+    bool isAttackValid = false;
+
     // 컴포넌트들
     Rigidbody2D rigid;
     Animator animator;
@@ -67,6 +77,28 @@ public class Player : MonoBehaviour
         currentSpeed = speed;
 
         attackSensorAxis = transform.GetChild(0);
+
+        attackTargetList = new List<Slime>(4);
+        AttackSensor sensor = attackSensorAxis.GetComponentInChildren<AttackSensor>();
+        sensor.onEnemyEnter += (slime) =>       // 적이 센서 안에 들어오면
+        {
+            if (isAttackValid)  
+            {
+                // 공격이 유효한 상황이면
+                slime.Die();                    // 즉시 죽이기
+            }
+            else
+            {
+                // 공격이 유효하지 않으면
+                attackTargetList.Add(slime);    // 리스트에 추가
+            }
+            slime.ShowOutline();                // 아웃라인을 그린다.
+        };
+        sensor.onEnemyExit += (slime) =>        // 적이 센서에서 나가면
+        {
+            attackTargetList.Remove(slime);     // 리스트에서 제거하고
+            slime.ShowOutline(false);           // 아웃라인을 끈다.
+        };
     }
 
     private void OnEnable()
@@ -130,6 +162,7 @@ public class Player : MonoBehaviour
             animator.SetTrigger(Attack_Hash);       // 애니메이션 재생
             currentAttackCoolTime = attackCoolTime; // 쿨타임 초기화
             currentSpeed = 0.0f;                    // 이동 정지
+            isAttackValid = false;                  // 만약을 대비한 초기화(isAttackValid가 true로 고정되는 일 방지)
         }
     }
 
@@ -169,6 +202,27 @@ public class Player : MonoBehaviour
         {
             attackSensorAxis.rotation = Quaternion.identity;            // 입력이 없음(0,0)
         }
+    }
+
+    /// <summary>
+    /// 공격 애니메이션 진행 중에 공격이 유효해지면 애니메이션 이벤트로 실행
+    /// </summary>
+    void AttackValid()
+    {
+        isAttackValid = true;
+        foreach(var slime in attackTargetList)
+        {
+            slime.Die();
+        }
+        attackTargetList.Clear();
+    }
+
+    /// <summary>
+    /// 공격 애니메이션 진행 중에 공격이 유효하지 않게 되면 애니메이션 이벤트로 실행
+    /// </summary>
+    void AttackNotValid()
+    {
+        isAttackValid = false;
     }
 }
 

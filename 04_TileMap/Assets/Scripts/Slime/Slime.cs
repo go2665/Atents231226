@@ -54,11 +54,17 @@ public class Slime : RecycleObject
         StartCoroutine(StartPhase());
     }
 
-    private void Die()
+    /// <summary>
+    /// 슬라임이 죽을 때 실행되는 함수
+    /// </summary>
+    public void Die()
     {
-        StartCoroutine(StartDissolve());
+        StartCoroutine(StartDissolve());    // 디졸브만 실행(디졸브 코루틴안에서 비활성화까지 처리)
     }
 
+    /// <summary>
+    /// 비활성화 시키면서 풀로 되돌리는 함수
+    /// </summary>
     private void ReturnToPool()
     {
         gameObject.SetActive(false);
