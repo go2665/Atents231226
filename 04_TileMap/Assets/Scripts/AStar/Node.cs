@@ -91,7 +91,7 @@ public class Node : IComparable<Node>
         if(other == null)               // other가 null이면 내가 크다
             return 1;
 
-        return  F.CompareTo(other.F);   // F 값을 기준으로 순서를 정해라
+        return F.CompareTo(other.F);   // F 값을 기준으로 순서를 정해라
     }
 
     /// <summary>
@@ -100,10 +100,10 @@ public class Node : IComparable<Node>
     /// <param name="left">== 왼쪽에 있는 노드</param>
     /// <param name="right">== 오른쪽에 있는 노드</param>
     /// <returns>같으면 true, 다르면 false</returns>
-    public static bool operator ==(Node left, Node right)
-    {
-        return left.x == right.x && left.y == right.y;
-    }
+    //public static bool operator ==(Node left, Node right)
+    //{
+    //    return left.x == right.x && left.y == right.y;
+    //}
 
 
     public static bool operator ==(Node left, Vector2Int right)
@@ -117,10 +117,10 @@ public class Node : IComparable<Node>
     /// <param name="left">== 왼쪽에 있는 노드</param>
     /// <param name="right">== 오른쪽에 있는 노드</param>
     /// <returns>같으면 false, 다르면 true</returns>
-    public static bool operator !=(Node left, Node right)
-    {
-        return left.x != right.x || left.y != right.y;
-    }
+    //public static bool operator !=(Node left, Node right)
+    //{
+    //    return left.x != right.x || left.y != right.y;
+    //}
 
     public static bool operator !=(Node left, Vector2Int right)
     {

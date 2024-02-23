@@ -16,7 +16,7 @@ public class Test_AStar : TestBase
         List<Node> nodes = new List<Node>();
         nodes.Sort();
 
-        int i = 0;
+        //int i = 0;
     }
 
     protected override void OnTest1(InputAction.CallbackContext context)
@@ -31,7 +31,7 @@ public class Test_AStar : TestBase
 
         list.Sort();
 
-        int i = 0;
+        //int i = 0;
     }
 
     protected override void OnTest2(InputAction.CallbackContext context)
@@ -59,7 +59,7 @@ public class Test_AStar : TestBase
         nodes.Add(node4);
         nodes.Add(node5);
         nodes.Sort();
-        int i = 0;
+        //int i = 0;
     }
 
     protected override void OnTest3(InputAction.CallbackContext context)
@@ -93,5 +93,30 @@ public class Test_AStar : TestBase
     protected override void OnTest4(InputAction.CallbackContext context)
     {
         // TestData 정렬 확인하기
+
+        TestData t1 = new TestData(0, 5.0f, "b");
+        TestData t2 = new TestData(2, 1.0f, "d");
+        TestData t3 = new TestData(1, 4.0f, "a");
+        TestData t4 = new TestData(3, 2.0f, "c");
+        TestData t5 = new TestData(4, 3.0f, "e");
+
+        List<TestData> nodes = new List<TestData>(5);
+        nodes.Add(t1);
+        nodes.Add(t2);
+        nodes.Add(t3);
+        nodes.Add(t4);
+        nodes.Add(t5);
+
+        nodes.Sort();
+
+        //int i = 0;
+        Debug.Log("4");
+    }
+
+    protected override void OnTest5(InputAction.CallbackContext context)
+    {
+        GridMap grid = new GridMap(3, 3);
+
+        int i = 0;
     }
 }
