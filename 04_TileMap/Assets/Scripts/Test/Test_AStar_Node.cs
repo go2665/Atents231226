@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Test_AStar : TestBase
+public class Test_AStar_Node : TestBase
 {
     private void Start()
     {
@@ -115,8 +115,5 @@ public class Test_AStar : TestBase
 
     protected override void OnTest5(InputAction.CallbackContext context)
     {
-        GridMap grid = new GridMap(3, 3);
-
-        int i = 0;
     }
 }
