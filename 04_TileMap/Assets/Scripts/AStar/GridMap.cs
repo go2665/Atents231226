@@ -10,18 +10,22 @@ public class GridMap
     /// <summary>
     /// 이 맵에 있는 모든 노드
     /// </summary>
-    Node[] nodes;
+    protected Node[] nodes;
 
     /// <summary>
     /// 맵의 가로 길이
     /// </summary>
-    int width;
+    protected int width;
 
     /// <summary>
     /// 맵의 세로 길이
     /// </summary>
-    int height;
+    protected int height;
     
+    protected GridMap() 
+    {        
+    }
+
     /// <summary>
     /// 생성자
     /// </summary>
