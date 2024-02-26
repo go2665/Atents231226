@@ -19,14 +19,14 @@ public static class AStar
     {
         List<Vector2Int> path = null;
 
-        if(map.IsValidPosition(start) && map.IsValidPosition(end) && map.IsWall(start) && map.IsWall(end))
+        if(map.IsValidPosition(start) && map.IsValidPosition(end) && map.IsPlain(start) && map.IsPlain(end))
         {
-            // start와 end가 맵 안이고 벽이 아니다.
+            // start와 end가 맵 안이고 평지다.
 
             map.ClearMapData(); // 맵 데이터 전체 초기화
 
             List<Node> open = new List<Node>();     // open list : 앞으로 탐색할 노드의 리스트
-            List<Node> close = new List<Node>();    // close lise : 탐색이 완료된 노드의 리스트
+            List<Node> close = new List<Node>();    // close list : 탐색이 완료된 노드의 리스트
 
             // A* 알고리즘 시작하기
             Node current = map.GetNode(start);
@@ -35,10 +35,42 @@ public static class AStar
             open.Add(current);
 
             // A* 루프 시작(핵심 루틴)
-            while(open.Count > 0)
+            while(open.Count > 0)   // open 리스트에 노드가 있으면 계속 반복
             {
-                //2.open list에 추가가 될 때는 f를 계산한다.(g와 h도 계산이 되어야 함)
-                //3.open list에서 f 값이 가장 작은 노드를 하나 선택한다.
+                open.Sort();            // f값을 기준으로 정렬
+                current = open[0];      // 제일 앞에 있는 노드(=f값이 가장 작은 노드)를 current로 설정
+                open.RemoveAt(0);       // open리스트에서 제일 앞에 있는 노드를 제거
+
+                if( current != end )
+                {
+                    // 목적지가 아니다.
+                    close.Add(current); // close리스트에 current를 추가해서 탐색이 완료되었음을 표시
+
+                    // current의 주변 8방향을 open 리스트에 추가
+                    for(int y = -1;y<2;y++)
+                    {
+                        for(int x = -1;x<2;x++)
+                        {
+                            Node node = map.GetNode(current.X + x, current.Y + y);  // 주변 노드 가져오기
+
+                            // 스킵할 노드인지 확인
+                            if (node == null) continue;                             // 맵 밖
+                            if (node == current) continue;                          // 자기자신
+                            if (node.nodeType == Node.NodeType.Wall) continue;      // 벽
+                            if (close.Exists((x) => x == node)) continue;           // close 리스트에 있음
+                                                                                    // (close에 있는 모든 요소(x)를 node와 비교해서 하나라도 같으면 true, 전부 다르면 false)
+                            // 대각선으로 가는데 옆에 벽이 있는 경우
+                                                        
+
+                        }
+                    }
+                }
+                else
+                {
+                    // 목적지에 도착했다.
+                    break;  // 목적지에 도착했으면 while 종료
+                }
+
                 //4.선택된 노드의 주변 노드를 open list에 추가한다.
                 //(못가는 노드와 close list에 있는 노드는 하지 않음.g값이 이전보다 더 작은 경우는 갱신한다.)
                 //5.선택된 노드는 close list에 들어간다.

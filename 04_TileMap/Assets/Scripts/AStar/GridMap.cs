@@ -82,6 +82,28 @@ public class GridMap
     }
 
     /// <summary>
+    /// 특정 위치가 평지인지 아닌지 확인하는 함수
+    /// </summary>
+    /// <param name="x">맵에서의 x좌표</param>
+    /// <param name="y">맵에서의 y좌표</param>
+    /// <returns>true면 평지, false면 평지 아님</returns>
+    public bool IsPlain(int x, int y)
+    {
+        Node node = GetNode(x, y);
+        return node != null && node.nodeType == Node.NodeType.Plain;
+    }
+
+    /// <summary>
+    /// 특정 위치가 평지인지 아닌지 확인하는 함수
+    /// </summary>
+    /// <param name="gridPosition">맵에서의 그리드 좌표</param>
+    /// <returns>true면 평지, false면 평지 아님</returns>
+    public bool IsPlain(Vector2Int gridPosition)
+    {
+        return IsPlain(gridPosition.x, gridPosition.y);
+    }
+
+    /// <summary>
     /// 특정 위치가 벽인지 아닌지 확인하는 함수
     /// </summary>
     /// <param name="x">맵에서의 x좌표</param>
