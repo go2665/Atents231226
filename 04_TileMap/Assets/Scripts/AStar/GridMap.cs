@@ -173,7 +173,7 @@ public class GridMap
     /// </summary>
     /// <param name="index">변경할 index값</param>
     /// <returns>변경된 그리드 좌표</returns>
-    Vector2Int IndexToGrid(int index)
+    public Vector2Int IndexToGrid(int index)
     {
         return new Vector2Int(index % width, index / width);
     }

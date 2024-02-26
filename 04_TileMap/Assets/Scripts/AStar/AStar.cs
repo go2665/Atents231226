@@ -15,7 +15,7 @@ public static class AStar
     /// <param name="start">시작점</param>
     /// <param name="end">도착점</param>
     /// <returns>시작점에서 도착점까지의 경로, 길을 못찾으면 null</returns>
-    public static List<Vector2Int> PathFine(GridMap map, Vector2Int start, Vector2Int end)
+    public static List<Vector2Int> PathFind(GridMap map, Vector2Int start, Vector2Int end)
     {
         List<Vector2Int> path = null;
 
@@ -60,8 +60,29 @@ public static class AStar
                             if (close.Exists((x) => x == node)) continue;           // close 리스트에 있음
                                                                                     // (close에 있는 모든 요소(x)를 node와 비교해서 하나라도 같으면 true, 전부 다르면 false)
                             // 대각선으로 가는데 옆에 벽이 있는 경우
-                                                        
+                            bool isDiagonal = (x * y) != 0;     // 대각선인지 확인(true면 대각선)                            
+                            if ( isDiagonal &&
+                                (map.IsWall(current.X + x, current.Y) || map.IsWall(current.X , current.Y + y)) ) 
+                                continue; // 대각선이고 한쪽이 벽이다.
 
+                            // current에서 (x, y)로 가는데 걸리는 거리를 확정(대각선은 1.4, 옆은 1.0)
+                            float distance = isDiagonal ? diagonalDistance : sideDistance;
+
+                            // G값을 갱신할지 결정
+                            if( node.G > current.G + distance )
+                            {
+                                // 원래 가지던 경로보다 current를 거쳐서 이동하는 것이 더 빠르다.(=갱신 필요)
+
+                                if( node.parent == null )   
+                                {
+                                    // 부모가 없으면 아직 open리스트에 안들어 갔음
+                                    node.H = GetHeuristic(node, end);   // 휴리스틱 계산
+                                    open.Add(node);                     // open리스트에 추가
+                                }
+
+                                node.G = current.G + distance;          // G값 설정
+                                node.parent = current;                  // 부모 설정
+                            }
                         }
                     }
                 }
@@ -70,19 +91,21 @@ public static class AStar
                     // 목적지에 도착했다.
                     break;  // 목적지에 도착했으면 while 종료
                 }
-
-                //4.선택된 노드의 주변 노드를 open list에 추가한다.
-                //(못가는 노드와 close list에 있는 노드는 하지 않음.g값이 이전보다 더 작은 경우는 갱신한다.)
-                //5.선택된 노드는 close list에 들어간다.
-                //6.선택된 노드가 도착점이 아니면 3번으로 돌아가 다시 실행한다.
             }
 
             // 마무리 작업(도착점에 도착했다 or 길을 못찾았다)
             if(current == end)
             {
-                // 경로 만들기
+                // 도착점에 도착했다. => 경로 만들기
+                path = new List<Vector2Int>();
+                Node result = current;
+                while(result != null)   // result가 start가 될 때까지 반복
+                {
+                    path.Add(new Vector2Int(result.X, result.Y));   // 각 current의 위치를 추가                    
+                    result = result.parent;
+                }
+                path.Reverse(); // 도착점->시작점으로 되어 있는 경로를 뒤집기
             }
-
         }
 
         return path;
