@@ -9,6 +9,19 @@ public class Test_AStar_Tilemap : TestBase
     public Tilemap background;
     public Tilemap obstacle;
 
+    public Vector2Int start;
+    public Vector2Int end;
+
+    TileGridMap gridMap;
+
+    public PathLine pathLine;
+
+    private void Start()
+    {
+        gridMap = new TileGridMap(background, obstacle);
+        pathLine.ClearPath();
+    }
+
     protected override void OnTestLClick(InputAction.CallbackContext _)
     {
         // 타일맵의 그리드 좌표 구하기
@@ -17,7 +30,11 @@ public class Test_AStar_Tilemap : TestBase
 
         Vector2Int gridPosition = (Vector2Int)background.WorldToCell(worldPostion);
 
-        Debug.Log(gridPosition);    
+        //Debug.Log(gridPosition);    
+        if(!IsWall(gridPosition))
+        {
+            start = gridPosition;
+        }
     }
 
     protected override void OnTestRClick(InputAction.CallbackContext _)
@@ -28,15 +45,45 @@ public class Test_AStar_Tilemap : TestBase
 
         Vector2Int gridPosition = (Vector2Int)obstacle.WorldToCell(worldPostion);
 
+        //if (IsWall(gridPosition))
+        //{
+        //    Debug.Log("타일 있음");
+        //}
+        //else
+        //{
+        //    Debug.Log("타일 없음");
+        //}
+
+        if (!IsWall(gridPosition))
+        {
+            end = gridPosition;
+
+            List<Vector2Int> path = AStar.PathFind(gridMap, start, end);
+            //PrintList(path);
+            pathLine.DrawPath(gridMap, path);
+        }
+    }
+
+    /// <summary>
+    /// 지정된 위치에 타일이 있으면 벽, 아니면 빈곳
+    /// </summary>
+    /// <param name="gridPosition">확인할 위치</param>
+    /// <returns>true면 벽, false면 빈곳</returns>
+    bool IsWall(Vector2Int gridPosition)
+    {
         TileBase tile = obstacle.GetTile((Vector3Int)gridPosition);
-        if (tile != null)
+        return tile != null;
+        
+    }
+
+    void PrintList(List<Vector2Int> list)
+    {
+        string str = "";
+        foreach (Vector2Int v in list)
         {
-            Debug.Log("타일 있음");
+            str += $"{v} -> ";
         }
-        else
-        {
-            Debug.Log("타일 없음");
-        }
+        Debug.Log(str + "End");
     }
 
     protected override void OnTest1(InputAction.CallbackContext context)

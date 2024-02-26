@@ -59,3 +59,6 @@ TagManager:
   - name: Player
     uniqueID: 2558179331
     locked: 0
+  - name: DebugInfo
+    uniqueID: 1830795625
+    locked: 0

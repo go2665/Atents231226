@@ -158,18 +158,29 @@ public class GridMap
     /// <param name="y">맵에서의 y좌표</param>
     /// <param name="index">(출력용)변경된 인덱스</param>
     /// <returns>좌표가 적절하면 true, 맵 밖이면 false</returns>
-    bool GridToIndex(int x, int y, out int? index)
+    protected bool GridToIndex(int x, int y, out int? index)
     {
         bool result = false;
         index = null;
 
         if (IsValidPosition(x,y))
         {
-            index = x + y * width;
+            index = CalcIndex(x,y);
             result = true;
         }
 
         return result;
+    }
+
+    /// <summary>
+    /// 인덱스 계산식
+    /// </summary>
+    /// <param name="x">x좌표</param>
+    /// <param name="y">y좌표</param>
+    /// <returns>계산된 인덱스 값</returns>
+    protected virtual int CalcIndex(int x, int y)
+    {
+        return x + y * width;
     }
 
     /// <summary>
@@ -188,7 +199,7 @@ public class GridMap
     /// <param name="x">확인할 x좌표</param>
     /// <param name="y">확인할 y좌표</param>
     /// <returns>true면 맵 안, false면 맵 밖</returns>
-    public bool IsValidPosition(int x, int y)
+    public virtual bool IsValidPosition(int x, int y)
     {
         return x < width && y < height && x >= 0 && y >= 0;
     }
