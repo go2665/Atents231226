@@ -29,6 +29,11 @@ public class Test_SlimePath : TestBase
             slime.SetDestination(gridPos);
         }
     }
+
+    protected override void OnTest1(InputAction.CallbackContext context)
+    {
+        slime.SetDestination(map.GetRandomMoveablePosition());
+    }
 }
 
 /*
@@ -45,7 +50,3 @@ public class Test_SlimePath : TestBase
  - 변수를 등록해서 값을 확인할 수 있다.
  */
 
-
-// 실습
-// 1. 슬라임이 목적지에 도착하면 새로운 목적지를 랜덤으로 설정한다.(GetRandomMoveablePosition함수 사용)
-// 2. 페이즈나 디졸브 도중에 움직이지 않아야 한다.

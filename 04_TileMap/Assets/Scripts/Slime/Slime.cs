@@ -37,6 +37,11 @@ public class Slime : RecycleObject
     readonly int DissolveFadeID = Shader.PropertyToID("_DissolveFade");
 
     /// <summary>
+    /// 페이즈가 끝남을 알리는 델리게이트
+    /// </summary>
+    Action onPhaseEnd;
+
+    /// <summary>
     /// 디졸브가 끝남을 알리는 델리게이트
     /// </summary>
     Action onDissolveEnd;
@@ -66,11 +71,20 @@ public class Slime : RecycleObject
     /// </summary>
     public float moveSpeed = 2.0f;
 
+    /// <summary>
+    /// 슬라임의 이동 활성화 표시용 변수(true면 움직임, false면 안움직임)
+    /// </summary>
+    bool isMoveActivate = false;
+
     private void Awake()
     {
         Renderer spriteRenderer = GetComponent<Renderer>();
         mainMaterial = spriteRenderer.material;
 
+        onPhaseEnd += () =>
+        {
+            isMoveActivate = true;
+        };
         onDissolveEnd += ReturnToPool;
 
         path = new List<Vector2Int>();
@@ -82,7 +96,9 @@ public class Slime : RecycleObject
         base.OnEnable();
 
         ResetShaderProperty();          
-        StartCoroutine(StartPhase());               
+        StartCoroutine(StartPhase());
+
+        isMoveActivate = false;
     }
 
     protected override void OnDisable()
@@ -95,25 +111,7 @@ public class Slime : RecycleObject
 
     private void Update()
     {
-        if(path.Count > 0)
-        {
-            Vector2Int destGrid = path[0];                          // path의 첫번째 위치 가져오기
-
-            Vector3 destPosition = map.GridToWorld(destGrid);       // 목적지 월드좌표 구하기
-            Vector3 direction = destPosition - transform.position;  // 방향 계산
-
-            if( direction.sqrMagnitude < 0.001f  )  // 방향벡터의 길이를 확인해서 도착했는지 확인
-            {
-                // 첫번째 위치에 도착
-                transform.position = destPosition;  // 오차보정
-                path.RemoveAt(0);                   // path의 첫번째 위치를 제거
-            }
-            else
-            {
-                // 도착안했으면 direction 방향으로 이동
-                transform.Translate(Time.deltaTime * moveSpeed * direction.normalized);
-            }
-        }
+        MoveUpdate();   // 이동처리
     }
 
     /// <summary>
@@ -132,6 +130,7 @@ public class Slime : RecycleObject
     /// </summary>
     public void Die()
     {
+        isMoveActivate = false;
         StartCoroutine(StartDissolve());    // 디졸브만 실행(디졸브 코루틴안에서 비활성화까지 처리)
     }
 
@@ -198,6 +197,8 @@ public class Slime : RecycleObject
 
         mainMaterial.SetFloat(PhaseThicknessID, 0); // 페이즈 선 안보이게 만들기
         mainMaterial.SetFloat(PhaseSplitID, 0);     // 숫자를 깔끔하게 정리하기 위한 것
+
+        onPhaseEnd?.Invoke();
     }
 
     /// <summary>
@@ -234,6 +235,48 @@ public class Slime : RecycleObject
         path = AStar.PathFind(map, GridPosition, destination);  // 목적지까지의 경로 저장
 
         pathLine.DrawPath(map, path); // 경로를 그리기
+    }
+
+    /// <summary>
+    /// 목적지에 도착했을 때 실행되는 함수
+    /// </summary>
+    void OnDestinationArrive()
+    {
+        SetDestination(map.GetRandomMoveablePosition());
+    }
+
+    /// <summary>
+    /// Update함수에서 이동 처리하는 함수
+    /// </summary>
+    void MoveUpdate()
+    {
+        if (isMoveActivate)
+        {
+            if (path.Count > 0)
+            {
+                Vector2Int destGrid = path[0];                          // path의 첫번째 위치 가져오기
+
+                Vector3 destPosition = map.GridToWorld(destGrid);       // 목적지 월드좌표 구하기
+                Vector3 direction = destPosition - transform.position;  // 방향 계산
+
+                if (direction.sqrMagnitude < 0.001f)  // 방향벡터의 길이를 확인해서 도착했는지 확인
+                {
+                    // 첫번째 위치에 도착
+                    transform.position = destPosition;  // 오차보정
+                    path.RemoveAt(0);                   // path의 첫번째 위치를 제거
+                }
+                else
+                {
+                    // 도착안했으면 direction 방향으로 이동
+                    transform.Translate(Time.deltaTime * moveSpeed * direction.normalized);
+                }
+            }
+            else
+            {
+                // 목적지에 도착
+                OnDestinationArrive();  // 다음 목적지 자동으로 설정
+            }
+        }
     }
 
 
