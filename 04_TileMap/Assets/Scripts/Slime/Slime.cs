@@ -36,7 +36,30 @@ public class Slime : RecycleObject
     readonly int PhaseThicknessID = Shader.PropertyToID("_PhaseThickness");
     readonly int DissolveFadeID = Shader.PropertyToID("_DissolveFade");
 
+    /// <summary>
+    /// 디졸브가 끝남을 알리는 델리게이트
+    /// </summary>
     Action onDissolveEnd;
+
+    /// <summary>
+    /// 슬라임이 따라 움직일 경로
+    /// </summary>
+    List<Vector2Int> path;
+
+    /// <summary>
+    /// 슬라임이 이동할 경로를 그려주는 클래스
+    /// </summary>
+    PathLine pathLine;
+
+    /// <summary>
+    /// 슬라임이 움직일 그리드맵
+    /// </summary>
+    TileGridMap map;
+
+    /// <summary>
+    /// 슬라임의 위치를 그리드 좌표로 알려주는 프로퍼티
+    /// </summary>
+    Vector2Int GridPosition => map.WorldToGrid(transform.position);
 
     private void Awake()
     {
@@ -44,6 +67,9 @@ public class Slime : RecycleObject
         mainMaterial = spriteRenderer.material;
 
         onDissolveEnd += ReturnToPool;
+
+        path = new List<Vector2Int>();
+        pathLine = GetComponentInChildren<PathLine>();
     }
 
     protected override void OnEnable()
@@ -51,7 +77,26 @@ public class Slime : RecycleObject
         base.OnEnable();
 
         ResetShaderProperty();          
-        StartCoroutine(StartPhase());
+        StartCoroutine(StartPhase());               
+    }
+
+    protected override void OnDisable()
+    {
+        path.Clear();
+        pathLine.ClearPath();
+
+        base.OnDisable();
+    }
+
+    /// <summary>
+    /// 슬라임 초기화용 함수(스폰직후에 실행)
+    /// </summary>
+    /// <param name="gridMap">슬라임이 있을 타일맵</param>
+    /// <param name="world">슬라임의 시작위치(월드 좌표)</param>
+    public void Initialize(TileGridMap gridMap, Vector3 world)
+    {
+        map = gridMap;      // 맵 저장
+        transform.position = map.GridToWorld(map.WorldToGrid(world));   // 셀의 가운데 위치에 배치
     }
 
     /// <summary>
@@ -150,6 +195,17 @@ public class Slime : RecycleObject
         mainMaterial.SetFloat(DissolveFadeID, 0);
 
         onDissolveEnd?.Invoke();
+    }
+
+    /// <summary>
+    /// 슬라임의 목적지를 지정하는 함수
+    /// </summary>
+    /// <param name="destination">목적지의 그리드 좌표</param>
+    public void SetDestination(Vector2Int destination)
+    {
+        path = AStar.PathFind(map, GridPosition, destination);  // 목적지까지의 경로 저장
+
+        pathLine.DrawPath(map, path); // 경로를 그리기
     }
 
 
