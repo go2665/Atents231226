@@ -94,4 +94,8 @@ public class TileGridMap : GridMap
         return background.CellToWorld((Vector3Int)gridPosition) + new Vector3(0.5f,0.5f);
     }
 
+    public Vector2Int GetRandomMoveablePosition()
+    {
+        return Vector2Int.zero;
+    }
 }

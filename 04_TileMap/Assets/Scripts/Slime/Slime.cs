@@ -61,6 +61,11 @@ public class Slime : RecycleObject
     /// </summary>
     Vector2Int GridPosition => map.WorldToGrid(transform.position);
 
+    /// <summary>
+    /// 슬라임의 이동 속도
+    /// </summary>
+    public float moveSpeed = 2.0f;
+
     private void Awake()
     {
         Renderer spriteRenderer = GetComponent<Renderer>();
@@ -86,6 +91,29 @@ public class Slime : RecycleObject
         pathLine.ClearPath();
 
         base.OnDisable();
+    }
+
+    private void Update()
+    {
+        if(path.Count > 0)
+        {
+            Vector2Int destGrid = path[0];                          // path의 첫번째 위치 가져오기
+
+            Vector3 destPosition = map.GridToWorld(destGrid);       // 목적지 월드좌표 구하기
+            Vector3 direction = destPosition - transform.position;  // 방향 계산
+
+            if( direction.sqrMagnitude < 0.001f  )  // 방향벡터의 길이를 확인해서 도착했는지 확인
+            {
+                // 첫번째 위치에 도착
+                transform.position = destPosition;  // 오차보정
+                path.RemoveAt(0);                   // path의 첫번째 위치를 제거
+            }
+            else
+            {
+                // 도착안했으면 direction 방향으로 이동
+                transform.Translate(Time.deltaTime * moveSpeed * direction.normalized);
+            }
+        }
     }
 
     /// <summary>
