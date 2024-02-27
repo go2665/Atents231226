@@ -115,8 +115,18 @@ public class ObjectPool<T> : MonoBehaviour where T : RecycleObject
             comp.onDisable += () => readyQueue.Enqueue(comp);   // 재활용 오브젝트가 비활성화 되면 레디큐로 되돌려라
             //readyQueue.Enqueue(comp);       // 레디큐에 추가하고(위의 델리게이트 등록한 것 때문에 아래에서 비활성화하면 자동으로 처리)
 
+            OnGenerateObject(comp);
+
             results[i] = comp;      // 배열에 저장하고
             obj.SetActive(false);   // 비활성화 시킨다.
         }
+    }
+
+    /// <summary>
+    /// 각 T타입별로 생성 직후에 필요한 추가 작업을 처리하는 함수
+    /// </summary>
+    /// <param name="comp">T타입의 컴포넌트</param>
+    protected virtual void OnGenerateObject(T comp)
+    {
     }
 }

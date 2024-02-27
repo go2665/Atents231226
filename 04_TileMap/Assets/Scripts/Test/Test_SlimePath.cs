@@ -32,7 +32,7 @@ public class Test_SlimePath : TestBase
 
     protected override void OnTest1(InputAction.CallbackContext context)
     {
-        slime.SetDestination(map.GetRandomMoveablePosition());
+        slime.SetDestination(map.GetRandomMoveablePosition());        
     }
 }
 

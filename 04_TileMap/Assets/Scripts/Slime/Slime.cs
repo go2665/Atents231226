@@ -76,6 +76,30 @@ public class Slime : RecycleObject
     /// </summary>
     bool isMoveActivate = false;
 
+    /// <summary>
+    /// 슬라임이 죽었음을 알리는 델리게이트
+    /// </summary>
+    public Action onDie;
+
+    /// <summary>
+    /// 슬라임이 생성된 풀의 트랜스폼
+    /// </summary>
+    Transform pool;
+
+    /// <summary>
+    /// pool에 단 한번만 값을 설정하는 프로퍼티
+    /// </summary>
+    public Transform Pool
+    {
+        set
+        {
+            if(pool == null)
+            {
+                pool = value;
+            }
+        }
+    }
+
     private void Awake()
     {
         Renderer spriteRenderer = GetComponent<Renderer>();
@@ -130,7 +154,9 @@ public class Slime : RecycleObject
     /// </summary>
     public void Die()
     {
-        isMoveActivate = false;
+        isMoveActivate = false;             // 이동 비활성화
+        onDie?.Invoke();                    // 죽었음을 알리기
+        onDie = null;                       // 연결된 함수 모두 제거
         StartCoroutine(StartDissolve());    // 디졸브만 실행(디졸브 코루틴안에서 비활성화까지 처리)
     }
 
@@ -139,7 +165,8 @@ public class Slime : RecycleObject
     /// </summary>
     private void ReturnToPool()
     {
-        gameObject.SetActive(false);
+        transform.SetParent(pool);      // 풀로 다시 부모 변경
+        gameObject.SetActive(false);    // 비활성화
     }
 
     /// <summary>
