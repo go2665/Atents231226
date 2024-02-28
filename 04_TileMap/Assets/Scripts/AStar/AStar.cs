@@ -19,7 +19,7 @@ public static class AStar
     {
         List<Vector2Int> path = null;
 
-        if(map.IsValidPosition(start) && map.IsValidPosition(end) && map.IsPlain(start) && map.IsPlain(end))
+        if(map.IsValidPosition(start) && map.IsValidPosition(end) && !map.IsWall(start) && !map.IsWall(end))
         {
             // start와 end가 맵 안이고 평지다.
 

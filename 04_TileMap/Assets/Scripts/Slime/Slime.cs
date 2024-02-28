@@ -78,12 +78,15 @@ public class Slime : RecycleObject
         {
             if (current != value)
             {
-                current.nodeType = Node.NodeType.Plain; // 이전 노드를 Plain으로 되돌리기
+                if(current != null) // 이전 노드가 null이면 스킵
+                {
+                    current.nodeType = Node.NodeType.Plain; // 이전 노드를 Plain으로 되돌리기
+                }
                 current = value;
-                current.nodeType = Node.NodeType.Slime; // 새로 이동한 노드는 Slime으로 변경하기
-
-                // 위에서 발생하는 에러의 원인을 확인하고 수정하기
-                // 아래쪽에 있는 슬라임이 위에 그려지게 만들기
+                if(current != null) // 새 노드가 null이면 스킵
+                {
+                    current.nodeType = Node.NodeType.Slime; // 새로 이동한 노드는 Slime으로 변경하기
+                }
             }
         }
     }
@@ -122,9 +125,22 @@ public class Slime : RecycleObject
         }
     }
 
+    // 스트라이트 랜더러(Order In Layer수정용)
+    SpriteRenderer spriteRenderer;
+
+    /// <summary>
+    /// 다른 슬라임에 의해 경로가 막혔을 때 기다린 시간
+    /// </summary>
+    float pathWaitTime = 0.0f;
+
+    /// <summary>
+    /// 경로가 막혔을 때 최대로 기다리는 시간
+    /// </summary>
+    const float MaxPathWaitTime = 1.0f;
+
     private void Awake()
     {
-        Renderer spriteRenderer = GetComponent<Renderer>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         mainMaterial = spriteRenderer.material;
 
         onPhaseEnd += () =>
@@ -303,29 +319,44 @@ public class Slime : RecycleObject
     {
         if (isMoveActivate)
         {
-            if (path.Count > 0)
+            if (path.Count > 0 && pathWaitTime < MaxPathWaitTime)       // 경로가 남아 있고 오래 기다리지 않았을 때의 처리
             {
                 Vector2Int destGrid = path[0];                          // path의 첫번째 위치 가져오기
 
-                Vector3 destPosition = map.GridToWorld(destGrid);       // 목적지 월드좌표 구하기
-                Vector3 direction = destPosition - transform.position;  // 방향 계산
-
-                if (direction.sqrMagnitude < 0.001f)  // 방향벡터의 길이를 확인해서 도착했는지 확인
+                // 다른 슬라임이 있는 칸에는 이동하지 않는다.
+                //  -> 슬라임으로 표시된 노드가 아니거나, 내가 있는 노드일 때만 움직이기
+                if (!map.IsSlime(destGrid) || map.GetNode(destGrid) == Current)
                 {
-                    // 첫번째 위치에 도착
-                    transform.position = destPosition;  // 오차보정
-                    path.RemoveAt(0);                   // path의 첫번째 위치를 제거
+                    // 실제로 이동하는 처리
+                    Vector3 destPosition = map.GridToWorld(destGrid);       // 목적지 월드좌표 구하기
+                    Vector3 direction = destPosition - transform.position;  // 방향 계산
+
+                    if (direction.sqrMagnitude < 0.001f)  // 방향벡터의 길이를 확인해서 도착했는지 확인
+                    {
+                        // 첫번째 위치에 도착
+                        transform.position = destPosition;  // 오차보정
+                        path.RemoveAt(0);                   // path의 첫번째 위치를 제거
+                    }
+                    else
+                    {
+                        // 도착안했으면 direction 방향으로 이동
+                        transform.Translate(Time.deltaTime * moveSpeed * direction.normalized);
+                        Current = map.GetNode(transform.position);  // Current 변경 시도 및 처리
+                    }
+                    spriteRenderer.sortingOrder = -Mathf.FloorToInt(transform.position.y * 100);    // 아래쪽에 있는 슬라임이 위에 그려지게 만들기
+
+                    pathWaitTime = 0.0f;    // 기다리는 시간 초기화
                 }
                 else
                 {
-                    // 도착안했으면 direction 방향으로 이동
-                    transform.Translate(Time.deltaTime * moveSpeed * direction.normalized);
-                    Current = map.GetNode(transform.position);  // Current 변경 시도 및 처리
+                    // 다른 슬라임이 있는 노드라 기다리기
+                    pathWaitTime += Time.deltaTime;     // 기다린 시간 누적
                 }
             }
             else
             {
-                // 목적지에 도착
+                // 목적지에 도착 or 오래 기다렸음
+                pathWaitTime = 0.0f;
                 OnDestinationArrive();  // 다음 목적지 자동으로 설정
             }
         }
