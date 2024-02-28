@@ -115,4 +115,14 @@ public class TileGridMap : GridMap
         int index = UnityEngine.Random.Range(0, movablePositions.Length);
         return movablePositions[index];
     }
+
+    /// <summary>
+    /// 월드 좌표를 통해 해당 위치에 있는 노드를 구해주는 함수
+    /// </summary>
+    /// <param name="worldPosition">확인할 위치(월드좌표)</param>
+    /// <returns>해당 위치에 있는 노드</returns>
+    public Node GetNode(Vector3 worldPosition)
+    {
+        return GetNode(WorldToGrid(worldPosition));
+    }
 }

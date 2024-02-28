@@ -67,6 +67,28 @@ public class Slime : RecycleObject
     Vector2Int GridPosition => map.WorldToGrid(transform.position);
 
     /// <summary>
+    /// 이 슬라임이 위치하고 있는 노드
+    /// </summary>
+    Node current = null;
+
+    Node Current
+    {
+        get => current;
+        set
+        {
+            if (current != value)
+            {
+                current.nodeType = Node.NodeType.Plain; // 이전 노드를 Plain으로 되돌리기
+                current = value;
+                current.nodeType = Node.NodeType.Slime; // 새로 이동한 노드는 Slime으로 변경하기
+
+                // 위에서 발생하는 에러의 원인을 확인하고 수정하기
+                // 아래쪽에 있는 슬라임이 위에 그려지게 만들기
+            }
+        }
+    }
+
+    /// <summary>
     /// 슬라임의 이동 속도
     /// </summary>
     public float moveSpeed = 2.0f;
@@ -147,6 +169,7 @@ public class Slime : RecycleObject
     {
         map = gridMap;      // 맵 저장
         transform.position = map.GridToWorld(map.WorldToGrid(world));   // 셀의 가운데 위치에 배치
+        Current = map.GetNode(world);
     }
 
     /// <summary>
@@ -165,6 +188,7 @@ public class Slime : RecycleObject
     /// </summary>
     private void ReturnToPool()
     {
+        Current = null;
         transform.SetParent(pool);      // 풀로 다시 부모 변경
         gameObject.SetActive(false);    // 비활성화
     }
@@ -296,6 +320,7 @@ public class Slime : RecycleObject
                 {
                     // 도착안했으면 direction 방향으로 이동
                     transform.Translate(Time.deltaTime * moveSpeed * direction.normalized);
+                    Current = map.GetNode(transform.position);  // Current 변경 시도 및 처리
                 }
             }
             else
