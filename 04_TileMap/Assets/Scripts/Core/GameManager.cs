@@ -15,6 +15,15 @@ public class GameManager : Singleton<GameManager>
             return player;
         }
     }
+    WorldManager worldManager;
+    public WorldManager World => worldManager;
+
+    protected override void OnPreInitialize()
+    {
+        base.OnPreInitialize();
+        worldManager = GetComponent<WorldManager>();
+        
+    }
 
     protected override void OnInitialize()
     {

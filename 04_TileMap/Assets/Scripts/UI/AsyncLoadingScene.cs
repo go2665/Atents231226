@@ -25,7 +25,7 @@ public class AsyncLoadingScene : MonoBehaviour
     float loadRatio;
 
     /// <summary>
-    /// slider의 value가 증가하는 속도
+    /// slider의 value가 증가하는 속도(초당)
     /// </summary>
     public float loadingBarSpeed = 1.0f;
 
@@ -102,13 +102,30 @@ public class AsyncLoadingScene : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     IEnumerator LoadingTextProgress()
-    {
-        // 실습1
+    {        
         // 0.2초 간격으로 .이 찍힌다.
         // .은 최대 5개까지만 찍인다.
         // "Loading" ~ "Loading . . . . ."
 
-        yield return null;
+        WaitForSeconds wait = new WaitForSeconds(0.2f);
+        string[] texts =
+        {
+            "Loading",
+            "Loading .",
+            "Loading . .",
+            "Loading . . .",
+            "Loading . . . .",
+            "Loading . . . . .",
+        };
+
+        int index = 0;
+        while(true)
+        {
+            loadingText.text = texts[index];
+            index++;
+            index %= texts.Length;
+            yield return wait;
+        }
     }
 
     /// <summary>
@@ -129,8 +146,8 @@ public class AsyncLoadingScene : MonoBehaviour
             yield return null;
         }
 
-        // 실습2
         // 남아있는 슬라이더가 다 찰 때까지 기다리기
+        yield return new WaitForSeconds((1 - loadingSlider.value) / loadingBarSpeed);
 
         StopCoroutine(loadingTextCoroutine);        // 글자 변경 안되게 만들기
         loadingText.text = "Loading\nComplete!";    // 완료되었다고 글자 출력
