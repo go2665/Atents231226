@@ -319,7 +319,8 @@ public class Slime : RecycleObject
     {
         if (isMoveActivate)
         {
-            if (path.Count > 0 && pathWaitTime < MaxPathWaitTime)       // 경로가 남아 있고 오래 기다리지 않았을 때의 처리
+            // 경로가 있고, 남은 경로가 있고, 오래 기다리지 않았을 때의 처리
+            if (path != null && path.Count > 0 && pathWaitTime < MaxPathWaitTime)       
             {
                 Vector2Int destGrid = path[0];                          // path의 첫번째 위치 가져오기
 
