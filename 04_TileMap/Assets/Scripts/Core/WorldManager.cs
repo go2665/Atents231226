@@ -126,6 +126,20 @@ public class WorldManager : MonoBehaviour
         {
             sceneLoadState[i] = SceneLoadState.Unload;
         }
+
+        // 플레이어 관련 처리
+        Player player = GameManager.Instance.Player;
+        if(player != null)
+        {
+            player.onMapChange += (currentGrid) =>
+            {
+                RefreshScenes(currentGrid.x, currentGrid.y);
+            };
+
+            Vector2Int grid = WorldToGrid(player.transform.position);   // 플레이어가 있는 맵의 그리드값 가져오기
+            RequestAsyncSceneLoad(grid.x, grid.y);  // 플레이어가 있는 맵을 최우선으로 로딩 요청
+            RefreshScenes(grid.x, grid.y);          // 주변맵 로딩 요청
+        }
     }
 
     /// <summary>
@@ -285,6 +299,16 @@ public class WorldManager : MonoBehaviour
                 }
             }
         }        
+    }
+
+    /// <summary>
+    /// 월드 좌표가 어떤 맵에 속하는지 계산하는 함수
+    /// </summary>
+    /// <param name="worldPostion">확인할 월드 좌표</param>
+    /// <returns>맵의 좌표( (0,0) ~ (2,2) )</returns>
+    public Vector2Int WorldToGrid(Vector3 worldPostion)
+    {
+        return Vector2Int.zero;
     }
 
 #if UNITY_EDITOR

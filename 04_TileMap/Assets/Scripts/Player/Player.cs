@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Rendering;
@@ -68,6 +69,37 @@ public class Player : MonoBehaviour
     readonly int IsMove_Hash = Animator.StringToHash("IsMove");
     readonly int Attack_Hash = Animator.StringToHash("Attack");
 
+    /// <summary>
+    /// 플레이어가 현재 위치하고 있는 맵의 그리드
+    /// </summary>
+    Vector2Int currentMap;
+
+    /// <summary>
+    /// CurrentMap에 값을 설정할 때 변경이 있었으면 델리게이트를 실행해서 알리는 프로퍼티
+    /// </summary>
+    Vector2Int CurrentMap
+    {
+        get => currentMap;
+        set
+        {
+            if(value != currentMap)
+            {
+                currentMap = value;
+                onMapChange?.Invoke(currentMap);    // 맵 변경을 알림
+            }
+        }
+    }
+
+    /// <summary>
+    /// 플레이어가 있는 맵이 변경되면 실행되는 델리게이트
+    /// </summary>
+    public Action<Vector2Int> onMapChange;
+
+    /// <summary>
+    /// 월드 매니저
+    /// </summary>
+    WorldManager world;
+
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -117,6 +149,11 @@ public class Player : MonoBehaviour
         inputActions.Player.Disable();
     }
 
+    private void Start()
+    {
+        world = GameManager.Instance.World;
+    }
+
     private void Update()
     {
         currentAttackCoolTime -= Time.deltaTime;
@@ -126,6 +163,8 @@ public class Player : MonoBehaviour
     {
         // 물리 프레임마다 inputDirection방향으로 초당 currentSpeed만큼 이동
         rigid.MovePosition(rigid.position + Time.fixedDeltaTime * currentSpeed * inputDirection);
+
+        CurrentMap = world.WorldToGrid(rigid.position); // 플레이어가 있는 맵 설정
     }
 
     private void OnMove(UnityEngine.InputSystem.InputAction.CallbackContext context)
