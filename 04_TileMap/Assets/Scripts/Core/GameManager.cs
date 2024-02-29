@@ -23,10 +23,6 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public bool showSlimePath = false;
 
-    // 실습
-    // 인스펙터 창에서 showSlimePath가 변경될 때마다
-    // true면 슬라임의 경로가 보이고 false면 슬라임의 경로가 보이지 않게 만들기
-
     private void OnValidate()
     {
         Slime[] slimes = FindObjectsOfType<Slime>(true);    // 비활성화 된 오브젝트 포함해서 모두 찾기

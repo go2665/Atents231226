@@ -369,7 +369,15 @@ public class Slime : RecycleObject
     /// <param name="isShow">true면 보여주고 false면 보여주지 않는다.</param>
     public void ShowPath(bool isShow = true)
     {
-        pathLine.gameObject.SetActive(isShow);
+        //pathLine.gameObject.SetActive(isShow);
+        if(isShow)
+        {
+            pathLine.DrawPath(map, path);
+        }
+        else
+        {
+            pathLine.ClearPath();
+        }
     }
 
 
