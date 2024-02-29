@@ -32,4 +32,10 @@ public class Test_Seemless : TestBase
     {
         world.TestRefreshscenes(x, y);
     }
+
+    protected override void OnTest4(InputAction.CallbackContext context)
+    {
+        world.TestUnloadAllScene();
+    }
+
 }

@@ -252,13 +252,39 @@ public class WorldManager : MonoBehaviour
     /// <summary>
     /// 지정된 위치 주변 맵은 로딩 요청하고 그 외는 로딩 해제를 요청하는 함수
     /// </summary>
-    /// <param name="x">지정된 맵의 x 위치</param>
-    /// <param name="y">지정된 맵의 y 위치</param>
-    void RefreshScenes(int x, int y)
+    /// <param name="mapX">지정된 맵의 X 위치</param>
+    /// <param name="mapY">지정된 맵의 Y 위치</param>
+    void RefreshScenes(int mapX, int mapY)
     {
-        // 전체범위 : (0,0) ~ (2,2) 
-        // (x,y) 주변은 RequestAsyncSceneLoad 실행
+        int startX = Mathf.Max(0, mapX - 1);            // 최소점은 (mapX,mapY)보다 1작거나 (0,0)
+        int startY = Mathf.Max(0, mapY - 1);
+        int endX = Mathf.Min(WidthCount, mapX + 2);     // 최대점은 (mapX,mapY)보다 1크거나 (WidthCount,HeightCount)
+        int endY = Mathf.Min(HeightCount, mapY + 2);
+
+        // (mapX,mapY) 주변은 RequestAsyncSceneLoad 실행
+        List<Vector2Int> open = new List<Vector2Int>(9);
+        for (int y = startY; y < endY; y++)
+        {
+            for(int x = startX; x < endX; x++)
+            {
+                RequestAsyncSceneLoad(x, y);        // 해당 하는 것들 로딩 요청
+                open.Add(new Vector2Int(x, y));     // 로딩 요청한 것들 기록
+            }
+        }
+
         // 나머지 부분은 모두 RequestAsyncSceneUnload 실행
+        for (int y = 0; y<HeightCount; y++)
+        {
+            for(int x = 0; x < WidthCount; x++)
+            {
+                // Contains : 단순 있다/없다 확인용
+                // Exits : 특정 조건을 만족하는 것이 있는지 없는지 확인용
+                if( !open.Contains(new Vector2Int(x,y)))
+                {
+                    RequestAsyncSceneUnload(x, y);                    
+                }
+            }
+        }        
     }
 
 #if UNITY_EDITOR
@@ -275,6 +301,13 @@ public class WorldManager : MonoBehaviour
     public void TestRefreshscenes(int x, int y)
     {
         RefreshScenes(x, y);
+    }
+
+    public void TestUnloadAllScene()
+    {
+        for(int y = 0;y<HeightCount;y++)
+            for(int x = 0;x < WidthCount;x++)
+                RequestAsyncSceneUnload(x, y);
     }
 #endif
 }
