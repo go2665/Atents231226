@@ -363,6 +363,15 @@ public class Slime : RecycleObject
         }
     }
 
+    /// <summary>
+    /// 경로를 보여줄지 말지 결정하는 함수
+    /// </summary>
+    /// <param name="isShow">true면 보여주고 false면 보여주지 않는다.</param>
+    public void ShowPath(bool isShow = true)
+    {
+        pathLine.gameObject.SetActive(isShow);
+    }
+
 
 #if UNITY_EDITOR
     public void TestShader(int index)
