@@ -202,7 +202,7 @@ public class Slime : RecycleObject
     /// <summary>
     /// 비활성화 시키면서 풀로 되돌리는 함수
     /// </summary>
-    private void ReturnToPool()
+    public void ReturnToPool()
     {
         Current = null;
         transform.SetParent(pool);      // 풀로 다시 부모 변경

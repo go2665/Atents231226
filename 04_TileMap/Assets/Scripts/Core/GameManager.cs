@@ -22,12 +22,14 @@ public class GameManager : Singleton<GameManager>
     {
         base.OnPreInitialize();
         worldManager = GetComponent<WorldManager>();
-        
+        worldManager.PreInitialize();
+
     }
 
     protected override void OnInitialize()
     {
         player = FindAnyObjectByType<Player>();
+        worldManager.Initialize();
     }
 
 }
