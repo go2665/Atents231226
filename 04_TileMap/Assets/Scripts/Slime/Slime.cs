@@ -138,6 +138,8 @@ public class Slime : RecycleObject
     /// </summary>
     const float MaxPathWaitTime = 1.0f;
 
+    bool isShowPath = false;
+
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -301,7 +303,10 @@ public class Slime : RecycleObject
     {
         path = AStar.PathFind(map, GridPosition, destination);  // 목적지까지의 경로 저장
 
-        pathLine.DrawPath(map, path); // 경로를 그리기
+        if(isShowPath)
+        {
+            pathLine.DrawPath(map, path); // 경로를 그리기
+        }
     }
 
     /// <summary>
@@ -370,7 +375,8 @@ public class Slime : RecycleObject
     public void ShowPath(bool isShow = true)
     {
         //pathLine.gameObject.SetActive(isShow);
-        if(isShow)
+        isShowPath = isShow;
+        if (isShow)
         {
             pathLine.DrawPath(map, path);
         }
