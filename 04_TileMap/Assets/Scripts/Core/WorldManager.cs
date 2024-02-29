@@ -308,7 +308,9 @@ public class WorldManager : MonoBehaviour
     /// <returns>맵의 좌표( (0,0) ~ (2,2) )</returns>
     public Vector2Int WorldToGrid(Vector3 worldPostion)
     {
-        return Vector2Int.zero;
+        Vector2 offset = (Vector2)worldPostion - worldOrigin;
+
+        return new Vector2Int((int)(offset.x/mapWidthSize), (int)(offset.y/mapHeightSize));
     }
 
 #if UNITY_EDITOR
