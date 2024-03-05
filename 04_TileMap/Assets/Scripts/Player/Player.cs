@@ -100,6 +100,35 @@ public class Player : MonoBehaviour
     /// </summary>
     WorldManager world;
 
+    /// <summary>
+    /// 플레이어의 최대 수명
+    /// </summary>
+    public float maxLifeTime = 10.0f;
+
+    /// <summary>
+    /// 플레이어의 현재 수명
+    /// </summary>
+    float lifeTime;
+
+    float LifeTime
+    {
+        get => lifeTime;
+        set
+        {
+            // 수명이 변경될 떄 델리게이트가 실행된다.
+        }
+    }
+
+    // 실습
+    // 1. 시작하면 플레이어의 수명이 최대 수명으로 변경
+    // 2. 시간이 지날 수록 플레이어의 수명이 감소(초당1)
+    // 3. 플레이어의 수명 변화가 LifeTimeGauge UI에 반영되어야 한다.
+
+    /// <summary>
+    /// 플레이어의 수명이 변경되었을 때 실행될 델리게이트(float:수명의 비율)
+    /// </summary>
+    public Action<float> onLifeTimeChange;
+
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
