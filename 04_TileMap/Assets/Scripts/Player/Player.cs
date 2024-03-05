@@ -130,6 +130,26 @@ public class Player : MonoBehaviour
     /// </summary>
     public Action<float> onLifeTimeChange;
 
+    /// <summary>
+    /// 잡은 슬라임 수
+    /// </summary>
+    int killCount = 0;
+
+    int KillCount
+    {
+        get => killCount;
+        set
+        {
+            if(killCount != value)
+            {
+                killCount = value;
+                onKillCountChange?.Invoke(killCount);
+            }
+        }
+    }
+
+    public Action<int> onKillCountChange;
+
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -294,6 +314,16 @@ public class Player : MonoBehaviour
     void AttackNotValid()
     {
         isAttackValid = false;
+    }
+
+    /// <summary>
+    /// 몬스터를 잡았을 때 실행할 함수
+    /// </summary>
+    /// <param name="bonus">몬스터 처리 보너스(수명추가)</param>
+    public void MonsterKill(float bonus)
+    {
+        LifeTime += bonus;
+        KillCount++;
     }
 }
 

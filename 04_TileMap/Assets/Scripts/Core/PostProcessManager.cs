@@ -33,6 +33,6 @@ public class PostProcessManager : MonoBehaviour
 
     private void OnLifeTimeChange(float ratio)
     {
-        vignette.intensity.value = curve.Evaluate(ratio);
+        vignette.intensity.value = curve.Evaluate(ratio);        
     }
 }

@@ -138,7 +138,16 @@ public class Slime : RecycleObject
     /// </summary>
     const float MaxPathWaitTime = 1.0f;
 
+    /// <summary>
+    /// 경로 보여줄지 말지 결정하는 변수
+    /// </summary>
     bool isShowPath = false;
+
+    /// <summary>
+    /// 이 슬라임이 죽을 때 플레이어에게 주는 수명 보너스
+    /// </summary>
+    public float lifeTimeBonus = 2.0f;
+
 
     private void Awake()
     {
