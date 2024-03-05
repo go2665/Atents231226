@@ -110,19 +110,20 @@ public class Player : MonoBehaviour
     /// </summary>
     float lifeTime;
 
+    /// <summary>
+    /// 수명을 확인하고 변경되었을 때의 처리를하는 프로퍼티
+    /// </summary>
     float LifeTime
     {
         get => lifeTime;
         set
         {
-            // 수명이 변경될 떄 델리게이트가 실행된다.
+            lifeTime = value;   // 값을 설정
+
+            lifeTime = Mathf.Clamp(lifeTime, 0.0f, maxLifeTime);    // 일정범위를 벗어나지 않게 만들기
+            onLifeTimeChange?.Invoke(lifeTime/maxLifeTime);         // 수명이 변경되었음을 알림
         }
     }
-
-    // 실습
-    // 1. 시작하면 플레이어의 수명이 최대 수명으로 변경
-    // 2. 시간이 지날 수록 플레이어의 수명이 감소(초당1)
-    // 3. 플레이어의 수명 변화가 LifeTimeGauge UI에 반영되어야 한다.
 
     /// <summary>
     /// 플레이어의 수명이 변경되었을 때 실행될 델리게이트(float:수명의 비율)
@@ -181,11 +182,13 @@ public class Player : MonoBehaviour
     private void Start()
     {
         world = GameManager.Instance.World;
+        LifeTime = maxLifeTime;
     }
 
     private void Update()
     {
         currentAttackCoolTime -= Time.deltaTime;
+        LifeTime -= Time.deltaTime;
     }
 
     private void FixedUpdate()
