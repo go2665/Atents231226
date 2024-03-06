@@ -133,7 +133,20 @@ public class WorldManager : MonoBehaviour
         {
             player.onMapChange += (currentGrid) =>
             {
+                // 맵에서 위치가 바뀌면 주변맵 갱신하기
                 RefreshScenes(currentGrid.x, currentGrid.y);
+            };
+
+            player.onDie += (_, _) =>
+            {
+                // 플레이어가 죽으면 모든 맵을 로딩해제 요청하기
+                for(int y= 0; y < HeightCount;y++)
+                {
+                    for(int x = 0; x < WidthCount;x++)
+                    {
+                        RequestAsyncSceneUnload(x, y);                        
+                    }
+                }
             };
 
             Vector2Int grid = WorldToGrid(player.transform.position);   // 플레이어가 있는 맵의 그리드값 가져오기

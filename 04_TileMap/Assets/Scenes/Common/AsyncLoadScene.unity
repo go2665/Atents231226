@@ -617,7 +617,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d495c30584ecd041baf4008e7949584, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextSceneName: LoadSampleScene
+  nextSceneName: SeemlessBase
   loadingBarSpeed: 1
 --- !u!1 &1141324628
 GameObject:

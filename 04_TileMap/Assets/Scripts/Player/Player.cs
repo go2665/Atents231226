@@ -119,16 +119,39 @@ public class Player : MonoBehaviour
         set
         {
             lifeTime = value;   // 값을 설정
+            if(isAlive && lifeTime < 0.0f)  // 살아있는데 수명이 0 미만이면 사망
+            {
+                Die();
+            }
+            else
+            {
+                // 살아 있으면 일반 처리
+                lifeTime = Mathf.Clamp(lifeTime, 0.0f, maxLifeTime);    // 일정범위를 벗어나지 않게 만들기
+                onLifeTimeChange?.Invoke(lifeTime/maxLifeTime);         // 수명이 변경되었음을 알림
+            }
 
-            lifeTime = Mathf.Clamp(lifeTime, 0.0f, maxLifeTime);    // 일정범위를 벗어나지 않게 만들기
-            onLifeTimeChange?.Invoke(lifeTime/maxLifeTime);         // 수명이 변경되었음을 알림
         }
     }
+
+    /// <summary>
+    /// 전체 플레이 시간
+    /// </summary>
+    float totalPlayTime = 0.0f;
 
     /// <summary>
     /// 플레이어의 수명이 변경되었을 때 실행될 델리게이트(float:수명의 비율)
     /// </summary>
     public Action<float> onLifeTimeChange;
+
+    /// <summary>
+    /// 플레이어가 죽었음을 알리는 델리게이트(float:전체 플레이시간, int:킬카운트)
+    /// </summary>
+    public Action<float, int> onDie;
+
+    /// <summary>
+    /// 살았는지 표시하는 변수
+    /// </summary>
+    bool isAlive = true;
 
     /// <summary>
     /// 잡은 슬라임 수
@@ -210,6 +233,7 @@ public class Player : MonoBehaviour
     {
         currentAttackCoolTime -= Time.deltaTime;
         LifeTime -= Time.deltaTime;
+        totalPlayTime += Time.deltaTime;
     }
 
     private void FixedUpdate()
@@ -326,5 +350,24 @@ public class Player : MonoBehaviour
         LifeTime += bonus;
         KillCount++;
     }
+
+    /// <summary>
+    /// 플레이어가 죽었을 때 처리할 일을 처리하는 함수
+    /// </summary>
+    void Die()
+    {
+        isAlive = false;                        // 죽었다고 표시
+        lifeTime = 0.0f;                        // 수명을 0으로 정리
+        onLifeTimeChange?.Invoke(0);            // 수명변화를 알리기
+        inputActions.Player.Disable();          // 플레이어 입력 정지
+        onDie?.Invoke(totalPlayTime, KillCount);// 사망 알리기
+    }
+
+#if UNITY_EDITOR
+    public void TestDie()
+    {
+        Die();
+    }
+#endif
 }
 

@@ -17,7 +17,7 @@ public class Test_Seemless : TestBase
     {
         world = GameManager.Instance.World;
     }
-
+#if UNITY_EDITOR
     protected override void OnTest1(InputAction.CallbackContext context)
     {
         world.TestLoadScene(x, y);
@@ -37,5 +37,5 @@ public class Test_Seemless : TestBase
     {
         world.TestUnloadAllScene();
     }
-
+#endif
 }
