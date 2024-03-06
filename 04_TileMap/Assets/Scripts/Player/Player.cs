@@ -133,7 +133,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 잡은 슬라임 수
     /// </summary>
-    int killCount = 0;
+    int killCount = -1;
 
     int KillCount
     {
@@ -203,6 +203,7 @@ public class Player : MonoBehaviour
     {
         world = GameManager.Instance.World;
         LifeTime = maxLifeTime;
+        KillCount = 0;
     }
 
     private void Update()
