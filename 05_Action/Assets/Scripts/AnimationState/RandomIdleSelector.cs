@@ -4,45 +4,39 @@ using UnityEngine;
 
 public class RandomIdleSelector : StateMachineBehaviour
 {
+    readonly int IdleSelect_Hash = Animator.StringToHash("IdleSelect");
+
     // OnStateEnter is called before OnStateEnter is called on any state inside this state machine
-    //override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
+    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        animator.SetInteger(IdleSelect_Hash, RandomSelect());
+    }
 
-    // OnStateUpdate is called before OnStateUpdate is called on any state inside this state machine
-    //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
+    /// <summary>
+    /// 랜덤하게 0~4 사이의 값을 선택하는 함수(수별로 확률 다름)
+    /// </summary>
+    /// <returns>0~4</returns>
+    int RandomSelect()
+    {
+        int select = 0;     // 80%
+        float num = Random.value;
 
-    // OnStateExit is called before OnStateExit is called on any state inside this state machine
-    //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
-
-    // OnStateMove is called before OnStateMove is called on any state inside this state machine
-    //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
-
-    // OnStateIK is called before OnStateIK is called on any state inside this state machine
-    //override public void OnStateIK(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
-
-    // OnStateMachineEnter is called when entering a state machine via its Entry Node
-    //override public void OnStateMachineEnter(Animator animator, int stateMachinePathHash)
-    //{
-    //    
-    //}
-
-    // OnStateMachineExit is called when exiting a state machine via its Exit Node
-    //override public void OnStateMachineExit(Animator animator, int stateMachinePathHash)
-    //{
-    //    
-    //}
+        if(num < 0.05f)
+        {
+            select = 4;     // 5%
+        }
+        else if(num < 0.10f)
+        {
+            select = 3;     // 5%
+        }
+        else if (num < 0.15f)
+        {
+            select = 2;     // 5%
+        }
+        else if (num < 0.20f)
+        {
+            select = 1;     // 5%
+        }
+        return select;
+    }
 }
