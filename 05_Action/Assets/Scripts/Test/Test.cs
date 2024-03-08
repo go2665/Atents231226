@@ -25,11 +25,39 @@ public class Test : MonoBehaviour
         // 컴포넌트 추가하기
         this.gameObject.AddComponent<Test>();
 
+        // Resources 폴더 사용하기
+        Texture tex = Resources.Load<Texture>("grass-texture-26");
+        Sprite sprite = Resources.Load<Sprite>("AAA/grass-Sprite-26"); 
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        // InputManager : Polling 방식 -> Busy wait -> 성능저하 + CPU가 sleep 상태로 들어갈 수 없게됨
+        if(Input.GetKeyDown(KeyCode.W))
+        {
+            // InputManager : 매 프레임마다 키입력 상태를 확인하고 필요한 처리를 수행
+        }
+
+        if(Input.GetButton("Jump")) // 스페이스키가 눌려져 있는가?
+        {
+            // Project Setting -> Input Manager 항목에 버튼 이름들이 어떤 키와 연결되어있는지 설정되어 있음
+        }
+
+        if(Input.GetAxis("Horizontal") > 0)
+        {
+            // 오른쪽 방향(D)가 눌려져 있다.
+        }
+        else if (Input.GetAxis("Horizontal") < 0)
+        {
+            // 왼쪽 방향(A)가 눌려져 있다.
+        }
+        else
+        {
+            // 중립 상태
+        }
+
+        // InputSystem : Event-Driven 방식으로 구현됨
+
     }
 }
