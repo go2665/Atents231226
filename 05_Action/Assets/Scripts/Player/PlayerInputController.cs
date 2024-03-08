@@ -55,6 +55,16 @@ public class PlayerInputController : MonoBehaviour
     /// </summary>
     Vector3 inputDirection = Vector3.zero;  // y는 무조건 바닥 높이
 
+    /// <summary>
+    /// 캐릭터의 목표방향으로 회전시키는 회전
+    /// </summary>
+    Quaternion targetRotation = Quaternion.identity;
+
+    /// <summary>
+    /// 캐릭터 회전 속도
+    /// </summary>
+    public float turnSpeed = 10.0f;
+
     // 컴포넌트들
     Animator animator;
     CharacterController characterController;
@@ -95,6 +105,8 @@ public class PlayerInputController : MonoBehaviour
     {
         characterController.Move(Time.deltaTime * currentSpeed * inputDirection);   // 좀 더 수동
         //characterController.SimpleMove(currentSpeed * inputDirection);            // 좀 더 자동
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * turnSpeed);  // 목표 회전으로 변경
     }
 
     /// <summary>
@@ -112,6 +124,13 @@ public class PlayerInputController : MonoBehaviour
         if(!context.canceled)
         {
             // 눌려진 상황(입력을 시작한 상황)
+
+            // 입력 방향 회전 시키기
+            Quaternion camY = Quaternion.Euler(0, Camera.main.transform.rotation.eulerAngles.y, 0); // 카메라의 y회전만 따로 추출
+            inputDirection = camY * inputDirection;     // 입력 방향을 카메라의 y회전과 같은 정도로 회전 시키기
+            targetRotation = Quaternion.LookRotation(inputDirection);   // 목표 회전 저장
+
+            // 이동 모드 변경
             MoveSpeedChange(CurrentMoveMode);
         }
         else
@@ -157,3 +176,7 @@ public class PlayerInputController : MonoBehaviour
         }
     }
 }
+
+// 실습
+// 1. 플레이어가 이동하는 방향을 바라보기(카메라 기준)
+// 2. 이동하는 방향으로 턴 하는 모습이 보여야 한다.
