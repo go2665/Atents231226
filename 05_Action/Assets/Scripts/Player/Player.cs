@@ -56,7 +56,6 @@ public class Player : MonoBehaviour
     /// </summary>
     Vector3 inputDirection = Vector3.zero;  // y는 무조건 바닥 높이
 
-
     /// <summary>
     /// 캐릭터의 목표방향으로 회전시키는 회전
     /// </summary>
@@ -77,12 +76,33 @@ public class Player : MonoBehaviour
     /// </summary>
     Transform shiledParent;
 
+    /// <summary>
+    /// 남아있는 쿨타임
+    /// </summary>
+    float coolTime = 0.0f;
+
+    [Range(0, attackAnimationLength)]
+    /// <summary>
+    /// 쿨타임 초기화용 변수
+    /// </summary>
+    public float maxCoolTime = 0.3f;
+
+    /// <summary>
+    /// 공격 애니메이션 재생 시간
+    /// </summary>
+    const float attackAnimationLength = 0.533f;
+
     // 애니메이터용 해시값 및 상수
     readonly int Speed_Hash = Animator.StringToHash("Speed");
     const float AnimatorStopSpeed = 0.0f;
     const float AnimatorWalkSpeed = 0.3f;
     const float AnimatorRunSpeed = 1.0f;
     readonly int Attack_Hash = Animator.StringToHash("Attack");
+
+    /// <summary>
+    /// 무기 이펙트 켜고 끄는 신호를 보내는 델리게이트
+    /// </summary>
+    Action<bool> onWeaponEffectEnable;
 
     // 컴포넌트들
     Animator animator;
@@ -119,14 +139,28 @@ public class Player : MonoBehaviour
         inputController.onAttack += OnAttackInput;
     }
 
+    private void Start()
+    {
+        Weapon weapon = weaponParent.GetComponentInChildren<Weapon>();
+        onWeaponEffectEnable = weapon.EffectEnable;
+        //ShowWeaponEffect(false);
+    }
+
     private void Update()
     {
+        coolTime -= Time.deltaTime;
+
         characterController.Move(Time.deltaTime * currentSpeed * inputDirection);   // 좀 더 수동
         //characterController.SimpleMove(currentSpeed * inputDirection);            // 좀 더 자동
 
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * turnSpeed);  // 목표 회전으로 변경
     }
 
+    /// <summary>
+    /// 이동 입력에 대한 델리게이트로 실행되는 함수
+    /// </summary>
+    /// <param name="input">입력 방향</param>
+    /// <param name="isPress">눌렀는지(true), 땠는지(false)</param>
     private void OnMoveInput(Vector2 input, bool isPress)
     {
         inputDirection.x = input.x;     // 입력 방향 저장
@@ -153,6 +187,9 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 이동 모드 변경 입력에 대한 델리게이트로 실행되는 함수
+    /// </summary>
     private void OnMoveModeChageInput()
     {
         if (CurrentMoveMode == MoveMode.Walk)
@@ -165,9 +202,17 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 공격 입력에 대한 델리게이트로 실행되는 함수
+    /// </summary>
     private void OnAttackInput()
     {
-        animator.SetTrigger(Attack_Hash);
+        // 쿨타임이 다 되었고, 가만히 서있거나 걷는 상태일 때만 공격 가능      
+        if( coolTime < 0 && ((currentSpeed < 0.001f) || (CurrentMoveMode == MoveMode.Walk)))
+        {
+            animator.SetTrigger(Attack_Hash);   // 트리거로 공격 애니메이션 재생
+            coolTime = maxCoolTime;
+        }
     }
 
     /// <summary>
@@ -189,9 +234,23 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 무기와 방패를 보여줄지 말지를 결정하는 함수
+    /// </summary>
+    /// <param name="isShow">true면 보여주고 false면 안보여준다.</param>
     public void ShowWeaponAndShield(bool isShow = true)
     {
         weaponParent.gameObject.SetActive(isShow);
         shiledParent.gameObject.SetActive(isShow);
     }
+
+    /// <summary>
+    /// 무기의 이펙트를 키거나 끄라는 신호를 보내는 함수
+    /// </summary>
+    /// <param name="isShow">true일 때 보이고, false일때 보이지 않는다.</param>
+    public void ShowWeaponEffect(bool isShow = true)
+    {
+        onWeaponEffectEnable?.Invoke(isShow);
+    }
+
 }
