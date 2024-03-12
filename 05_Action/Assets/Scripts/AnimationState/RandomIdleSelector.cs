@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class RandomIdleSelector : StateMachineBehaviour
 {
+    public int test = -1;
     readonly int IdleSelect_Hash = Animator.StringToHash("IdleSelect");
+
+    int prevSelect = 0;
 
     // OnStateEnter is called before OnStateEnter is called on any state inside this state machine
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -19,24 +22,35 @@ public class RandomIdleSelector : StateMachineBehaviour
     int RandomSelect()
     {
         int select = 0;     // 80%
-        float num = Random.value;
 
-        if(num < 0.05f)
-        {
-            select = 4;     // 5%
+        if(prevSelect == 0)     // 이전에 0일 때만 특수 Idle 재생
+        { 
+            float num = Random.value;
+
+            if(num < 0.05f)
+            {
+                select = 4;     // 5%
+            }
+            else if(num < 0.10f)
+            {
+                select = 3;     // 5%
+            }
+            else if (num < 0.15f)
+            {
+                select = 2;     // 5%
+            }
+            else if (num < 0.20f)
+            {
+                select = 1;     // 5%
+            }
         }
-        else if(num < 0.10f)
+
+        if(test != -1)
         {
-            select = 3;     // 5%
+            select = test;
         }
-        else if (num < 0.15f)
-        {
-            select = 2;     // 5%
-        }
-        else if (num < 0.20f)
-        {
-            select = 1;     // 5%
-        }
+
+        prevSelect = select;
         return select;
     }
 }
