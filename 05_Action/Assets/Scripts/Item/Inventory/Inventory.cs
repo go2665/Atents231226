@@ -274,8 +274,38 @@ public class Inventory
                 });
                 break;
             case ItemSortBy.Name:
+                temp.Sort((current, other) =>       // current, y는 temp리스트에 들어있는 요소 중 2개
+                {
+                    if (current.ItemData == null)   // 비어있는 슬롯을 뒤쪽으로 보내기
+                        return 1;
+                    if (other.ItemData == null)
+                        return -1;
+                    if (isAcending)                  // 오름차순/내림차순에 따라 처리
+                    {
+                        return current.ItemData.itemName.CompareTo(other.ItemData.itemName);
+                    }
+                    else
+                    {
+                        return other.ItemData.itemName.CompareTo(current.ItemData.itemName);
+                    }
+                });
                 break;
             case ItemSortBy.Price:
+                temp.Sort((current, other) =>       // current, y는 temp리스트에 들어있는 요소 중 2개
+                {
+                    if (current.ItemData == null)   // 비어있는 슬롯을 뒤쪽으로 보내기
+                        return 1;
+                    if (other.ItemData == null)
+                        return -1;
+                    if (isAcending)                  // 오름차순/내림차순에 따라 처리
+                    {
+                        return current.ItemData.price.CompareTo(other.ItemData.price);
+                    }
+                    else
+                    {
+                        return other.ItemData.price.CompareTo(current.ItemData.price);
+                    }
+                });
                 break;
         }
 
