@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,10 +15,14 @@ public class InventoryUI : MonoBehaviour
     /// </summary>
     InvenSlotUI[] slotUIs;
 
+    TempSlotUI tempSlotUI;
+
     private void Awake()
     {
         Transform child = transform.GetChild(0);
         slotUIs = child.GetComponentsInChildren<InvenSlotUI>();
+
+        tempSlotUI = GetComponentInChildren<TempSlotUI>();
     }
 
     /// <summary>
@@ -31,6 +36,20 @@ public class InventoryUI : MonoBehaviour
         for(uint i=0; i<slotUIs.Length; i++)
         {
             slotUIs[i].InitializeSlot(inven[i]);    // 모든 슬롯 초기화
+            slotUIs[i].onDragBegin += OnItemMoveBegin;
+            slotUIs[i].onDragEnd += OnItemMoveEnd;
         }
+
+        tempSlotUI.InitializeSlot(inven.TempSlot);
+    }
+
+    private void OnItemMoveBegin(uint index)
+    {
+        inven.MoveItem(index, tempSlotUI.Index);
+    }
+
+    private void OnItemMoveEnd(uint index, bool isSuccess)
+    {
+        inven.MoveItem(tempSlotUI.Index, index);
     }
 }
