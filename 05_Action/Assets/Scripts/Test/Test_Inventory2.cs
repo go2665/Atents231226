@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Test_Inventory : TestBase
+public class Test_Inventory2 : TestBase
 {
     public ItemCode code = ItemCode.Ruby;
+        
     [Range(0,5)]
     public uint index = 0;
+
+    public ItemSortBy sortBy = ItemSortBy.Code;
+    public bool isAcending = true;
+
     Inventory inven;
 
 #if UNITY_EDITOR
@@ -28,32 +33,20 @@ public class Test_Inventory : TestBase
 
     protected override void OnTest1(InputAction.CallbackContext context)
     {
-        inven.AddItem(code);
-        inven.Test_InventoryPrint();
+        // 이동
     }
 
     protected override void OnTest2(InputAction.CallbackContext context)
     {
-        inven.AddItem(code, index);
-        inven.Test_InventoryPrint();
+        // 나누기
     }
 
     protected override void OnTest3(InputAction.CallbackContext context)
     {
-        inven.RemoveItem(index);
+        // 정렬
+        inven.SlotSorting(sortBy, isAcending);
         inven.Test_InventoryPrint();
     }
 
-    protected override void OnTest4(InputAction.CallbackContext context)
-    {
-        inven.ClearSlot(index);
-        inven.Test_InventoryPrint();
-    }
-
-    protected override void OnTest5(InputAction.CallbackContext context)
-    {
-        inven.ClearInventory();
-        inven.Test_InventoryPrint();
-    }
 #endif
 }
