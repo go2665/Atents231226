@@ -21,7 +21,7 @@ public class Inventory
     /// <param name="index">슬롯의 인덱스</param>
     /// <returns>슬롯</returns>
     public InvenSlot this[uint index] => slots[index];
-    //public InvenSlot this[uint index] => (index != tempSlotIndex) ? slots[index] : tempSlot;  // 이렇게도 가능
+    //public InvenSlot this[uint fromIndex] => (fromIndex != tempSlotIndex) ? slots[fromIndex] : tempSlot;  // 이렇게도 가능
 
     /// <summary>
     /// 인벤토리 슬롯의 개수
