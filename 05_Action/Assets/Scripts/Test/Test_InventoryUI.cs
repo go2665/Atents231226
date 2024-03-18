@@ -32,6 +32,12 @@ public class Test_InventoryUI : TestBase
         inven.AddItem(ItemCode.Emerald);
         inven.AddItem(ItemCode.Emerald);
         inven.MoveItem(2, 3);
+        inven.AddItem(ItemCode.Sapphire, 2);
+        inven.AddItem(ItemCode.Sapphire, 4);
+        inven.AddItem(ItemCode.Sapphire, 4);
+        inven.AddItem(ItemCode.Sapphire, 5);
+        inven.AddItem(ItemCode.Sapphire, 5);
+        inven.AddItem(ItemCode.Sapphire, 5);
         inven.Test_InventoryPrint();
 
         inventoryUI.InitializeInventory(inven);

@@ -194,20 +194,21 @@ public class Inventory
         if ( (from != to) && IsValidIndex(from) && IsValidIndex(to) )
         {
             bool fromIsTemp = (from == tempSlotIndex);
-            InvenSlot fromSlot = fromIsTemp ? TempSlot : slots[from];
+            InvenSlot fromSlot = fromIsTemp ? TempSlot : slots[from];   // from 슬롯 가져오기
             
-            if( !fromSlot.IsEmpty)
+            if(!fromSlot.IsEmpty)
             {
                 // from에 아이템이 있다
                 InvenSlot toSlot = null;
                 if(to == tempSlotIndex)
                 {
-                    toSlot = TempSlot;
-                    TempSlot.SetFromIndex(fromSlot.Index);
+                    // to가 temp슬롯이면
+                    toSlot = TempSlot;                      // 슬롯 저장하고
+                    TempSlot.SetFromIndex(fromSlot.Index);  // 드래그 시작 인덱스 저장(FromIndex)
                 }
                 else
                 {
-                    toSlot = slots[to];
+                    toSlot = slots[to]; // temp슬롯이 아니면 슬롯만 저장
                 }
 
                 if ( fromSlot.ItemData == toSlot.ItemData )
@@ -228,22 +229,54 @@ public class Inventory
 
                     if( fromIsTemp )
                     {
-                        // temp가 기록해 놓은 FromIndex 슬롯에 toSlot 슬롯의 데이터 넣기
-                        slots[TempSlot.FromIndex].AssignSlotItem(toSlot.ItemData, toSlot.ItemCount, false);
-                        toSlot.AssignSlotItem(TempSlot.ItemData, TempSlot.ItemCount, false);
-                        TempSlot.ClearSlotItem();
+                        // temp슬롯에서 to슬롯으로 옮기는 경우
+                        //      returnSlot에 toSlot 슬롯의 데이터 넣고 
+                        //      toSlot에 TempSlot의 데이터 넣기
+
+                        InvenSlot returnSlot = slots[TempSlot.FromIndex];   // temp가 기록해 놓은 FromIndex에 있는 슬롯
+
+                        if ( returnSlot.IsEmpty )
+                        {
+                            // returnSlot이 비어있는 경우(to->return, temp->to, temp 비우기)
+                            returnSlot.AssignSlotItem(toSlot.ItemData, toSlot.ItemCount, false);
+                            toSlot.AssignSlotItem(TempSlot.ItemData, TempSlot.ItemCount, false);
+                            TempSlot.ClearSlotItem();
+                        }
+                        else
+                        {
+                            // returnSlot에 아이템이 있다.
+                            if ( returnSlot.ItemData == toSlot.ItemData )
+                            {
+                                // 같은 종류의 아이템이다. => toSlot의 내용을 tempSlot에 합치기 시도
+                                returnSlot.IncreaseSlotItem(out uint overCount, toSlot.ItemCount); 
+                                toSlot.DecreaseSlotItem(toSlot.ItemCount - overCount);
+                                // 아이템이 남아도 아래쪽에서 처리
+                            }
+                            // tempSlot과 toSlot을 스왑
+                            SwapSlot(tempSlot, toSlot);
+                        }
                     }
                     else
                     {
-                        ItemData tempData = fromSlot.ItemData;
-                        uint tempCount = fromSlot.ItemCount;
-
-                        fromSlot.AssignSlotItem(toSlot.ItemData, toSlot.ItemCount, false);
-                        toSlot.AssignSlotItem(tempData, tempCount, false);
+                        // fromSlot이 TempSlot이 아닌 경우(fromSlot과 toSlot 스왑)
+                        SwapSlot(fromSlot, toSlot);
                     }
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// 슬롯 스왑용 함수
+    /// </summary>
+    /// <param name="slotA"></param>
+    /// <param name="slotB"></param>
+    void SwapSlot(InvenSlot slotA, InvenSlot slotB)
+    {
+        ItemData tempData = slotA.ItemData;
+        uint tempCount = slotA.ItemCount;
+        slotA.AssignSlotItem(slotB.ItemData, slotB.ItemCount, false);
+        slotB.AssignSlotItem(tempData, tempCount, false);
     }
 
     /// <summary>
