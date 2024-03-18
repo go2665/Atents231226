@@ -111,7 +111,7 @@ public class InvenSlot
             ItemData = data;
             ItemCount = count;
             IsEquipped = isEquipped;
-            Debug.Log($"인벤토리 [{slotIndex}]번 슬롯에 [{ItemData.itemName}]아이템이 [{ItemCount}]개 설정");
+            //Debug.Log($"인벤토리 [{slotIndex}]번 슬롯에 [{ItemData.itemName}]아이템이 [{ItemCount}]개 설정");
         }
         else
         {
@@ -122,12 +122,12 @@ public class InvenSlot
     /// <summary>
     /// 이 슬롯을 비우는 함수
     /// </summary>
-    public void ClearSlotItem()
+    public virtual void ClearSlotItem()
     {
         ItemData = null;
         ItemCount = 0;
         isEquipped = false;
-        Debug.Log($"인벤토리 [{slotIndex}]번 슬롯을 비웁니다.");
+        //Debug.Log($"인벤토리 [{slotIndex}]번 슬롯을 비웁니다.");
     }
 
     // 아이템 개수 변화
@@ -145,14 +145,14 @@ public class InvenSlot
         uint newCount = ItemCount + increaseCount;
         int over = (int)newCount - (int)ItemData.maxStackCount;
 
-        Debug.Log($"인벤토리 [{slotIndex}]번 슬롯에 아이템이 증가. 현재 [{ItemCount}]개");
+        //Debug.Log($"인벤토리 [{slotIndex}]번 슬롯에 아이템이 증가. 현재 [{ItemCount}]개");
         if (over > 0 )
         {
             // 넘쳤다.
             ItemCount = ItemData.maxStackCount;
             overCount = (uint)over;
             result = false;
-            Debug.Log($"아이템이 최대치까지 증가. [{over}]개 넘침");
+            //Debug.Log($"아이템이 최대치까지 증가. [{over}]개 넘침");
         }
         else
         {
@@ -160,7 +160,7 @@ public class InvenSlot
             ItemCount = newCount;
             overCount = 0;
             result = true;
-            Debug.Log($"아이템이 [{increaseCount}]개 증가. ");
+            //Debug.Log($"아이템이 [{increaseCount}]개 증가. ");
         }
 
         return result;
@@ -177,7 +177,7 @@ public class InvenSlot
         {
             // 아직 아이템이 남아있음
             ItemCount = (uint)newCount;
-            Debug.Log($"인벤토리 [{slotIndex}]번 슬롯에 [{ItemData.itemName}]이 [{decreaseCount}]개 감소. 현재 [{ItemCount}]개");
+            //Debug.Log($"인벤토리 [{slotIndex}]번 슬롯에 [{ItemData.itemName}]이 [{decreaseCount}]개 감소. 현재 [{ItemCount}]개");
         }
         else
         {

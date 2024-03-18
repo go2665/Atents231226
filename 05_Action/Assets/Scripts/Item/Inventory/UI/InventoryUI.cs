@@ -45,11 +45,34 @@ public class InventoryUI : MonoBehaviour
 
     private void OnItemMoveBegin(uint index)
     {
-        inven.MoveItem(index, tempSlotUI.Index);
+        inven.MoveItem(index, tempSlotUI.Index);        // 시작->임시로 아이템 옮기기  
+        tempSlotUI.Open();                              // 임시 슬롯 열기
     }
 
     private void OnItemMoveEnd(uint index, bool isSuccess)
     {
-        inven.MoveItem(tempSlotUI.Index, index);
+        //uint finalIndex = index;
+        //if(!isSuccess)
+        //{
+        //    // 빈곳을 찾아서 따로 준다.
+        //    if( inven.FindEmptySlot(out uint emptySlotIndex))
+        //    {
+        //        finalIndex = emptySlotIndex;
+        //    }
+        //    else
+        //    {
+        //        // 바닥에 드랍
+        //        Debug.LogWarning("바닥에 아이템을 드랍해야 한다.");
+        //        return;
+        //    }
+        //}
+
+        //inven.MoveItem(tempSlotUI.Index, finalIndex);
+        inven.MoveItem(tempSlotUI.Index, index);    // 임시 -> 도착으로 아이템 옮기기
+
+        if (tempSlotUI.InvenSlot.IsEmpty)
+        {
+            tempSlotUI.Close();                     // 임시 슬롯이 비면 닫는다.
+        }
     }
 }
