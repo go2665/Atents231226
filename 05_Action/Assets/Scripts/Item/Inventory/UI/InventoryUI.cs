@@ -38,6 +38,7 @@ public class InventoryUI : MonoBehaviour
             slotUIs[i].InitializeSlot(inven[i]);    // 모든 슬롯 초기화
             slotUIs[i].onDragBegin += OnItemMoveBegin;
             slotUIs[i].onDragEnd += OnItemMoveEnd;
+            slotUIs[i].onClick += OnSlotClick;
         }
 
         tempSlotUI.InitializeSlot(inven.TempSlot);
@@ -49,10 +50,10 @@ public class InventoryUI : MonoBehaviour
         tempSlotUI.Open();                              // 임시 슬롯 열기
     }
 
-    private void OnItemMoveEnd(uint index, bool isSuccess)
+    private void OnItemMoveEnd(uint index, bool isSlotEnd)
     {
         //uint finalIndex = index;
-        //if(!isSuccess)
+        //if(!isSlotEnd)
         //{
         //    // 빈곳을 찾아서 따로 준다.
         //    if( inven.FindEmptySlot(out uint emptySlotIndex))
@@ -73,6 +74,14 @@ public class InventoryUI : MonoBehaviour
         if (tempSlotUI.InvenSlot.IsEmpty)
         {
             tempSlotUI.Close();                     // 임시 슬롯이 비면 닫는다.
+        }
+    }
+
+    private void OnSlotClick(uint index)
+    {
+        if(!tempSlotUI.InvenSlot.IsEmpty)
+        {
+            OnItemMoveEnd(index, true); // 슬롯이 클릭되었을 때 실행되니 isSlotEnd는 true
         }
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class InvenSlotUI : SlotUI_Base, IDragHandler, IBeginDragHandler, IEndDragHandler
+public class InvenSlotUI : SlotUI_Base, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerClickHandler
 {
 
     /// <summary>
@@ -18,6 +18,11 @@ public class InvenSlotUI : SlotUI_Base, IDragHandler, IBeginDragHandler, IEndDra
     /// 드래그 종료를 알리는 델리게이트(uint:드래그가 끝난 슬롯의 인덱스, bool:슬롯에서 드래그가 끝났으면 true)
     /// </summary>
     public Action<uint, bool> onDragEnd;
+
+    /// <summary>
+    /// 마우스 클릭을 알리는 델리게이트(uint: 클릭이 된 슬롯의 인덱스)
+    /// </summary>
+    public Action<uint> onClick;
 
     /// <summary>
     /// 장비여부 표시용 텍스트
@@ -46,7 +51,7 @@ public class InvenSlotUI : SlotUI_Base, IDragHandler, IBeginDragHandler, IEndDra
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        Debug.Log($"드래그 시작 : [{Index}]번 슬롯");
+        //Debug.Log($"드래그 시작 : [{Index}]번 슬롯");
         onDragBegin?.Invoke(Index);
     }
 
@@ -65,7 +70,7 @@ public class InvenSlotUI : SlotUI_Base, IDragHandler, IBeginDragHandler, IEndDra
             if(endSlot != null)
             {
                 // 슬롯이다.
-                Debug.Log($"드래그 종료 : [{endSlot.Index}]번 슬롯");
+                //Debug.Log($"드래그 종료 : [{endSlot.Index}]번 슬롯");
                 onDragEnd?.Invoke(endSlot.Index, true);
             }
             else
@@ -82,5 +87,10 @@ public class InvenSlotUI : SlotUI_Base, IDragHandler, IBeginDragHandler, IEndDra
             Debug.Log("어떤 UI도 없다.");
         }
 
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        onClick?.Invoke(Index);
     }
 }
