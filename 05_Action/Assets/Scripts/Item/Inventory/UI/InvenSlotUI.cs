@@ -31,9 +31,9 @@ public class InvenSlotUI : SlotUI_Base, IDragHandler, IBeginDragHandler, IEndDra
     public Action<uint> onPointerEnter;
 
     /// <summary>
-    /// 마우스 커서가 슬롯에서 나갔다.(uint: 나간 슬롯의 인덱스)
+    /// 마우스 커서가 슬롯에서 나갔다.
     /// </summary>
-    public Action<uint> onPointerExit;
+    public Action onPointerExit;
 
     /// <summary>
     /// 마우스 커서가 슬롯위에서 움직인다.(Vector2: 마우스 포인터의 스크린 좌표)
@@ -117,7 +117,7 @@ public class InvenSlotUI : SlotUI_Base, IDragHandler, IBeginDragHandler, IEndDra
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        onPointerExit?.Invoke(Index);
+        onPointerExit?.Invoke();
     }
 
     public void OnPointerMove(PointerEventData eventData)

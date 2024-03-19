@@ -15,7 +15,15 @@ public class InventoryUI : MonoBehaviour
     /// </summary>
     InvenSlotUI[] slotUIs;
 
+    /// <summary>
+    /// 임시 슬롯
+    /// </summary>
     TempSlotUI tempSlotUI;
+
+    /// <summary>
+    /// 상세 정보창
+    /// </summary>
+    DetailInfoUI detail;
 
     private void Awake()
     {
@@ -23,6 +31,7 @@ public class InventoryUI : MonoBehaviour
         slotUIs = child.GetComponentsInChildren<InvenSlotUI>();
 
         tempSlotUI = GetComponentInChildren<TempSlotUI>();
+        detail = GetComponentInChildren<DetailInfoUI>();
     }
 
     /// <summary>
@@ -35,21 +44,33 @@ public class InventoryUI : MonoBehaviour
 
         for(uint i=0; i<slotUIs.Length; i++)
         {
-            slotUIs[i].InitializeSlot(inven[i]);    // 모든 슬롯 초기화
-            slotUIs[i].onDragBegin += OnItemMoveBegin;
+            slotUIs[i].InitializeSlot(inven[i]);    // 모든 인벤토리 슬롯 초기화
+            slotUIs[i].onDragBegin += OnItemMoveBegin;      // 슬롯 델리게이트에 함수들 등록
             slotUIs[i].onDragEnd += OnItemMoveEnd;
             slotUIs[i].onClick += OnSlotClick;
+            slotUIs[i].onPointerEnter += OnItemDetailOn;
+            slotUIs[i].onPointerExit += OnItemDetailOff;
+            slotUIs[i].onPointerMove += OnSlotPointerMove;
         }
 
-        tempSlotUI.InitializeSlot(inven.TempSlot);
+        tempSlotUI.InitializeSlot(inven.TempSlot);  // 임시 슬롯 초기화
     }
 
+    /// <summary>
+    /// 드래그 시작했을 때 실행되는 함수
+    /// </summary>
+    /// <param name="index">드래그 시작한 위치에 있는 슬롯의 인덱스</param>
     private void OnItemMoveBegin(uint index)
     {
         inven.MoveItem(index, tempSlotUI.Index);        // 시작->임시로 아이템 옮기기  
         tempSlotUI.Open();                              // 임시 슬롯 열기
     }
 
+    /// <summary>
+    /// 드래그가 끝났을 때 실행되는 함수
+    /// </summary>
+    /// <param name="index">슬롯에서 드래그가 끝났으면 드래그가 끝난 슬롯의 인덱스, 아니면 드래그 시작한 슬롯의 인덱스</param>
+    /// <param name="isSlotEnd">슬롯에서 드래그가 끝났으면 true, 아니면 false</param>
     private void OnItemMoveEnd(uint index, bool isSlotEnd)
     {
         //uint finalIndex = index;
@@ -77,11 +98,41 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 슬롯을 클릭했을 때 실행되는 함수
+    /// </summary>
+    /// <param name="index">클릭한 슬롯의 인덱스</param>
     private void OnSlotClick(uint index)
     {
-        if(!tempSlotUI.InvenSlot.IsEmpty)
+        if(!tempSlotUI.InvenSlot.IsEmpty)   // 임시 슬롯이 비어있지 않으면 
         {
-            OnItemMoveEnd(index, true); // 슬롯이 클릭되었을 때 실행되니 isSlotEnd는 true
+            OnItemMoveEnd(index, true);     // 클릭된 슬롯에 아이템 넣기(슬롯이 클릭되었을 때 실행되니 isSlotEnd는 true)
         }
+    }
+
+    /// <summary>
+    /// 아이템 상세 정보창을 여는 함수
+    /// </summary>
+    /// <param name="index">상세 정보창에서 표시될 아이템이 들어있는 슬롯의 인덱스</param>
+    private void OnItemDetailOn(uint index)
+    {
+        detail.Open(slotUIs[index].InvenSlot.ItemData); // 열기
+    }
+
+    /// <summary>
+    /// 아이템 상세 정보창을 닫는 함수
+    /// </summary>
+    private void OnItemDetailOff()
+    {
+        detail.Close(); // 닫기
+    }
+
+    /// <summary>
+    /// 슬롯안에서 마우스 커서가 움직였을 때 실행되는 함수
+    /// </summary>
+    /// <param name="screen">마우스 커서의 스크린 좌표</param>
+    private void OnSlotPointerMove(Vector2 screen)
+    {
+        detail.MovePosition(screen);    // 움직이기
     }
 }
