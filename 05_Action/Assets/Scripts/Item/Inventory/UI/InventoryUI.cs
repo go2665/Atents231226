@@ -62,6 +62,7 @@ public class InventoryUI : MonoBehaviour
     /// <param name="index">드래그 시작한 위치에 있는 슬롯의 인덱스</param>
     private void OnItemMoveBegin(uint index)
     {
+        detail.IsPause = true;
         inven.MoveItem(index, tempSlotUI.Index);        // 시작->임시로 아이템 옮기기  
         tempSlotUI.Open();                              // 임시 슬롯 열기
     }
@@ -95,6 +96,12 @@ public class InventoryUI : MonoBehaviour
         if (tempSlotUI.InvenSlot.IsEmpty)
         {
             tempSlotUI.Close();                     // 임시 슬롯이 비면 닫는다.
+        }
+
+        detail.IsPause = false; // 퍼즈 풀고
+        if(isSlotEnd)           // 슬롯에서 끝이 났으면 상세 정보창 다시 열기
+        {
+            detail.Open(inven[index].ItemData);
         }
     }
 

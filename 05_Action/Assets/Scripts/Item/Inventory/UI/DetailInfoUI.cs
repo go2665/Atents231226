@@ -15,6 +15,27 @@ public class DetailInfoUI : MonoBehaviour
     CanvasGroup canvasGroup;
 
     /// <summary>
+    /// 일시 정지 모드(true면 일시 정지, false면 사용 중)
+    /// </summary>
+    bool isPause = false;
+
+    /// <summary>
+    /// 일시 정지 모드를 확인하고 설정하는 프로퍼티
+    /// </summary>
+    public bool IsPause
+    {
+        get => isPause;
+        set
+        {
+            isPause = value;
+            if(isPause)
+            {
+                Close();    // 일시 정지가 되면 열려있던 상세 정보창도 닫는다.
+            }
+        }
+    }
+
+    /// <summary>
     /// 알파값이 변하는 속도
     /// </summary>
     public float alphaChangeSpeed = 10.0f;
@@ -40,7 +61,7 @@ public class DetailInfoUI : MonoBehaviour
     /// <param name="itemData">표시할 아이템 데이터</param>
     public void Open(ItemData itemData)
     {
-        if(itemData != null)
+        if(!IsPause && itemData != null)
         {
             // 컴포넌트들 채우기
             icon.sprite = itemData.itemIcon;
@@ -48,7 +69,8 @@ public class DetailInfoUI : MonoBehaviour
             price.text = itemData.price.ToString("N0");
             description.text = itemData.itemDescription;
 
-            MovePosition(Mouse.current.position.ReadValue()); // 보이기 전에 커서 위치오 상세 정보창 옮기기
+            canvasGroup.alpha = 0.0001f; // MovePosition이 alpha가 0보다 클때만 실행되니 미리 조금만 올리기
+            MovePosition(Mouse.current.position.ReadValue()); // 보이기 전에 커서 위치와 상세 정보창 옮기기
 
             // 알파 변경 시작(0->1)
             StopAllCoroutines();
