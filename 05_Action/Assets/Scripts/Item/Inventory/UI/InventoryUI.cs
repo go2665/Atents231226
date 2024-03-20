@@ -69,17 +69,6 @@ public class InventoryUI : MonoBehaviour
         divider.Close();
     }
 
-    private void OnDividerOK(uint targetIndex, uint dividCount)
-    {
-        inven.DividItem(targetIndex, dividCount);
-        tempSlotUI.Open();
-    }
-
-    private void OnDividerCancel()
-    {
-        detail.IsPause = false;
-    }
-
     /// <summary>
     /// 드래그 시작했을 때 실행되는 함수
     /// </summary>
@@ -190,7 +179,28 @@ public class InventoryUI : MonoBehaviour
     {
         InvenSlotUI target = slotUIs[index];
         divider.transform.position = target.transform.position + Vector3.up * 100;
-        divider.Open(target.InvenSlot);
-        detail.IsPause = true;
+        if( divider.Open(target.InvenSlot) )
+        {
+            detail.IsPause = true;
+        }
+    }
+
+    /// <summary>
+    /// 아이템 분리창의 OK 버튼을 눌렀을 때 실행될 함수
+    /// </summary>
+    /// <param name="targetIndex">나이템을 나눌 슬롯</param>
+    /// <param name="dividCount">나눌 개수</param>
+    private void OnDividerOK(uint targetIndex, uint dividCount)
+    {
+        inven.DividItem(targetIndex, dividCount);
+        tempSlotUI.Open();
+    }
+
+    /// <summary>
+    /// 아이템 분리창의 Cancel버튼을 눌렀을 때 실행될 함수
+    /// </summary>
+    private void OnDividerCancel()
+    {
+        detail.IsPause = false;
     }
 }

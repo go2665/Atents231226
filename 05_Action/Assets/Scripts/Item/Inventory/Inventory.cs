@@ -292,6 +292,7 @@ public class Inventory
             count = System.Math.Min(count, slot.ItemCount); // count가 슬롯에 들어있는 개수보다 크면 슬롯에 들어있는 개수까지만 사용
 
             TempSlot.AssignSlotItem(slot.ItemData, count);  // 임시 슬롯에 우선 넣고
+            TempSlot.SetFromIndex(slotIndex);               // 나누는 슬롯 인덱스 저장
             slot.DecreaseSlotItem(count);                   // 목적하던 슬롯에서 빼기            
         }
     }

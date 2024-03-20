@@ -164,6 +164,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Wheel",
+                    "type": "Value",
+                    "id": "eeed8d86-0f00-4806-b1fe-7fd170654a9a",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -197,6 +206,17 @@
                     "processors": "",
                     "groups": "KM",
                     "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "eb6a1981-c594-4c76-b2ad-498a1ac58559",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Wheel",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
