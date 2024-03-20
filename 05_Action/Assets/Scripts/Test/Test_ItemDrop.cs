@@ -47,7 +47,7 @@ public class Test_ItemDrop : TestBase
         inven.AddItem(ItemCode.Sapphire, 5);
         inven.Test_InventoryPrint();
 
-        inventoryUI.InitializeInventory(inven);
+        inventoryUI.InitializeInventory(inven);        
     }
 
     protected override void OnTest1(InputAction.CallbackContext context)

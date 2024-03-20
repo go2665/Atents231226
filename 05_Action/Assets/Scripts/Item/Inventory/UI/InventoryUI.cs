@@ -117,6 +117,8 @@ public class InventoryUI : MonoBehaviour
             inven.MergeItems();
             inven.SlotSorting(by, isAcending);   // 정렬 패널에서 정렬 요청 들어오면 실행
         };
+
+        Close();
     }
 
     /// <summary>
