@@ -8,17 +8,13 @@ using UnityEngine.UI;
 
 public class ItemDividerUI : MonoBehaviour
 {
-    // 2개 이상 아이템이 들어있는 인벤토리 슬롯을 쉬프트 클릭하면 열린다.
-    // DividCountInputField, PlusButton, MinusButton, DividSlider를 이용해서 아이템을 나눌 개수를 설정할 수 있다.
-    // 아이템을 나누는 개수는 반드시 1~(슬롯에 들어있는 아이템 수 - 1) 이어야 한다.
-    // OK버튼을 누르면 슬롯에서 설정된 개수만큼 아이템이 빠지고 빠진만큼 Temp슬롯에 들어간다.
-
     /// <summary>
     /// 아이템을 나눌 슬롯
     /// </summary>
     InvenSlot targetSlot;
 
-    const int MinItemCount = 1;
+    const uint MinItemCount = 1;
+    uint MaxItemCount => targetSlot.IsEmpty ? MinItemCount : (targetSlot.ItemCount - 1);
 
     /// <summary>
     /// 아이템을 나눌 개수
@@ -33,7 +29,9 @@ public class ItemDividerUI : MonoBehaviour
         get => dividCount;
         set
         {
-            dividCount = value;
+            dividCount = Math.Clamp(value, MinItemCount, MaxItemCount); // dividCount는 무조건 Min~Max 사이
+            inputField.text = dividCount.ToString();    // UI에 보여지는 부분도 적용
+            slider.value = dividCount;
         }
     }
 
@@ -45,7 +43,7 @@ public class ItemDividerUI : MonoBehaviour
     /// <summary>
     /// Cancel버튼을 눌렀을 때 실행되는 델리게이트
     /// </summary>
-    public Action onCancel;
+    public Action onCancelClick;
 
     // 입력용 인풋 액션
     PlayerInputActions inputActions;
@@ -55,10 +53,63 @@ public class ItemDividerUI : MonoBehaviour
     TMP_InputField inputField;
     Slider slider;
 
-
     private void Awake()
     {
         inputActions = new PlayerInputActions();
+
+        Transform child = transform.GetChild(0);
+        icon = child.GetComponent<Image>();
+        child = transform.GetChild(1);
+        inputField = child.GetComponent<TMP_InputField>();
+        inputField.onValueChanged.AddListener((text) =>
+        {
+            if( uint.TryParse(text, out uint value) )
+            {
+                DividCount = value;
+            }
+            else
+            {
+                // inputField가 정수만 받게 설정되어 있어서 -값을 넣는 것이 아니면 실행 안됨                
+                DividCount = MinItemCount;                
+            }
+        });
+
+        child = transform.GetChild(2);
+        Button plus = child.GetComponent<Button>();
+        plus.onClick.AddListener(() =>
+        {
+            DividCount++;
+        });
+
+        child = transform.GetChild(3);
+        Button minus = child.GetComponent<Button>();
+        minus.onClick.AddListener(() =>
+        {
+            DividCount--;
+        });
+
+        child = transform.GetChild(4);
+        slider = child.GetComponent<Slider>();
+        slider.onValueChanged.AddListener((value) =>
+        {
+            DividCount = (uint)value;
+        });
+
+        child = transform.GetChild(5);
+        Button ok = child.GetComponent<Button>();
+        ok.onClick.AddListener(() =>
+        {
+            onOkClick?.Invoke(targetSlot.Index, DividCount);
+            Close();
+        });
+
+        child = transform.GetChild(6);
+        Button cancel = child.GetComponent<Button>();
+        cancel.onClick.AddListener(() =>
+        {
+            onCancelClick?.Invoke();
+            Close();
+        });
     }
 
     private void OnEnable()
@@ -75,15 +126,32 @@ public class ItemDividerUI : MonoBehaviour
 
     public void Open(InvenSlot target)
     {
+        if( !target.IsEmpty && target.ItemCount > MinItemCount )
+        {
+            targetSlot = target;
+            icon.sprite = targetSlot.ItemData.itemIcon;
+            slider.minValue = MinItemCount;
+            slider.maxValue = MaxItemCount;
+            DividCount = targetSlot.ItemCount / 2;
 
+            gameObject.SetActive(true);
+        }
     }
 
     public void Close()
     {
-
+        gameObject.SetActive(false);
     }
 
     private void OnClick(UnityEngine.InputSystem.InputAction.CallbackContext _)
     {
+        Vector2 screenPos = Mouse.current.position.ReadValue();
+        Vector2 diff = screenPos - (Vector2)transform.position; // 이 UI의 피봇에서 마우스 포인터가 얼마나 떨어져 있는지 계산
+
+        RectTransform rectTransform = (RectTransform)transform;
+        if(!rectTransform.rect.Contains(diff))  // 마우스 포인터가 UI의 rect안에 있는지 확인
+        {
+            Close();    // UI 영역 밖을 클릭했으면 닫는다.
+        }
     }
 }

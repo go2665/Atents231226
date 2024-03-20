@@ -2781,6 +2781,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1287261406}
   - component: {fileID: 1287261407}
+  - component: {fileID: 1287261408}
   m_Layer: 0
   m_Name: Test_InventoryUI
   m_TagString: Untagged
@@ -2810,7 +2811,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1287261405}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 896716c68a3d784479b08703407463d7, type: 3}
   m_Name: 
@@ -2822,6 +2823,20 @@ MonoBehaviour:
   toIndex: 0
   sortBy: 0
   isAcending: 1
+--- !u!114 &1287261408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1287261405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcb9edc12f41f904ab847cda3ca950b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  seed: -1
+  inventoryUI: {fileID: 95449273}
 --- !u!1 &1290416854
 GameObject:
   m_ObjectHideFlags: 0
@@ -3552,6 +3567,7 @@ GameObject:
   - component: {fileID: 1566824626}
   - component: {fileID: 1566824628}
   - component: {fileID: 1566824627}
+  - component: {fileID: 1566824629}
   m_Layer: 5
   m_Name: ItemDivider
   m_TagString: Untagged
@@ -3582,7 +3598,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -777, y: 58}
+  m_AnchoredPosition: {x: -688, y: -188}
   m_SizeDelta: {x: 400, y: 480}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &1566824627
@@ -3623,6 +3639,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1566824625}
   m_CullTransparentMesh: 1
+--- !u!114 &1566824629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1566824625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37f83a2c56eb69540992f23561d30db2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1675629359
 GameObject:
   m_ObjectHideFlags: 0

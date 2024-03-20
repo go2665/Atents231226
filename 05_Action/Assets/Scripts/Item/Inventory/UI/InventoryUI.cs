@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class InventoryUI : MonoBehaviour
 {
@@ -25,6 +27,11 @@ public class InventoryUI : MonoBehaviour
     /// </summary>
     DetailInfoUI detail;
 
+    /// <summary>
+    /// 아이템 분리 창
+    /// </summary>
+    ItemDividerUI divider;
+
     private void Awake()
     {
         Transform child = transform.GetChild(0);
@@ -32,6 +39,8 @@ public class InventoryUI : MonoBehaviour
 
         tempSlotUI = GetComponentInChildren<TempSlotUI>();
         detail = GetComponentInChildren<DetailInfoUI>();
+        divider = GetComponentInChildren<ItemDividerUI>(true);
+        
     }
 
     /// <summary>
@@ -54,6 +63,21 @@ public class InventoryUI : MonoBehaviour
         }
 
         tempSlotUI.InitializeSlot(inven.TempSlot);  // 임시 슬롯 초기화
+
+        divider.onOkClick += OnDividerOK;
+        divider.onCancelClick += OnDividerCancel;
+        divider.Close();
+    }
+
+    private void OnDividerOK(uint targetIndex, uint dividCount)
+    {
+        inven.DividItem(targetIndex, dividCount);
+        tempSlotUI.Open();
+    }
+
+    private void OnDividerCancel()
+    {
+        detail.IsPause = false;
     }
 
     /// <summary>
@@ -110,9 +134,24 @@ public class InventoryUI : MonoBehaviour
     /// </summary>
     /// <param name="index">클릭한 슬롯의 인덱스</param>
     private void OnSlotClick(uint index)
-    {
-        if(!tempSlotUI.InvenSlot.IsEmpty)   // 임시 슬롯이 비어있지 않으면 
+    {        
+        if(tempSlotUI.InvenSlot.IsEmpty)
         {
+            bool isShiftPress = (Keyboard.current.shiftKey.ReadValue() > 0);
+            if(isShiftPress)
+            {
+                // 쉬프트가 눌려져 있는 상태 -> 아이템 분리 창 열기
+                OnItemDividerOpen(index);
+            }
+            else
+            {
+                // 쉬프트가 안눌려진 상태 -> 아이템 사용 or 아이템 장비
+            }
+
+        }
+        else
+        {
+            // 임시 슬롯에 아이템이 들어있으면
             OnItemMoveEnd(index, true);     // 클릭된 슬롯에 아이템 넣기(슬롯이 클릭되었을 때 실행되니 isSlotEnd는 true)
         }
     }
@@ -141,5 +180,17 @@ public class InventoryUI : MonoBehaviour
     private void OnSlotPointerMove(Vector2 screen)
     {
         detail.MovePosition(screen);    // 움직이기
+    }
+
+    /// <summary>
+    /// 아이템 분리 창 열기
+    /// </summary>
+    /// <param name="index">아이템을 분리할 슬롯의 인덱스</param>
+    void OnItemDividerOpen(uint index)
+    {
+        InvenSlotUI target = slotUIs[index];
+        divider.transform.position = target.transform.position + Vector3.up * 100;
+        divider.Open(target.InvenSlot);
+        detail.IsPause = true;
     }
 }

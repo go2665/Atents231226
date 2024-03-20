@@ -284,7 +284,7 @@ public class Inventory
     /// </summary>
     /// <param name="slotIndex">아이템을 덜어낼 슬롯</param>
     /// <param name="count">덜어낼 개수</param>
-    public void SplitItem(uint slotIndex, uint count)
+    public void DividItem(uint slotIndex, uint count)
     {
         if(IsValidIndex(slotIndex))
         {
