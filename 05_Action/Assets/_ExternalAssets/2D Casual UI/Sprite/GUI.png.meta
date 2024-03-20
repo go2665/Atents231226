@@ -1065,7 +1065,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: GUI_36
+      name: _Sort
       rect:
         serializedVersion: 2
         x: 569
@@ -1647,7 +1647,6 @@ TextureImporter:
       GUI_32: 21300064
       GUI_34: 21300068
       GUI_35: 21300070
-      GUI_36: 21300072
       GUI_4: 21300008
       GUI_42: 21300074
       GUI_43: 21300076
@@ -1683,6 +1682,7 @@ TextureImporter:
       _MoneyBackground: 21300046
       _OK: 21300118
       _SlotBackground: 21300090
+      _Sort: 21300072
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
