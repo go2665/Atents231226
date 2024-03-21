@@ -47,7 +47,7 @@ public class Test_ItemDrop : TestBase
         inven.AddItem(ItemCode.Sapphire, 5);
         inven.Test_InventoryPrint();
 
-        inventoryUI.InitializeInventory(inven);        
+        inventoryUI.InitializeInventory(inven);
     }
 
     protected override void OnTest1(InputAction.CallbackContext context)
@@ -57,6 +57,19 @@ public class Test_ItemDrop : TestBase
         inven.Test_InventoryPrint();
     }
 
+    protected override void OnTest2(InputAction.CallbackContext context)
+    {
+        Factory.Instance.MakeItem(code);
+    }
 
+    protected override void OnTest3(InputAction.CallbackContext context)
+    {
+        ItemObject[] items = FindObjectsByType<ItemObject>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        foreach (ItemObject item in items)
+        {
+            ItemData data = item.Pickup();
+            Debug.Log($"{data.itemName} 획득");
+        }
+    }
 #endif
 }

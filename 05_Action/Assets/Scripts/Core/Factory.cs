@@ -4,19 +4,25 @@ using UnityEngine;
 
 public enum PoolObjectType
 {
-    Slime = 0,
+    Slime = 0,    
 }
 
 public class Factory : Singleton<Factory>
 {
+    ItemPool itemPool;
     //SlimePool slimePool;
 
     protected override void OnInitialize()
     {
         base.OnInitialize();
 
+        itemPool = GetComponentInChildren<ItemPool>();
+        if(itemPool != null ) itemPool.Initialize();
+
         //slimePool = GetComponentInChildren<SlimePool>();
         //if( slimePool != null ) slimePool.Initialize();
+
+
     }
  
     /// <summary>
@@ -31,9 +37,9 @@ public class Factory : Singleton<Factory>
         GameObject result = null;
         switch (type)
         {
-            case PoolObjectType.Slime:
+            //case PoolObjectType.Slime:
                 //result = slimePool.GetObject(position, euler).gameObject;
-                break;
+            //    break;
         }
 
         return result;
@@ -58,4 +64,18 @@ public class Factory : Singleton<Factory>
     //{
     //    return slimePool.GetObject(position, angle * Vector3.forward);
     //}
+
+    public GameObject MakeItem(ItemCode code)
+    {
+        ItemData data = GameManager.Instance.ItemData[code];
+        ItemObject obj = itemPool.GetObject();
+        obj.ItemData = data;
+
+        return obj.gameObject;
+    }
+
+    public GameObject MakeItem(ItemCode code, Vector3 position, bool useNoise = false)
+    {
+        return null;
+    }
 }
