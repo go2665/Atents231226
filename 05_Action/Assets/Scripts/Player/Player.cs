@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 public class Player : MonoBehaviour
 {
     /// <summary>
@@ -91,6 +95,36 @@ public class Player : MonoBehaviour
     /// 공격 애니메이션 재생 시간
     /// </summary>
     const float attackAnimationLength = 0.533f;
+    
+    /// <summary>
+    /// 아이템을 줏을 수 있는 거리(아이템을 버릴 수 있는 최대 거리)
+    /// </summary>
+    public float ItemPickupRange = 2.0f;
+    
+    /// <summary>
+    /// 플레이어의 인벤토리
+    /// </summary>
+    Inventory inven;
+    public Inventory Inventory => inven;
+
+    /// <summary>
+    /// 플레이어가 가지는 금액
+    /// </summary>
+    int money = 0;
+
+    public int Money
+    {
+        get => money;
+        set
+        {
+            if(money != value)
+            {
+                money = value;
+                onMoneyChange?.Invoke(money);   // 금액 변경이 있으면 델리게이트를 실행한다.
+            }
+        }
+    }
+    public Action<int> onMoneyChange;
 
     // 애니메이터용 해시값 및 상수
     readonly int Speed_Hash = Animator.StringToHash("Speed");
@@ -103,7 +137,7 @@ public class Player : MonoBehaviour
     /// 무기 이펙트 켜고 끄는 신호를 보내는 델리게이트
     /// </summary>
     Action<bool> onWeaponEffectEnable;
-
+    
     // 컴포넌트들
     Animator animator;
     CharacterController characterController;
@@ -137,12 +171,22 @@ public class Player : MonoBehaviour
         inputController.onMove += OnMoveInput;
         inputController.onMoveModeChange += OnMoveModeChageInput;
         inputController.onAttack += OnAttackInput;
+        inputController.onItemPickUp += OnItemPickupInput;
     }
 
     private void Start()
     {
+        inven = new Inventory(this);    // itemDataManager가 게임메니저에 있어서 반드시 Start이후에 해야 함
+        if(GameManager.Instance.InventoryUI != null)
+        {
+            GameManager.Instance.InventoryUI.InitializeInventory(Inventory);    // 인벤토리와 인벤토리 UI연결
+        }
+
         Weapon weapon = weaponParent.GetComponentInChildren<Weapon>();
-        onWeaponEffectEnable = weapon.EffectEnable;
+        if(weapon != null)
+        {
+            onWeaponEffectEnable = weapon.EffectEnable;
+        }
         //ShowWeaponEffect(false);
     }
 
@@ -253,4 +297,39 @@ public class Player : MonoBehaviour
         onWeaponEffectEnable?.Invoke(isShow);
     }
 
+    /// <summary>
+    /// 주변에 있는 아이템을 습득하는 함수
+    /// </summary>
+    private void OnItemPickupInput()
+    {
+        // 주변에 있는 Item 레이어의 컬라이더를 전부 찾기
+        Collider[] itemColliders = Physics.OverlapSphere(transform.position, ItemPickupRange, LayerMask.GetMask("Item"));
+        foreach(Collider collider in itemColliders)
+        {
+            ItemObject item = collider.GetComponent<ItemObject>();
+
+            IConsumable consumItem = item.ItemData as IConsumable;
+            if(consumItem == null)
+            {
+                // 일반 아이템이다.
+                if (Inventory.AddItem(item.ItemData.code))   // 인벤토리에 추가 시도
+                {
+                    item.End();                              // 아이템 제거
+                }
+            }
+            else
+            {
+                consumItem.Consume(gameObject); // 플레이어에게 즉시 사용
+                item.End();
+            }
+        }
+    }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmosSelected()
+    {
+        Handles.color = Color.blue;
+        Handles.DrawWireDisc(transform.position, Vector3.up, ItemPickupRange, 2.0f);
+    }
+#endif
 }

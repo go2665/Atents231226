@@ -23,7 +23,7 @@ public class RecycleObject : MonoBehaviour
     /// <summary>
     /// 일정 시간 후에 이 게임 오브젝트를 비활성화 시키는 코루틴
     /// </summary>
-    /// <param name="delay">비활성화ㅗ 될 때까지 걸리는 시간</param>
+    /// <param name="delay">비활성화 될 때까지 걸리는 시간</param>
     /// <returns></returns>
     protected IEnumerator LifeOver(float delay = 0.0f)
     {

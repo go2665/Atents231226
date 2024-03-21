@@ -19,7 +19,7 @@ public class Test_ItemDrop : TestBase
     {
         target = transform.GetChild(0);
 
-        inven = new Inventory(null);
+        inven = new Inventory(GameManager.Instance.Player);
         inven.AddItem(ItemCode.Ruby);
         inven.AddItem(ItemCode.Ruby);
         inven.AddItem(ItemCode.Ruby);
@@ -67,7 +67,8 @@ public class Test_ItemDrop : TestBase
         ItemObject[] items = FindObjectsByType<ItemObject>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
         foreach (ItemObject item in items)
         {
-            ItemData data = item.Pickup();
+            ItemData data = item.ItemData;
+            item.End();
             Debug.Log($"{data.itemName} 획득");
         }
     }

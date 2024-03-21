@@ -40,12 +40,12 @@ public class Factory : Singleton<Factory>
     public GameObject GetObject(PoolObjectType type, Vector3? position = null, Vector3? euler = null)
     {
         GameObject result = null;
-        switch (type)
-        {
-            //case PoolObjectType.Slime:
-                //result = slimePool.GetObject(position, euler).gameObject;
-            //    break;
-        }
+        //switch (type)
+        //{
+        //    //case PoolObjectType.Slime:
+        //        //result = slimePool.GetObject(position, euler).gameObject;
+        //    //    break;
+        //}
 
         return result;
     }

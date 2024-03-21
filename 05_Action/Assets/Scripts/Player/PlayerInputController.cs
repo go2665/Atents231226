@@ -20,6 +20,11 @@ public class PlayerInputController : MonoBehaviour
     /// </summary>
     public Action onAttack;
 
+    /// <summary>
+    /// 아이템을 줍는 입력을 전달하는 델리게이트
+    /// </summary>
+    public Action onItemPickUp;
+
     // 입력용 인풋 액션
     PlayerInputActions inputActions;
 
@@ -35,10 +40,12 @@ public class PlayerInputController : MonoBehaviour
         inputActions.Player.Move.canceled += OnMove;
         inputActions.Player.MoveModeChange.performed += OnMoveModeChange;
         inputActions.Player.Attack.performed += OnAttack;
+        inputActions.Player.Pickup.performed += OnPickup;
     }
 
     private void OnDisable()
     {
+        inputActions.Player.Pickup.performed -= OnPickup;
         inputActions.Player.Attack.performed -= OnAttack;
         inputActions.Player.MoveModeChange.performed -= OnMoveModeChange;
         inputActions.Player.Move.canceled -= OnMove;
@@ -60,5 +67,10 @@ public class PlayerInputController : MonoBehaviour
     private void OnAttack(UnityEngine.InputSystem.InputAction.CallbackContext _)
     {
         onAttack?.Invoke();        
+    }
+
+    private void OnPickup(UnityEngine.InputSystem.InputAction.CallbackContext _)
+    {
+        onItemPickUp?.Invoke();
     }
 }

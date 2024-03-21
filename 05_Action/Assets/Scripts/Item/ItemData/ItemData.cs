@@ -13,5 +13,5 @@ public class ItemData : ScriptableObject
     public Sprite itemIcon;
     public uint price = 0;
     public uint maxStackCount = 1;
-    public GameObject modelPrefab;
+    //public GameObject modelPrefab;
 }

@@ -9,7 +9,7 @@ public class ItemObject : RecycleObject
 
     public ItemData ItemData
     {
-        private get => data;
+        get => data;
         set
         {
             if( data == null )  // 활성화 이후에는 단 한번만 설정 가능(팩토리에서 처리해야 함)
@@ -32,12 +32,10 @@ public class ItemObject : RecycleObject
     }
 
     /// <summary>
-    /// 아이템이 플레이어에게 획득될 때 실행되는 함수
+    /// 아이템을 비활성화 시키는 함수
     /// </summary>
-    /// <returns>아이템의 ItemData</returns>
-    public ItemData Pickup()
+    public void End()
     {
         gameObject.SetActive(false);
-        return ItemData;
     }
 }

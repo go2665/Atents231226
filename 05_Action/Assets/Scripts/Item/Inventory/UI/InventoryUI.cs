@@ -43,6 +43,11 @@ public class InventoryUI : MonoBehaviour
     /// </summary>
     SortPanelUI sortPanel;
 
+    /// <summary>
+    /// 인벤토리의 소유자
+    /// </summary>
+    public Player Owner => inven.Owner;
+
     PlayerInputActions inputActions;
 
     CanvasGroup canvasGroup;
@@ -53,7 +58,7 @@ public class InventoryUI : MonoBehaviour
         Transform child = transform.GetChild(0);
         slotUIs = child.GetComponentsInChildren<InvenSlotUI>();
 
-        child = transform.GetChild(4);
+        child = transform.GetChild(3);
         Button close = child.GetComponent<Button>();
         close.onClick.AddListener(Close);
 
@@ -72,10 +77,12 @@ public class InventoryUI : MonoBehaviour
     {
         inputActions.UI.Enable();
         inputActions.UI.InvenOnOff.performed += OnInvenOnOff;
+        inputActions.UI.Click.canceled += OnItemDrop;
     }
 
     private void OnDisable()
     {
+        inputActions.UI.Click.canceled -= OnItemDrop;
         inputActions.UI.InvenOnOff.performed -= OnInvenOnOff;
         inputActions.UI.Disable();
     }
@@ -101,10 +108,16 @@ public class InventoryUI : MonoBehaviour
 
         tempSlotUI.InitializeSlot(inven.TempSlot);  // 임시 슬롯 초기화
 
+        // 아이템 분리창
         divider.onOkClick += OnDividerOK;
         divider.onCancelClick += OnDividerCancel;
         divider.Close();
 
+        // 머니 패널
+        Owner.onMoneyChange += moneyPanel.Refresh;
+        moneyPanel.Refresh(Owner.Money);
+
+        // 소트 패널
         sortPanel.onSortRequest += (by) =>
         {
             bool isAcending = true;
@@ -287,6 +300,19 @@ public class InventoryUI : MonoBehaviour
         else
         {
             Open();
+        }
+    }
+
+    private void OnItemDrop(InputAction.CallbackContext _)
+    {
+        Vector2 screenPos = Mouse.current.position.ReadValue();
+        Vector2 diff = screenPos - (Vector2)transform.position; // 이 UI의 피봇에서 마우스 포인터가 얼마나 떨어져 있는지 계산
+
+        RectTransform rectTransform = (RectTransform)transform;
+        if( !rectTransform.rect.Contains(diff))
+        {
+            // 인벤토리 영역 밖에서 마우스 버튼이 떨어졌다.
+            tempSlotUI.OnDrop(screenPos);
         }
     }
 }
