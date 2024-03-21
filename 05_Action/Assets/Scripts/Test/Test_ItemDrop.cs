@@ -10,20 +10,15 @@ public class Test_ItemDrop : TestBase
 
     public ItemCode code = ItemCode.Ruby;
 
-    [Range(0, 5)]
-    public uint fromIndex = 0;
-
-    [Range(0, 5)]
-    public uint toIndex = 0;
-
-    public ItemSortBy sortBy = ItemSortBy.Code;
-    public bool isAcending = true;
+    public Transform target;
+    public bool useNoise = false;
 
 #if UNITY_EDITOR
+
     private void Start()
     {
-        // 실습 : Test_InventoryPrint 완성하기
-        //[루비(1/10), 사파이어(2/3), (빈칸), 에메랄드(3/5), (빈칸), (빈칸) ]
+        target = transform.GetChild(0);
+
         inven = new Inventory(null);
         inven.AddItem(ItemCode.Ruby);
         inven.AddItem(ItemCode.Ruby);
@@ -53,7 +48,7 @@ public class Test_ItemDrop : TestBase
     protected override void OnTest1(InputAction.CallbackContext context)
     {
         // 추가
-        inven.AddItem(code, fromIndex);
+        inven.AddItem(code);
         inven.Test_InventoryPrint();
     }
 
@@ -63,6 +58,11 @@ public class Test_ItemDrop : TestBase
     }
 
     protected override void OnTest3(InputAction.CallbackContext context)
+    {
+        Factory.Instance.MakeItem(code, target.position, useNoise);
+    }
+
+    protected override void OnTest5(InputAction.CallbackContext context)
     {
         ItemObject[] items = FindObjectsByType<ItemObject>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
         foreach (ItemObject item in items)
