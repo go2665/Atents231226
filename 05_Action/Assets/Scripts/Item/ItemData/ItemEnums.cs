@@ -13,6 +13,9 @@ public enum ItemCode
     CopperCoin,
     SilverCoin,
     GoldCoin,
+    Apple,
+    Bread,
+    Beer
 }
 
 /// <summary>

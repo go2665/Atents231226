@@ -8,6 +8,8 @@ public class Test_PlayerHP : TestBase
     Player player;
     public float data = 10.0f;
 
+    public ItemCode code = ItemCode.Ruby;
+
     private void Start()
     {
         player = GameManager.Instance.Player;
@@ -39,5 +41,10 @@ public class Test_PlayerHP : TestBase
         // 플레이어 MP 틱당 재생
         player.HealthRegenerateByTick(3, 0.5f, 4);
         player.ManaRegenerateByTick(3, 0.5f, 4);
+    }
+
+    protected override void OnTest5(InputAction.CallbackContext context)
+    {
+        Factory.Instance.MakeItem(code);
     }
 }
