@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IHealth
 {
     /// <summary>
     /// 걷는 속도
@@ -124,6 +124,54 @@ public class Player : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// 플레이어의 현재 HP
+    /// </summary>
+    float hp = 100.0f;
+    public float HP 
+    { 
+        get => hp; 
+        set
+        {
+            if(IsAlive)     // 살아 있을 때만 HP 변화함
+            {
+                hp = value;
+                if( hp <= 0.0f )    // HP가 0 이하면 사망처리
+                {
+                    Die();
+                }
+                hp = Mathf.Clamp(hp, 0, MaxHP);     // 최소~최대 사이로 숫자 유지
+                onHealthChange?.Invoke(hp/MaxHP);   // 델리게이트로 HP변화 알림
+                Debug.Log($"{this.gameObject.name} HP : {hp}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// 플레이어의 최대 HP
+    /// </summary>
+    float maxHP = 100.0f;
+    public float MaxHP => maxHP;
+
+    /// <summary>
+    /// HP의 변경을 알리는 델리게이트
+    /// </summary>
+    public Action<float> onHealthChange { get; set; }
+
+    /// <summary>
+    /// 플레이어의 생존 여부를 확인하기 위한 프로퍼티
+    /// </summary>
+    public bool IsAlive => hp > 0;
+
+    /// <summary>
+    /// 플레이어의 사망을 알리는 델리게이트
+    /// </summary>
+    public Action onDie { get; set; }
+
+    /// <summary>
+    /// 돈의 변경을 알리는 델리게이트
+    /// </summary>
     public Action<int> onMoneyChange;
 
     // 애니메이터용 해시값 및 상수
@@ -325,11 +373,64 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void Die()
+    {
+        onDie?.Invoke();
+        Debug.Log("플레이어 사망");
+    }
+
+    /// <summary>
+    /// 플레이어의 체력을 지속적으로 증가시켜 주는 함수. 초당 totalRegen/duration 만큼 회복
+    /// </summary>
+    /// <param name="totalRegen">전체 회복량</param>
+    /// <param name="duration">전체 회복되는데 걸리는 시간</param>
+    public void HealthRegenerate(float totalRegen, float duration)
+    {        
+        StartCoroutine(RegenCoroutine(totalRegen, duration));
+    }
+
+    IEnumerator RegenCoroutine(float totalRegen, float duration)
+    {
+        float regenPerSec = totalRegen / duration;  // 초당 회복량 계산
+        float timeElapsed = 0.0f;
+        while (timeElapsed < duration)
+        {
+            timeElapsed += Time.deltaTime;
+            HP += Time.deltaTime * regenPerSec;     // 초당 회복량만큼 증가
+            yield return null;
+        }
+    }
+
+    /// <summary>
+    /// 플레이어의 체력을 틱단위로 회복시켜 주는 함수. 
+    /// 전체 회복량 = tickRegen * totalTickCount. 전체 회복 시간 = tickInterval * totalTickCount
+    /// </summary>
+    /// <param name="tickRegen">틱 당 회복량</param>
+    /// <param name="tickInterval">틱 간의 시간 간격</param>
+    /// <param name="totalTickCount">전체 틱 수</param>
+    public void HealthRegenerateByTick(float tickRegen, float tickInterval, uint totalTickCount)
+    {
+        StartCoroutine(RegenByTick(tickRegen, tickInterval, totalTickCount));
+    }
+
+    IEnumerator RegenByTick(float tickRegen, float tickInterval, uint totalTickCount)
+    {
+        WaitForSeconds wait = new WaitForSeconds(tickInterval);
+        for (int i = 0; i < totalTickCount; i++)    // totalTickCount 회수만큼 반복
+        {
+            HP += tickRegen;    // tickRegen만큼 증가
+            yield return wait;  // tickInterval만큼 대기
+        }
+
+    }
+
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
         Handles.color = Color.blue;
         Handles.DrawWireDisc(transform.position, Vector3.up, ItemPickupRange, 2.0f);
     }
+
+    
 #endif
 }
