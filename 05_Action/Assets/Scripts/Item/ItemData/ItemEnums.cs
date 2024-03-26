@@ -16,7 +16,8 @@ public enum ItemCode
     Apple,
     Bread,
     Beer,
-    HealingPotion
+    HealingPotion,
+    ManaPotion
 }
 
 /// <summary>

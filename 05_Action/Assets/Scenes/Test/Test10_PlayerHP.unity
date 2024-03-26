@@ -1032,6 +1032,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b6cb5e97c0e403149b29b71a6067a05b, type: 2}
   - {fileID: 11400000, guid: 246206221f0947d46a13196a2507e1ba, type: 2}
   - {fileID: 11400000, guid: 94fe932d138085047944d2418c72c492, type: 2}
+  - {fileID: 11400000, guid: f625b5911e298904a96f2a2f65cbc708, type: 2}
 --- !u!4 &828922730 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4562130011507692517, guid: 39a0e8134f366b7499ac9b5a8a9b56e2,
