@@ -779,6 +779,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seed: -1
   data: 10
+  code: 9
 --- !u!1 &547212298
 GameObject:
   m_ObjectHideFlags: 0
@@ -1030,6 +1031,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 267527482b6f39a48ae903dd6a4c62f2, type: 2}
   - {fileID: 11400000, guid: b6cb5e97c0e403149b29b71a6067a05b, type: 2}
   - {fileID: 11400000, guid: 246206221f0947d46a13196a2507e1ba, type: 2}
+  - {fileID: 11400000, guid: 94fe932d138085047944d2418c72c492, type: 2}
 --- !u!4 &828922730 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4562130011507692517, guid: 39a0e8134f366b7499ac9b5a8a9b56e2,

@@ -15,7 +15,8 @@ public enum ItemCode
     GoldCoin,
     Apple,
     Bread,
-    Beer
+    Beer,
+    HealingPotion
 }
 
 /// <summary>

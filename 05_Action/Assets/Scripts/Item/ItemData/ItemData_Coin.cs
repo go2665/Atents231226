@@ -16,11 +16,3 @@ public class ItemData_Coin : ItemData, IConsumable
         }
     }
 }
-
-// ItemData_Food
-// - 획득하면 HP가 있는 대상이면 HP증가(틱으로 리젠)
-// - 맴버 변수 : 틱당 회복량, 틱인터벌, 틱회수
-
-// ItemData_Drink
-//  - 획득하면 MP가 있는 대상이면 MP증가(리젠)
-//  - 멤버 변수 : 전체 회복량, 회복시간
