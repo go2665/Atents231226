@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-public class Player : MonoBehaviour, IHealth, IMana
+public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget
 {
     /// <summary>
     /// 걷는 속도
@@ -198,6 +198,18 @@ public class Player : MonoBehaviour, IHealth, IMana
     public Action<float> onManaChange { get; set; }
 
     /// <summary>
+    /// 장비 아이템의 부위별 장비 상태(장착한 아이템이 있는 슬롯을 가지고 있음, null이면 장비 안했음)
+    /// </summary>
+    InvenSlot[] partsSlot;
+
+    /// <summary>
+    /// 장비 아이템 부위별 슬롯 확인용 인덱스
+    /// </summary>
+    /// <param name="part">확인할 종류</param>
+    /// <returns>null이면 장비되어 있지 않음. null이 아니면 해당 슬롯에 있는 아이템이 장비되어 있음</returns>
+    public InvenSlot this[EquipType part] => partsSlot[(int)part];
+
+    /// <summary>
     /// 돈의 변경을 알리는 델리게이트
     /// </summary>
     public Action<int> onMoneyChange;
@@ -248,6 +260,8 @@ public class Player : MonoBehaviour, IHealth, IMana
         inputController.onMoveModeChange += OnMoveModeChageInput;
         inputController.onAttack += OnAttackInput;
         inputController.onItemPickUp += OnItemPickupInput;
+
+        partsSlot = new InvenSlot[Enum.GetValues(typeof(EquipType)).Length];
     }
 
     private void Start()
@@ -489,6 +503,50 @@ public class Player : MonoBehaviour, IHealth, IMana
     public void ManaRegenerateByTick(float tickRegen, float tickInterval, uint totalTickCount)
     {
         StartCoroutine(RegenByTick(tickRegen, tickInterval, totalTickCount, false));
+    }
+
+    public void EquipItem(EquipType part, InvenSlot slot)
+    {
+        ItemData_Equip equip = slot.ItemData as ItemData_Equip;
+        if(equip != null)
+        {
+            Transform partParent = GetEquipParentTransform(part);
+            GameObject obj = Instantiate(equip.equipPrefab, partParent);
+            partsSlot[(int)part] = slot;
+            slot.IsEquipped = true;
+        }        
+    }
+
+    public void UnEquipItem(EquipType part)
+    {
+        InvenSlot slot = partsSlot[(int)part];
+        if ( slot != null )
+        {
+            Transform partParent = GetEquipParentTransform(part);
+            while(partParent.childCount > 0)
+            {
+                Transform child = partParent.GetChild(0);
+                child.SetParent(null);
+                Destroy(child.gameObject);
+            }
+            slot.IsEquipped = false;
+            partsSlot[(int)part] = null;
+        }
+    }
+
+    public Transform GetEquipParentTransform(EquipType part)
+    {
+        Transform result = null;
+        switch (part)
+        {
+            case EquipType.Weapon:
+                result = weaponParent;
+                break;
+            case EquipType.Shield:
+                result = shiledParent;
+                break;
+        }
+        return result;
     }
 
 #if UNITY_EDITOR

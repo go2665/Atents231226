@@ -1,5 +1,52 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2767671230632725404
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9051391333017599141}
+  - component: {fileID: 7235463995092852049}
+  m_Layer: 0
+  m_Name: ItemPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9051391333017599141
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2767671230632725404}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4562130011507692517}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7235463995092852049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2767671230632725404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e81fde69168082449a55ef2f425a74ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  originalPrefab: {fileID: 6806213638725899627, guid: e88e7052dd9122f44980c37db5d54c9e,
+    type: 3}
+  poolSize: 16
 --- !u!1 &5958032770682672420
 GameObject:
   m_ObjectHideFlags: 0
@@ -10,6 +57,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4562130011507692517}
   - component: {fileID: 2913136765519523368}
+  - component: {fileID: 9035982811999268254}
+  - component: {fileID: 9079802753774154932}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -29,7 +78,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 9051391333017599141}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2913136765519523368
@@ -44,3 +94,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f40596ba75c9f449ae4b82ed6ba2c63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &9035982811999268254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5958032770682672420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7edb7b14b96757e4db21b32d99b4dfb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemDatas:
+  - {fileID: 11400000, guid: 56978a4a263bee54080b681b6215ab56, type: 2}
+  - {fileID: 11400000, guid: 4f05ddc401e6644449805f9f6b86acd6, type: 2}
+  - {fileID: 11400000, guid: e28bdf123c9924440935d9680b2773a9, type: 2}
+  - {fileID: 11400000, guid: 400823eeb710f1849bc7f33954f5c06f, type: 2}
+  - {fileID: 11400000, guid: ec8a8c710882fe14cae75cda1b6d0686, type: 2}
+  - {fileID: 11400000, guid: 44d29dc1132eb8044a8d26f32b077394, type: 2}
+  - {fileID: 11400000, guid: 267527482b6f39a48ae903dd6a4c62f2, type: 2}
+  - {fileID: 11400000, guid: b6cb5e97c0e403149b29b71a6067a05b, type: 2}
+  - {fileID: 11400000, guid: 246206221f0947d46a13196a2507e1ba, type: 2}
+  - {fileID: 11400000, guid: 94fe932d138085047944d2418c72c492, type: 2}
+  - {fileID: 11400000, guid: f625b5911e298904a96f2a2f65cbc708, type: 2}
+  - {fileID: 11400000, guid: 6435299cdb4d6e941b6cff262f03a4f8, type: 2}
+  - {fileID: 11400000, guid: 43203da49041a024a8e743ddb4e2034d, type: 2}
+  - {fileID: 11400000, guid: 91259b58e83664244998e2e512165c7a, type: 2}
+--- !u!114 &9079802753774154932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5958032770682672420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6b9abd71653f5d4585b070ff3a8a80a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noisePower: 0.5

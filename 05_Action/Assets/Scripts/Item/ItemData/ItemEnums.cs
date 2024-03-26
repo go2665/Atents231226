@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// 아이템 코드(ID)
 /// </summary>
-public enum ItemCode
+public enum ItemCode : byte
 {
     Ruby = 0,
     Emerald,
@@ -17,15 +17,27 @@ public enum ItemCode
     Bread,
     Beer,
     HealingPotion,
-    ManaPotion
+    ManaPotion, 
+    IronSword,
+    SilverSword,
+    OldSword,
 }
 
 /// <summary>
 /// 아이템 정렬 기준
 /// </summary>
-public enum ItemSortBy
+public enum ItemSortBy : byte
 {
     Code = 0,   // 코드 기준
     Name,       // 이름 기준
     Price       // 가격 기준
+}
+
+/// <summary>
+/// 장비 가능한 아이템의 종류
+/// </summary>
+public enum EquipType : byte
+{
+    Weapon,
+    Shield
 }

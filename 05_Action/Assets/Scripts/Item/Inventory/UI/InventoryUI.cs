@@ -200,7 +200,11 @@ public class InventoryUI : MonoBehaviour
             else
             {
                 // 쉬프트가 안눌려진 상태 -> 아이템 사용 or 아이템 장비
-                inven[index].UseItem(Owner.gameObject);
+                if(inven[index].ItemData is IUsable)
+                    inven[index].UseItem(Owner.gameObject);
+
+                if(inven[index].ItemData is IEquipable)
+                    inven[index].EquipItem(Owner.gameObject);
             }
         }
         else
