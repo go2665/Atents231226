@@ -203,11 +203,19 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget
     InvenSlot[] partsSlot;
 
     /// <summary>
-    /// 장비 아이템 부위별 슬롯 확인용 인덱스
+    /// 장비 아이템 부위별 슬롯 확인 및 설정용 인덱스
     /// </summary>
     /// <param name="part">확인할 종류</param>
     /// <returns>null이면 장비되어 있지 않음. null이 아니면 해당 슬롯에 있는 아이템이 장비되어 있음</returns>
-    public InvenSlot this[EquipType part] => partsSlot[(int)part];
+    public InvenSlot this[EquipType part]
+    {
+        get => partsSlot[(int)part];
+        set
+        {
+            partsSlot[(int)part] = value;
+        }
+    }
+    
 
     /// <summary>
     /// 돈의 변경을 알리는 델리게이트
@@ -505,35 +513,49 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget
         StartCoroutine(RegenByTick(tickRegen, tickInterval, totalTickCount, false));
     }
 
+    /// <summary>
+    /// 플레이어가 아이템을 장비하는 함수
+    /// </summary>
+    /// <param name="part">장비할 부위</param>
+    /// <param name="slot">장비할 아이템이 들어있는 슬롯</param>
     public void EquipItem(EquipType part, InvenSlot slot)
     {
         ItemData_Equip equip = slot.ItemData as ItemData_Equip;
-        if(equip != null)
+        if(equip != null)   // 장비 가능한 아이템인지 확인
         {
             Transform partParent = GetEquipParentTransform(part);
-            GameObject obj = Instantiate(equip.equipPrefab, partParent);
-            partsSlot[(int)part] = slot;
-            slot.IsEquipped = true;
+            GameObject obj = Instantiate(equip.equipPrefab, partParent);    // 아이템 생성하고 부모 위치에 붙이기
+            this[part] = slot;              // 기록하고
+            slot.IsEquipped = true;         // 장비했다고 표시
         }        
     }
 
+    /// <summary>
+    /// 플레이어가 장비를 해제하는 함수
+    /// </summary>
+    /// <param name="part">아이템을 장비 해제할 부위</param>
     public void UnEquipItem(EquipType part)
     {
         InvenSlot slot = partsSlot[(int)part];
-        if ( slot != null )
+        if ( slot != null ) // 장비 되어 있는 위치인지 확인
         {
-            Transform partParent = GetEquipParentTransform(part);
+            Transform partParent = GetEquipParentTransform(part);   // 해당 부위 부모 아래쪽에 있는 모든 오브젝트 삭제
             while(partParent.childCount > 0)
             {
                 Transform child = partParent.GetChild(0);
                 child.SetParent(null);
                 Destroy(child.gameObject);
             }
-            slot.IsEquipped = false;
-            partsSlot[(int)part] = null;
+            slot.IsEquipped = false;        // 해제했다고 표시
+            this[part] = null;              // 슬롯 비우기
         }
     }
 
+    /// <summary>
+    /// 장비가 붙을 부모 트랜스폼 찾는 함수
+    /// </summary>
+    /// <param name="part">장비 종류</param>
+    /// <returns>장비의 부모 트랜스폼</returns>
     public Transform GetEquipParentTransform(EquipType part)
     {
         Transform result = null;

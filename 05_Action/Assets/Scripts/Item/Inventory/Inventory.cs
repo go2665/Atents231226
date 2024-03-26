@@ -238,8 +238,8 @@ public class Inventory
                         if ( returnSlot.IsEmpty )
                         {
                             // returnSlot이 비어있는 경우(to->return, temp->to, temp 비우기)
-                            returnSlot.AssignSlotItem(toSlot.ItemData, toSlot.ItemCount, false);
-                            toSlot.AssignSlotItem(TempSlot.ItemData, TempSlot.ItemCount, false);
+                            returnSlot.AssignSlotItem(toSlot.ItemData, toSlot.ItemCount, toSlot.IsEquipped);
+                            toSlot.AssignSlotItem(TempSlot.ItemData, TempSlot.ItemCount, TempSlot.IsEquipped);
                             TempSlot.ClearSlotItem();
                         }
                         else
@@ -373,8 +373,15 @@ public class Inventory
 
         int index = 0;
         foreach(var data in sortedData)
-        {
+        {   
             slots[index].AssignSlotItem(data.Item1, data.Item2, data.Item3);    // 복사한 내용을 슬롯에 설정
+
+            if (data.Item3)     // true면 무조건 장비 아이템
+            {
+                ItemData_Equip equipData = data.Item1 as ItemData_Equip;
+                Owner[equipData.EquipType] = slots[index];  // 장비한 슬롯 다시 재설정
+            }
+
             index++;
         }
     }

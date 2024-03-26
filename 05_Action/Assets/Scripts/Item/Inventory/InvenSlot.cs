@@ -126,7 +126,7 @@ public class InvenSlot
     {
         ItemData = null;
         ItemCount = 0;
-        isEquipped = false;
+        IsEquipped = false;
         //Debug.Log($"인벤토리 [{slotIndex}]번 슬롯을 비웁니다.");
     }
 
