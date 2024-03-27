@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.VisualScripting;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -215,7 +217,14 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget
             partsSlot[(int)part] = value;
         }
     }
-    
+
+    // 플레이어의 공격력과 방어력
+    float baseAttackPower = 5.0f;
+    float baseDefencePower = 1.0f;
+    float attackPower = 5.0f;
+    public float AttackPower => attackPower;
+    float defencePower = 1.0f;
+    public float DefencePower => defencePower;
 
     /// <summary>
     /// 돈의 변경을 알리는 델리게이트
@@ -233,6 +242,11 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget
     /// 무기 이펙트 켜고 끄는 신호를 보내는 델리게이트
     /// </summary>
     Action<bool> onWeaponEffectEnable;
+
+    /// <summary>
+    /// 무기 컬라이더 켜고 끄는 신호를 보내는 델리게이트
+    /// </summary>
+    Action<bool> onWeaponBladeEnabe;
     
     // 컴포넌트들
     Animator animator;
@@ -280,11 +294,11 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget
             GameManager.Instance.InventoryUI.InitializeInventory(Inventory);    // 인벤토리와 인벤토리 UI연결
         }
 
-        Weapon weapon = weaponParent.GetComponentInChildren<Weapon>();
-        if(weapon != null)
-        {
-            onWeaponEffectEnable = weapon.EffectEnable;
-        }
+        //Weapon weapon = weaponParent.GetComponentInChildren<Weapon>();
+        //if(weapon != null)
+        //{
+        //    onWeaponEffectEnable = weapon.EffectEnable;
+        //}
         //ShowWeaponEffect(false);
     }
 
@@ -527,6 +541,22 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget
             GameObject obj = Instantiate(equip.equipPrefab, partParent);    // 아이템 생성하고 부모 위치에 붙이기
             this[part] = slot;              // 기록하고
             slot.IsEquipped = true;         // 장비했다고 표시
+
+            switch(part)
+            {
+                case EquipType.Weapon:
+                    Weapon weapon = obj.GetComponentInChildren<Weapon>();
+                    onWeaponEffectEnable = weapon.EffectEnable;
+                    onWeaponBladeEnabe = weapon.BladeColliderEnable;
+
+                    ItemData_Weapon weaponData = equip as ItemData_Weapon;
+                    attackPower = baseAttackPower + weaponData.attackPower;
+                    break;
+                case EquipType.Shield:
+                    ItemData_Shield shieldData = equip as ItemData_Shield;
+                    defencePower = baseDefencePower + shieldData.defencePower;
+                    break;
+            }
         }        
     }
 
@@ -548,6 +578,18 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget
             }
             slot.IsEquipped = false;        // 해제했다고 표시
             this[part] = null;              // 슬롯 비우기
+
+            switch (part)
+            {
+                case EquipType.Weapon:
+                    onWeaponEffectEnable = null;
+                    onWeaponBladeEnabe = null;
+                    attackPower = baseAttackPower;
+                    break;
+                case EquipType.Shield:
+                    defencePower = baseDefencePower;
+                    break;
+            }
         }
     }
 
@@ -569,6 +611,22 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget
                 break;
         }
         return result;
+    }
+
+    /// <summary>
+    /// 무기의 컬라이더를 켜라는 신호를 보내는 함수(애니메이션 이벤트용)
+    /// </summary>
+    void WeaponBladeEnabe()
+    {
+        onWeaponBladeEnabe?.Invoke(true);
+    }
+
+    /// <summary>
+    /// 무기의 컬라이더를 끄라는 신호를 보내는 함수(애니메이션 이벤트용)
+    /// </summary>
+    void WeaponBladeDisable()
+    {
+        onWeaponBladeEnabe?.Invoke(false);
     }
 
 #if UNITY_EDITOR
