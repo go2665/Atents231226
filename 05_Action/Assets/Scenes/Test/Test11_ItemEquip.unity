@@ -744,7 +744,7 @@ GameObject:
   - component: {fileID: 262924616}
   - component: {fileID: 262924615}
   m_Layer: 0
-  m_Name: Teest_ItemEquip
+  m_Name: Test_ItemEquip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -762,6 +762,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08ca9831d25f37e46b9645c95a862c39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  seed: -1
 --- !u!4 &262924616
 Transform:
   m_ObjectHideFlags: 0
@@ -983,6 +984,23 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
+    - target: {fileID: 9035982811999268254, guid: 39a0e8134f366b7499ac9b5a8a9b56e2,
+        type: 3}
+      propertyPath: itemDatas.Array.size
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 9035982811999268254, guid: 39a0e8134f366b7499ac9b5a8a9b56e2,
+        type: 3}
+      propertyPath: itemDatas.Array.data[14]
+      value: 
+      objectReference: {fileID: 11400000, guid: 043147a21ae5f654284ab02bf23fcff3,
+        type: 2}
+    - target: {fileID: 9035982811999268254, guid: 39a0e8134f366b7499ac9b5a8a9b56e2,
+        type: 3}
+      propertyPath: itemDatas.Array.data[15]
+      value: 
+      objectReference: {fileID: 11400000, guid: 893b754a2e87fe6449b2fbe115814f65,
+        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

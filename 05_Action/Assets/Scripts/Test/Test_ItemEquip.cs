@@ -10,6 +10,8 @@ public class Test_ItemEquip : TestBase
         Factory.Instance.MakeItem(ItemCode.IronSword);
         Factory.Instance.MakeItem(ItemCode.SilverSword);
         Factory.Instance.MakeItem(ItemCode.OldSword);        
+        Factory.Instance.MakeItem(ItemCode.KiteShield);        
+        Factory.Instance.MakeItem(ItemCode.RoundShield);        
 
     }
 }

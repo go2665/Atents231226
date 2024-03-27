@@ -21,6 +21,8 @@ public enum ItemCode : byte
     IronSword,
     SilverSword,
     OldSword,
+    KiteShield,
+    RoundShield
 }
 
 /// <summary>
