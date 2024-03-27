@@ -69,6 +69,7 @@ public class Inventory
         for (uint i = 0; i < size; i++)
         {
             slots[i] = new InvenSlot(i);
+            slots[i].onItemEquip += owner.OnItemEquip;
         }
         tempSlot = new InvenTempSlot(tempSlotIndex);
         itemDataManager = GameManager.Instance.ItemData;    // 타이밍 조심
@@ -375,13 +376,6 @@ public class Inventory
         foreach(var data in sortedData)
         {   
             slots[index].AssignSlotItem(data.Item1, data.Item2, data.Item3);    // 복사한 내용을 슬롯에 설정
-
-            if (data.Item3)     // true면 무조건 장비 아이템
-            {
-                ItemData_Equip equipData = data.Item1 as ItemData_Equip;
-                Owner[equipData.EquipType] = slots[index];  // 장비한 슬롯 다시 재설정
-            }
-
             index++;
         }
     }

@@ -50,6 +50,13 @@ public class TempSlotUI : SlotUI_Base
             Ray ray = Camera.main.ScreenPointToRay(screenPosition); // 스크린좌표를 이용해서 레이 생성
             if ( Physics.Raycast(ray, out RaycastHit hitInfo, 1000.0f, LayerMask.GetMask("Ground")) )
             {
+                // 장비중인 아이템이면 버리기 전에 장비 해제
+                if (InvenSlot.IsEquipped)
+                {
+                    ItemData_Equip itemData = InvenSlot.ItemData as ItemData_Equip;
+                    owner.UnEquipItem(itemData.EquipType);
+                }
+
                 // 레이를 이용해서 레이캐스트 실행(Ground레이어에 있는 컬라이더랑만 체크)
                 Vector3 dropPosition = hitInfo.point;
                 dropPosition.y = 0;

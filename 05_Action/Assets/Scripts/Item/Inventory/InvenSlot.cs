@@ -82,9 +82,18 @@ public class InvenSlot
         set
         {
             isEquipped = value;
+            if(isEquipped)
+            {
+                onItemEquip?.Invoke(this);  // IsEquipped가 true면 무조건 장비 가능한 아이템
+            }
             onSlotItemChange?.Invoke();
         }
     }
+
+    /// <summary>
+    /// 아이템을 장비했을 때 실행되는 델리게이트(InvenSlot:장비 가능한 아이템이 들어있는 슬롯)
+    /// </summary>
+    public Action<InvenSlot> onItemEquip;
 
     /// <summary>
     /// 생성자
