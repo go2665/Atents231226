@@ -276,7 +276,7 @@ public class InventoryUI : MonoBehaviour
     /// <summary>
     /// 인벤토리를 여는 함수
     /// </summary>
-    void Open()
+    public void Open()
     {
         canvasGroup.alpha = 1.0f;
         canvasGroup.interactable = true;
@@ -287,7 +287,7 @@ public class InventoryUI : MonoBehaviour
     /// <summary>
     /// 인벤토리를 닫는 함수
     /// </summary>
-    void Close()
+    public void Close()
     {
         canvasGroup.alpha = 0.0f;
         canvasGroup.interactable = false;

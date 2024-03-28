@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Unity.VisualScripting;
 
 
 #if UNITY_EDITOR
@@ -627,6 +626,16 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget
     void WeaponBladeDisable()
     {
         onWeaponBladeEnabe?.Invoke(false);
+    }
+
+    /// <summary>
+    /// 아이템이 장비 되었을 때 실행되는 함수
+    /// </summary>
+    /// <param name="slot">장비하는 아이템이 들어있는 슬롯</param>
+    public void OnItemEquip(InvenSlot slot)
+    {
+        ItemData_Equip equip = slot.ItemData as ItemData_Equip; // slot에 들어있는 아이템은 무조건 장비 가능
+        this[equip.EquipType] = slot;
     }
 
 #if UNITY_EDITOR
