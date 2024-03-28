@@ -81,7 +81,7 @@ public class InvenSlot
         get => isEquipped;
         set
         {
-            isEquipped = value;
+            isEquipped = value; // 테스트
             if(isEquipped)
             {
                 onItemEquip?.Invoke(this);  // IsEquipped가 true면 무조건 장비 가능한 아이템
