@@ -271,6 +271,41 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
     {
     }
 
+    /// <summary>
+    /// 시야 범위안에 플레이어가 있는지 없는지 찾는 함수
+    /// </summary>
+    /// <returns>찾았으면 true, 못찾았으면 false</returns>
+    bool SearchPlayer()
+    {
+        bool result = false;
+
+        // Physics
+
+        // 일정 반경(farSightRange)안에 있고 시야각 안에 있는 플레이어를 찾으면 true
+        // 가까이(nearSightRange)에 있는 플레이어 찾으면 true
+
+        return result;
+    }
+
+    /// <summary>
+    /// 시야각(-sightHalfAngle ~ +sightHalfAngle)안에 플레이어가 있는지 없는지 확인하는 함수
+    /// </summary>
+    /// <param name="toTargetDirection">적에서 대상으로 향하는 방향 백터</param>
+    /// <returns>시야각 안에 있으면 true, 없으면 false</returns>
+    bool IsInSightAngle(Vector3 toTargetDirection)
+    {
+        return false;
+    }
+
+    /// <summary>
+    /// 적이 다른 오브젝트에 의해 가려지는지 아닌지 확인하는 함수
+    /// </summary>
+    /// <param name="toTargetDirection">적에서 대상으로 향하는 방향 백터</param>
+    /// <returns>true면 가려지지 않는다. false면 가려진다.</returns>
+    bool IsSightClear(Vector3 toTargetDirection)
+    {
+        return false;
+    }
 
     public void Attack(IBattler target)
     {
