@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -278,11 +279,34 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
     bool SearchPlayer()
     {
         bool result = false;
+        chaseTarget = null;
 
-        // Physics
-
-        // 일정 반경(farSightRange)안에 있고 시야각 안에 있는 플레이어를 찾으면 true
-        // 가까이(nearSightRange)에 있는 플레이어 찾으면 true
+        // 일정 반경(=farSightRange)안에 있는 플레이어 레이어에 있는 오브젝트 전부 찾기
+        Collider[] colliders = Physics.OverlapSphere(transform.position, farSightRange, LayerMask.GetMask("Player"));
+        if( colliders.Length > 0 )
+        {
+            // 일정 반경(=farSightRange)안에 플레이어가 있다.
+            Vector3 playerPos = colliders[0].transform.position;    // 0번이 무조건 플레이어다(플레이어는 1명이니까)
+            Vector3 toPlayerDir = playerPos - transform.position;   // 적->플레이어로 가는 방향 백터
+            if(toPlayerDir.sqrMagnitude < nearSightRange * nearSightRange)  // 플레이어는 nearSightRange보다 안쪽에 있다.
+            {
+                // 근접범위(=nearSightRange) 안쪽이다.
+                chaseTarget = colliders[0].transform;
+                result = true;
+            }
+            else
+            {
+                // 근접범위 밖이다 => 시야각 확인
+                if(IsInSightAngle(toPlayerDir))     // 시야각 안인지 확인
+                { 
+                    if(IsSightClear(toPlayerDir))   // 적과 플레이어 사이에 시야를 가리는 오브젝트가 있는지 확인
+                    {
+                        chaseTarget = colliders[0].transform;
+                        result = true;
+                    }
+                }
+            }
+        }
 
         return result;
     }
@@ -294,7 +318,8 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
     /// <returns>시야각 안에 있으면 true, 없으면 false</returns>
     bool IsInSightAngle(Vector3 toTargetDirection)
     {
-        return false;
+        float angle = Vector3.Angle(transform.forward, toTargetDirection);  // 적의 포워드와 적을 바라보는 방향백터 사이의 각을 구함
+        return sightHalfAngle > angle;
     }
 
     /// <summary>
@@ -304,7 +329,17 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
     /// <returns>true면 가려지지 않는다. false면 가려진다.</returns>
     bool IsSightClear(Vector3 toTargetDirection)
     {
-        return false;
+        bool result = false;
+        Ray ray = new(transform.position + transform.up * 0.5f, toTargetDirection); // 래이 생성(눈 높이 때문에 조금 높임)
+        if(Physics.Raycast(ray, out RaycastHit hitInfo, farSightRange)) 
+        { 
+            if(hitInfo.collider.CompareTag("Player"))   // 처음 충돌한 것이 플레이어라면
+            {
+                result = true;                          // 중간에 가리는 물체가 없다는 소리
+            }
+        }
+
+        return result;
     }
 
     public void Attack(IBattler target)
@@ -331,4 +366,25 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
     {
         throw new NotImplementedException();
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        bool playerShow = SearchPlayer();
+        Handles.color = playerShow ? Color.red : Color.green;
+
+        Vector3 forward = transform.forward * farSightRange;
+        Handles.DrawDottedLine(transform.position, transform.position + forward, 2.0f); // 중심선 그리기
+
+        Quaternion q1 = Quaternion.AngleAxis(-sightHalfAngle, transform.up);            // 중심선 회전시키고
+        Handles.DrawLine(transform.position, transform.position + q1 * forward);        // 선 긋기
+
+        Quaternion q2 = Quaternion.AngleAxis(sightHalfAngle, transform.up);
+        Handles.DrawLine(transform.position, transform.position + q2 * forward);
+
+        Handles.DrawWireArc(transform.position, transform.up, q1 * forward, sightHalfAngle * 2, farSightRange, 2.0f);   // 호 그리기
+
+        Handles.DrawWireDisc(transform.position, transform.up, nearSightRange);         // 근거리 범위 그리기
+    }
+#endif
 }
