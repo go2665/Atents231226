@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget
+public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
 {
     /// <summary>
     /// 걷는 속도
@@ -546,7 +546,7 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget
                 case EquipType.Weapon:
                     Weapon weapon = obj.GetComponentInChildren<Weapon>();
                     onWeaponEffectEnable = weapon.EffectEnable;
-                    onWeaponBladeEnabe = weapon.BladeColliderEnable;
+                    onWeaponBladeEnabe = weapon.BladeVolumeEnable;
 
                     ItemData_Weapon weaponData = equip as ItemData_Weapon;
                     attackPower = baseAttackPower + weaponData.attackPower;
@@ -636,6 +636,19 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget
     {
         ItemData_Equip equip = slot.ItemData as ItemData_Equip; // slot에 들어있는 아이템은 무조건 장비 가능
         this[equip.EquipType] = slot;
+    }
+
+    public void Attack(IBattler target)
+    {
+        target.Defence(AttackPower);
+    }
+
+    public void Defence(float damage)
+    {
+        if(IsAlive)
+        {
+            HP -= MathF.Max(0, damage - DefencePower);  // 0 이하로는 데미지가 내려가지 않는다.
+        }
     }
 
 #if UNITY_EDITOR

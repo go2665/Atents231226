@@ -53,6 +53,8 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
                         onStateUpdate = Update_Patrol;
                         break;                        
                     case EnemyState.Chase:
+                        agent.isStopped = false;
+                        animator.SetTrigger("Move");
                         onStateUpdate = Update_Chase;
                         break;                        
                     case EnemyState.Attack:
@@ -241,11 +243,18 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
     /// </summary>
     void Update_Wait()
     {
-        WaitTimer -= Time.deltaTime;    // 기다리는 시간 감소(0이되면 Patrol로 변경)
+        if( SearchPlayer() )
+        {
+            State = EnemyState.Wait;
+        }
+        else
+        {
+            WaitTimer -= Time.deltaTime;    // 기다리는 시간 감소(0이되면 Patrol로 변경)
 
-        // 다음 목적지를 바라보게 만들기
-        Quaternion look = Quaternion.LookRotation(waypoints.NextTarget - transform.position);
-        transform.rotation = Quaternion.Slerp(transform.rotation, look, Time.deltaTime * 2);
+            // 다음 목적지를 바라보게 만들기
+            Quaternion look = Quaternion.LookRotation(waypoints.NextTarget - transform.position);
+            transform.rotation = Quaternion.Slerp(transform.rotation, look, Time.deltaTime * 2);
+        }
     }
 
     /// <summary>
@@ -253,15 +262,30 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
     /// </summary>
     void Update_Patrol()
     {
-        if( agent.remainingDistance <= agent.stoppingDistance ) // 도착하면
+        if( SearchPlayer() )
         {
-            waypoints.StepNextWaypoint();   // 웨이포인트가 다음 지점을 설정하도록 실행
-            State = EnemyState.Wait;        // 대기 상태로 전환
+            State = EnemyState.Chase;
+        }
+        else
+        {
+            if( agent.remainingDistance <= agent.stoppingDistance ) // 도착하면
+            {
+                waypoints.StepNextWaypoint();   // 웨이포인트가 다음 지점을 설정하도록 실행
+                State = EnemyState.Wait;        // 대기 상태로 전환
+            }
         }
     }
 
     void Update_Chase()
     {
+        if( SearchPlayer() )
+        {
+            agent.SetDestination(chaseTarget.position);
+        }
+        else
+        {
+            State = EnemyState.Wait;
+        }
     }
 
     void Update_Attack()
@@ -344,17 +368,22 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
 
     public void Attack(IBattler target)
     {
-        throw new System.NotImplementedException();
+        target.Defence(AttackPower);
     }
 
     public void Defence(float damage)
     {
-        throw new System.NotImplementedException();
+        if(IsAlive)
+        {
+            animator.SetTrigger("Hit");
+            HP -= MathF.Max(0, damage - DefencePower);
+            Debug.Log($"적이 맞았다. 남은 HP = {HP}");
+        }
     }
 
     public void Die()
     {
-        throw new NotImplementedException();
+        Debug.Log("사망");
     }
 
     public void HealthRegenerate(float totalRegen, float duration)
