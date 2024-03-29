@@ -63,10 +63,13 @@ public class Weapon : MonoBehaviour
             if(target != null )
             {
                 player.Attack(target);
+
+                Vector3 impactPoint = transform.position + transform.up * 0.8f; // 칼날 부분 중 한군데를 임의로 지정
+                Vector3 effectPoint = other.ClosestPoint(impactPoint);  // impactPoint이 위치와 other가 가장 가까운 위치
+                Factory.Instance.GetHitEffect(effectPoint);             // effectPoint위치에 이팩트 생성
+
+                //Time.timeScale = 0.0f;
             }
         }
     }
 }
-
-// Hit 이팩트를 풀에 추가한 후
-// 무기가 몬스터를 때릴 때 하나씩 꺼내 쓰기

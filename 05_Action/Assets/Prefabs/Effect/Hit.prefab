@@ -14270,6 +14270,7 @@ GameObject:
   - component: {fileID: 6311669762542502337}
   - component: {fileID: 8572333114600353772}
   - component: {fileID: 6566171279365365462}
+  - component: {fileID: -4393902886819396158}
   m_Layer: 0
   m_Name: Hit
   m_TagString: Untagged
@@ -19012,6 +19013,18 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!114 &-4393902886819396158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3103355682341577063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdb950caaa15bd2449168d9377c12f1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4883810071822886043
 GameObject:
   m_ObjectHideFlags: 0

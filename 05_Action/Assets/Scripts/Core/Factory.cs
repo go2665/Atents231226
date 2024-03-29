@@ -15,6 +15,7 @@ public class Factory : Singleton<Factory>
     public float noisePower = 0.5f;
 
     ItemPool itemPool;
+    HitEffectPool hitEffectPool;
     //SlimePool slimePool;
 
     protected override void OnInitialize()
@@ -23,6 +24,9 @@ public class Factory : Singleton<Factory>
 
         itemPool = GetComponentInChildren<ItemPool>();
         if(itemPool != null ) itemPool.Initialize();
+
+        hitEffectPool = GetComponentInChildren<HitEffectPool>();
+        if(hitEffectPool != null ) hitEffectPool.Initialize();
 
         //slimePool = GetComponentInChildren<SlimePool>();
         //if( slimePool != null ) slimePool.Initialize();
@@ -138,5 +142,15 @@ public class Factory : Singleton<Factory>
             items[i] = MakeItem(code, position, useNoise);
         }
         return items;
+    }
+
+    /// <summary>
+    /// 히트 이팩트를 생성하는 함수
+    /// </summary>
+    /// <param name="position">생성될 위치</param>
+    /// <returns></returns>
+    public GameObject GetHitEffect(Vector3? position)
+    {
+        return hitEffectPool.GetObject(position).gameObject;
     }
 }
