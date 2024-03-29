@@ -6,6 +6,9 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour, IBattler, IHealth
 {
+    /// <summary>
+    /// 적이 가질 수 있는 상태의 종류
+    /// </summary>
     protected enum EnemyState
     {
         Wait = 0,   // 대기
@@ -15,6 +18,9 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
         Dead        // 사망
     }
 
+    /// <summary>
+    /// 적의 현재 상태
+    /// </summary>
     EnemyState state = EnemyState.Patrol;
 
     /// <summary>
@@ -39,7 +45,10 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
                         onStateUpdate = Update_Wait;    // 대기 상태용 업데이트 함수 설정
                         break;                        
                     case EnemyState.Patrol:
-                        Debug.Log("패트롤 상태");
+                        // Debug.Log("패트롤 상태");
+                        agent.isStopped = false;        // agent 다시 켜기
+                        agent.SetDestination(waypoints.NextTarget);  // 목적지 지정(웨이포인트 지점)
+                        animator.SetTrigger("Move");
                         onStateUpdate = Update_Patrol;
                         break;                        
                     case EnemyState.Chase:
@@ -91,11 +100,6 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
     /// 적이 순찰할 웨이포인트
     /// </summary>
     public Waypoints waypoints;
-
-    /// <summary>
-    /// 이동할 웨이포인트의 트랜스폼
-    /// </summary>
-    protected Transform waypointTarget = null;
 
     /// <summary>
     /// 원거리 시야 범위
@@ -220,16 +224,9 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
     void Start()
     {
         agent.speed = moveSpeed;
-        if(waypoints == null)
-        {
-            waypointTarget = transform;
-        }
-        else
-        {
-            waypointTarget = waypoints.Current;
-        }
 
         State = EnemyState.Wait;
+        animator.ResetTrigger("Stop");  // Wait 상태로 설정하면서 Stop 트리거가 쌓인 것을 제거하기 위해 필요
     }
 
 
@@ -238,13 +235,28 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
         onStateUpdate();        
     }
 
+    /// <summary>
+    /// Wait 상태용 업데이트 함수
+    /// </summary>
     void Update_Wait()
     {
-        WaitTimer -= Time.deltaTime;
+        WaitTimer -= Time.deltaTime;    // 기다리는 시간 감소(0이되면 Patrol로 변경)
+
+        // 다음 목적지를 바라보게 만들기
+        Quaternion look = Quaternion.LookRotation(waypoints.NextTarget - transform.position);
+        transform.rotation = Quaternion.Slerp(transform.rotation, look, Time.deltaTime * 2);
     }
 
+    /// <summary>
+    /// Patrol 상태용 업데이트 함수
+    /// </summary>
     void Update_Patrol()
     {
+        if( agent.remainingDistance <= agent.stoppingDistance ) // 도착하면
+        {
+            waypoints.StepNextWaypoint();   // 웨이포인트가 다음 지점을 설정하도록 실행
+            State = EnemyState.Wait;        // 대기 상태로 전환
+        }
     }
 
     void Update_Chase()

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Test : MonoBehaviour
 {
-    // Start is called before the first frame update
+    // NextTarget is called before the first frame update
     void Start()
     {
         GameObject obj1 = GameObject.Find("이름");  // 이름으로찾기
