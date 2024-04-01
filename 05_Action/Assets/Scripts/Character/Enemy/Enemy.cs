@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Enemy : MonoBehaviour, IBattler, IHealth
+public class Enemy : RecycleObject, IBattler, IHealth
 {
     /// <summary>
     /// 적이 가질 수 있는 상태의 종류
@@ -61,7 +61,6 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
                         onStateUpdate = Update_Attack;
                         break; 
                     case EnemyState.Dead:
-                        onStateUpdate = Update_Dead;
                         agent.isStopped = true;
                         agent.velocity = Vector3.zero;
                         animator.SetTrigger("Die");
@@ -104,7 +103,7 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
     public float moveSpeed = 3.0f;
 
     /// <summary>
-    /// 적이 순찰할 웨이포인트
+    /// 적이 순찰할 웨이포인트(public이지만 private처럼 사용할 것)
     /// </summary>
     public Waypoints waypoints;
 
@@ -201,6 +200,7 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
         public ItemCode code;       // 아이템 종류
         [Range(0,1)]
         public float dropRatio;     // 드랍 확율(1.0f = 100%)
+        public uint dropCount;      // 최대 드랍 개수
     }
     /// <summary>
     /// 이 적이 죽을때 드랍하는 아이테 정보
@@ -217,6 +217,7 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
     NavMeshAgent agent;
     SphereCollider bodyCollider;
     Rigidbody rigid;
+    EnemyHealthBar hpBar;
     ParticleSystem dieEffect;
 
     void Awake()
@@ -225,17 +226,33 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
         agent = GetComponent<NavMeshAgent>();
         bodyCollider = GetComponent<SphereCollider>();
         rigid = GetComponent<Rigidbody>();
-        // dieEffect 
+
+        Transform child = transform.GetChild(2);
+        hpBar = child.GetComponent<EnemyHealthBar>();
+        child = transform.GetChild(3);
+        dieEffect = child.GetComponent<ParticleSystem>();
     }
 
-    void Start()
+    protected override void OnEnable()
     {
-        agent.speed = moveSpeed;
+        base.OnEnable();
 
+        agent.speed = moveSpeed;
         State = EnemyState.Wait;
-        animator.ResetTrigger("Stop");  // Wait 상태로 설정하면서 Stop 트리거가 쌓인 것을 제거하기 위해 필요
+        animator.ResetTrigger("Stop");      // Wait 상태로 설정하면서 Stop 트리거가 쌓인 것을 제거하기 위해 필요
+        HP = maxHP;
     }
 
+    protected override void OnDisable()
+    {        
+        bodyCollider.enabled = true;        // 컬라이더 활성화
+        hpBar.gameObject.SetActive(true);   // HP바 다시 보이게 만들기
+        agent.enabled = true;               // agent가 활성화 되어 있으면 항상 네브메시 위에 있음
+        rigid.isKinematic = true;           // 키네마틱을 꺼서 물리가 적용되게 만들기
+        rigid.drag = float.MaxValue;        // 무한대로 되어 있던 마찰력을 낮춰서 떨어질 수 있게 하기
+
+        base.OnDisable();
+    }
 
     void Update()
     {
@@ -249,7 +266,7 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
     {
         if( SearchPlayer() )
         {
-            State = EnemyState.Wait;
+            State = EnemyState.Chase;
         }
         else
         {
@@ -399,25 +416,36 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
     /// <returns></returns>
     IEnumerator DeadSquence()
     {
+        // 컬라이더 비활성화
         bodyCollider.enabled = false;
 
         // 사망 이팩트 처리
-        yield return new WaitForSeconds(0.5f);     // 아이템이 바로 떨어지면 어색해서 약간 대기
+        dieEffect.Play();                       // 재생 시작
+        dieEffect.transform.SetParent(null);    // 이팩트를 부모에서 분리(같이 가라앉는 것 방지)
+
+        // HP바 안보이게 만들기
+        hpBar.gameObject.SetActive(false);
+
+        yield return new WaitForSeconds(0.5f);  // 아이템이 바로 떨어지면 어색해서 약간 대기
 
         // 아이템 드랍
         MakeDropItems();
 
         // 사망 애니메이션 끝날때까지 대기
-        yield return new WaitForSeconds(1.0f);     // 사망 애니메이션 시간(1.333초) -> 1.5초로 처리
+        yield return new WaitForSeconds(1.0f);  // 사망 애니메이션 시간(1.333초) -> 1.5초로 처리
 
         // 바닥으로 가라 앉기 시작
-        agent.enabled = false;
-        // 리지드바디도 조작 필요
+        agent.enabled = false;                  // agent가 활성화 되어 있으면 항상 네브메시 위에 있음
+        rigid.isKinematic = false;              // 키네마틱을 꺼서 물리가 적용되게 만들기
+        rigid.drag = 10.0f;                     // 무한대로 되어 있던 마찰력을 낮춰서 떨어질 수 있게 하기
 
         // 충분히 바닥아래로 내려갈때까지 대기
-        yield return new WaitForSeconds(2.0f);      // 2초면 다 떨어질 것이다.
+        yield return new WaitForSeconds(2.0f);  // 2초면 다 떨어질 것이다.
 
-        // 슬라임 삭제하기
+        // 슬라임 풀로 되돌리기
+        dieEffect.transform.SetParent(this.transform);              // 이팩트 부모 되돌리고
+        dieEffect.transform.localPosition = new(0.0f, 0.01f, 0.0f); // 위치 리셋
+        gameObject.SetActive(false);    // 즉시 슬라임 풀로 되돌리기
     }
 
     /// <summary>
@@ -426,6 +454,14 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
     void MakeDropItems()
     {
         // dropItems; 이 정보를 바탕으로 아이템을 드랍
+        foreach(var item in dropItems)
+        {
+            if( item.dropRatio > UnityEngine.Random.value ) // 확률 체크하고
+            {
+                uint count = (uint)UnityEngine.Random.Range(0, item.dropCount) + 1;     // 개수 결정
+                Factory.Instance.MakeItems(item.code, count, transform.position, true); // 실제 생성
+            }
+        }
     }
 
     public void HealthRegenerate(float totalRegen, float duration)
@@ -456,6 +492,31 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
         Handles.DrawWireArc(transform.position, transform.up, q1 * forward, sightHalfAngle * 2, farSightRange, 2.0f);   // 호 그리기
 
         Handles.DrawWireDisc(transform.position, transform.up, nearSightRange);         // 근거리 범위 그리기
+    }
+
+    public void Test_DropItems(int testCount)
+    {
+        uint[] types = new uint[dropItems.Length];
+        uint[] total = new uint[dropItems.Length];
+
+        for(int i=0;i<testCount;i++)
+        {
+            int index = 0;
+            foreach (var item in dropItems)
+            {
+                if (item.dropRatio > UnityEngine.Random.value)
+                {
+                    uint count = (uint)UnityEngine.Random.Range(0, item.dropCount) + 1;
+                    //Factory.Instance.MakeItems(item.code, count, transform.position, true);
+                    types[index]++;
+                    total[index] += count;
+                }
+                index++;
+            }
+        }
+
+        Debug.Log($"1st : {types[0]}번 드랍, {total[0]}개 드랍");
+        Debug.Log($"2nd : {types[1]}번 드랍, {total[1]}개 드랍");
     }
 #endif
 }

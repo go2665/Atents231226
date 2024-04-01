@@ -27,7 +27,7 @@ public class RecycleObject : MonoBehaviour
     /// <returns></returns>
     protected IEnumerator LifeOver(float delay = 0.0f)
     {
-        yield return new WaitForSeconds(delay); // delay만큼 기ㅏ리고
+        yield return new WaitForSeconds(delay); // delay만큼 기다리고
         gameObject.SetActive(false);            // 비활성화 
     }
 }

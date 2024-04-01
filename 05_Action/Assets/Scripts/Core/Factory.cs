@@ -2,11 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum PoolObjectType
-{
-    Slime = 0,    
-}
-
 public class Factory : Singleton<Factory>
 {
     /// <summary>
@@ -16,7 +11,7 @@ public class Factory : Singleton<Factory>
 
     ItemPool itemPool;
     HitEffectPool hitEffectPool;
-    //SlimePool slimePool;
+    EnemyPool enemyPool;
 
     protected override void OnInitialize()
     {
@@ -28,51 +23,41 @@ public class Factory : Singleton<Factory>
         hitEffectPool = GetComponentInChildren<HitEffectPool>();
         if(hitEffectPool != null ) hitEffectPool.Initialize();
 
-        //slimePool = GetComponentInChildren<SlimePool>();
-        //if( slimePool != null ) slimePool.Initialize();
-
-
+        enemyPool = GetComponentInChildren<EnemyPool>();
+        if (enemyPool != null) enemyPool.Initialize();
     }
- 
+
     /// <summary>
-    /// 풀에 있는 게임 오브젝트 하나 가져오기
+    /// 슬라임 하나 가져오는 함수
     /// </summary>
-    /// <param name="type">가져올 오브젝트의 종류</param>
-    /// <param name="position">오브젝트가 배치될 위치</param>
-    /// <param name="angle">오브젝트의 초기 각도</param>
-    /// <returns>활성화된 오브젝트</returns>
-    public GameObject GetObject(PoolObjectType type, Vector3? position = null, Vector3? euler = null)
+    /// <returns>배치된 슬라임 하나</returns>
+    public Enemy GetEnemy()
     {
-        GameObject result = null;
-        //switch (type)
-        //{
-        //    //case PoolObjectType.Slime:
-        //        //result = slimePool.GetObject(position, euler).gameObject;
-        //    //    break;
-        //}
-
-        return result;
+        return enemyPool.GetObject();
     }
 
-    ///// <summary>
-    ///// 슬라임 하나 가져오는 함수
-    ///// </summary>
-    ///// <returns>배치된 슬라임 하나</returns>
-    //public Slime GetSlime()
-    //{
-    //    return slimePool.GetObject();        
-    //}
+    /// <summary>
+    /// 슬라임 하나를 특정 위치에, 특정 각도로 배치
+    /// </summary>
+    /// <param name="position">배치될 위치</param>
+    /// <param name="angle">배치 될 때의 각도</param>
+    /// <returns>배치된 슬라임 하나</returns>
+    public Enemy GetEnemy(Vector3 position, float angle = 0.0f)
+    {
+        return enemyPool.GetObject(position, angle * Vector3.forward);
+    }
 
-    ///// <summary>
-    ///// 슬라임 하나를 특정 위치에, 특정 각도로 배치
-    ///// </summary>
-    ///// <param name="position">배치될 위치</param>
-    ///// <param name="angle">배치 될 때의 각도</param>
-    ///// <returns>배치된 슬라임 하나</returns>
-    //public Slime GetSlime(Vector3 position, float angle = 0.0f)
-    //{
-    //    return slimePool.GetObject(position, angle * Vector3.forward);
-    //}
+    /// <summary>
+    /// 슬라임 하나를 특정 웨이포인트를 사용하고, 특정 위치에, 특정 각도로 배치
+    /// </summary>
+    /// <param name="index">사용할 웨이포인트의 인덱스</param>
+    /// <param name="position">배치될 위치</param>
+    /// <param name="angle">배치 될 때의 각도</param>
+    /// <returns>배치된 슬라임 하나</returns>
+    public Enemy GetEnemy(int index, Vector3 position, float angle = 0.0f)
+    {
+        return enemyPool.GetObject(index, position, angle * Vector3.forward);
+    }
 
     /// <summary>
     /// 아이템을 하나 생성하는 함수
