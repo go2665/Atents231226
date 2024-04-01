@@ -220,6 +220,9 @@ public class Enemy : RecycleObject, IBattler, IHealth
     EnemyHealthBar hpBar;
     ParticleSystem dieEffect;
 
+    // 읽기 전용
+    readonly Vector3 EffectResetPosition = new(0.0f, 0.01f, 0.0f);
+
     void Awake()
     {
         animator = GetComponent<Animator>();
@@ -237,10 +240,12 @@ public class Enemy : RecycleObject, IBattler, IHealth
     {
         base.OnEnable();
 
-        agent.speed = moveSpeed;
-        State = EnemyState.Wait;
+        agent.speed = moveSpeed;            // 이동 속도 지정
+        State = EnemyState.Wait;            // 기본 상태 지정
         animator.ResetTrigger("Stop");      // Wait 상태로 설정하면서 Stop 트리거가 쌓인 것을 제거하기 위해 필요
-        HP = maxHP;
+        rigid.isKinematic = true;           // 키네마틱을 꺼서 물리가 적용되게 만들기
+        rigid.drag = Mathf.Infinity;        // 무한대로 되어 있던 마찰력을 낮춰서 떨어질 수 있게 하기
+        HP = maxHP;                         // HP 최대로
     }
 
     protected override void OnDisable()
@@ -248,8 +253,6 @@ public class Enemy : RecycleObject, IBattler, IHealth
         bodyCollider.enabled = true;        // 컬라이더 활성화
         hpBar.gameObject.SetActive(true);   // HP바 다시 보이게 만들기
         agent.enabled = true;               // agent가 활성화 되어 있으면 항상 네브메시 위에 있음
-        rigid.isKinematic = true;           // 키네마틱을 꺼서 물리가 적용되게 만들기
-        rigid.drag = float.MaxValue;        // 무한대로 되어 있던 마찰력을 낮춰서 떨어질 수 있게 하기
 
         base.OnDisable();
     }
@@ -444,7 +447,7 @@ public class Enemy : RecycleObject, IBattler, IHealth
 
         // 슬라임 풀로 되돌리기
         dieEffect.transform.SetParent(this.transform);              // 이팩트 부모 되돌리고
-        dieEffect.transform.localPosition = new(0.0f, 0.01f, 0.0f); // 위치 리셋
+        dieEffect.transform.localPosition = EffectResetPosition;    // 위치 리셋
         gameObject.SetActive(false);    // 즉시 슬라임 풀로 되돌리기
     }
 

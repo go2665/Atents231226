@@ -4,14 +4,16 @@ using UnityEngine;
 
 public class EnemyPool : ObjectPool<Enemy>
 {
+    /// <summary>
+    /// 적들이 사용할 웨이포인트들. 반드시 하나는 있어야 한다.
+    /// </summary>
     public Waypoints[] waypoints;
 
     private void Awake()
     {
         Transform child = transform.GetChild(0);
-        waypoints = child.GetComponentsInChildren<Waypoints>();
+        waypoints = child.GetComponentsInChildren<Waypoints>(); // 풀의 자식에서 모두 찾기
     }
-
 
     /// <summary>
     /// 풀에서 사용하지 않는 오브젝트를 하나 꺼낸 후 리턴 하는 함수
