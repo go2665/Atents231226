@@ -62,6 +62,10 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
                         break; 
                     case EnemyState.Dead:
                         onStateUpdate = Update_Dead;
+                        agent.isStopped = true;
+                        agent.velocity = Vector3.zero;
+                        animator.SetTrigger("Die");
+                        onStateUpdate = Update_Dead;
                         break;
                 }
             }
@@ -384,6 +388,44 @@ public class Enemy : MonoBehaviour, IBattler, IHealth
     public void Die()
     {
         Debug.Log("사망");
+        State = EnemyState.Dead;
+        StartCoroutine(DeadSquence());  // 사망 연출 시작
+        onDie?.Invoke();                // 죽었다고 알림 보내기
+    }
+
+    /// <summary>
+    /// 사망 연출용 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator DeadSquence()
+    {
+        bodyCollider.enabled = false;
+
+        // 사망 이팩트 처리
+        yield return new WaitForSeconds(0.5f);     // 아이템이 바로 떨어지면 어색해서 약간 대기
+
+        // 아이템 드랍
+        MakeDropItems();
+
+        // 사망 애니메이션 끝날때까지 대기
+        yield return new WaitForSeconds(1.0f);     // 사망 애니메이션 시간(1.333초) -> 1.5초로 처리
+
+        // 바닥으로 가라 앉기 시작
+        agent.enabled = false;
+        // 리지드바디도 조작 필요
+
+        // 충분히 바닥아래로 내려갈때까지 대기
+        yield return new WaitForSeconds(2.0f);      // 2초면 다 떨어질 것이다.
+
+        // 슬라임 삭제하기
+    }
+
+    /// <summary>
+    /// 아이템을 드랍하는 함수
+    /// </summary>
+    void MakeDropItems()
+    {
+        // dropItems; 이 정보를 바탕으로 아이템을 드랍
     }
 
     public void HealthRegenerate(float totalRegen, float duration)
