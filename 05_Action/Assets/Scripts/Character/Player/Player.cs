@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
+
 
 
 #if UNITY_EDITOR
@@ -256,6 +258,7 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
     Animator animator;
     CharacterController characterController;
     PlayerInputController inputController;
+    CinemachineVirtualCamera deadCam;
 
     private void Awake()
     {
@@ -279,6 +282,7 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
 
         animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
+        deadCam = GetComponentInChildren<CinemachineVirtualCamera>();
 
         inputController = GetComponent<PlayerInputController>();
 
@@ -450,6 +454,10 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
     /// </summary>
     public void Die()
     {
+        //animator.SetTrigger("Die");
+        deadCam.Follow = null;      // 플레이어 안따라다님
+        deadCam.Priority = 20;
+
         onDie?.Invoke();
         Debug.Log("플레이어 사망");
     }
