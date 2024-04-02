@@ -197,6 +197,11 @@ public class Enemy : RecycleObject, IBattler, IHealth
     /// </summary>
     public Action onDie { get; set; }
 
+    /// <summary>
+    /// 이 캐릭터가 맞았을 때 실행되는 델리게이트(int : 실제로 입은 데미지)
+    /// </summary>
+    public Action<int> onHit { get; set; }
+
     [System.Serializable]   // 이게 있어야 구조체 내용을 인스팩터 창에서 수정할 수 있다.
     public struct ItemDropInfo
     {
@@ -455,7 +460,10 @@ public class Enemy : RecycleObject, IBattler, IHealth
         if(IsAlive) // 살아있을 때만 데미지를 받음
         {
             animator.SetTrigger("Hit");                 // 애니메이션 재생
-            HP -= MathF.Max(0, damage - DefencePower);  // 최종 데미지 계산해서 적용
+
+            float final = Mathf.Max(0, damage - DefencePower);  // 최종 데미지 계산해서 적용
+            HP -= final;
+            onHit?.Invoke(Mathf.RoundToInt(final));
             //Debug.Log($"적이 맞았다. 남은 HP = {HP}");
         }
     }

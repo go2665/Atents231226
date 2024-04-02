@@ -226,6 +226,11 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
     public float DefencePower => defencePower;
 
     /// <summary>
+    /// 이 캐릭터가 맞았을 때 실행되는 델리게이트(int : 실제로 입은 데미지)
+    /// </summary>
+    public Action<int> onHit { get; set; }
+
+    /// <summary>
     /// 돈의 변경을 알리는 델리게이트
     /// </summary>
     public Action<int> onMoneyChange;
@@ -651,7 +656,9 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
     {
         if(IsAlive)
         {
-            HP -= MathF.Max(0, damage - DefencePower);  // 0 이하로는 데미지가 내려가지 않는다.
+            float final = Mathf.Max(0, damage - DefencePower);  // 0 이하로는 데미지가 내려가지 않는다.
+            HP -= final;
+            onHit?.Invoke(Mathf.RoundToInt(final));
         }
     }
 

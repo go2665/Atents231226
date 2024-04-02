@@ -12,6 +12,7 @@ public class Factory : Singleton<Factory>
     ItemPool itemPool;
     HitEffectPool hitEffectPool;
     EnemyPool enemyPool;
+    DamageTextPool damageTextPool;
 
     protected override void OnInitialize()
     {
@@ -25,6 +26,9 @@ public class Factory : Singleton<Factory>
 
         enemyPool = GetComponentInChildren<EnemyPool>();
         if (enemyPool != null) enemyPool.Initialize();
+
+        damageTextPool = GetComponentInChildren<DamageTextPool>();
+        if (damageTextPool != null) damageTextPool.Initialize();
     }
 
     /// <summary>
@@ -137,5 +141,15 @@ public class Factory : Singleton<Factory>
     public GameObject GetHitEffect(Vector3? position)
     {
         return hitEffectPool.GetObject(position).gameObject;
+    }
+
+    /// <summary>
+    /// 데미지 텍스트를 생성하는 함수
+    /// </summary>
+    /// <param name="damage">설정될 데미지</param>
+    /// <returns></returns>
+    public GameObject GetDamageText(int damage, Vector3? position)
+    {
+        return damageTextPool.GetObject(damage, position);
     }
 }

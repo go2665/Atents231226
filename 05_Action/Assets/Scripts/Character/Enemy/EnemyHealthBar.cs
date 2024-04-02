@@ -24,7 +24,7 @@ public class EnemyHealthBar : MonoBehaviour
     /// <param name="ratio">HP비율(hp/maxHP)</param>
     private void Refresh(float ratio)
     {
-        Debug.Log($"HP : {ratio}");
+        //Debug.Log($"HP : {ratio}");
         fillPivot.localScale = new(ratio, 1, 1);    // 로컬 스케일 조절해서 HP 변화 표시
     }
 
