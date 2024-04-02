@@ -218,8 +218,8 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
     }
 
     // 플레이어의 공격력과 방어력
-    float baseAttackPower = 5.0f;
-    float baseDefencePower = 1.0f;
+    public float baseAttackPower = 5.0f;
+    public float baseDefencePower = 1.0f;
     float attackPower = 5.0f;
     public float AttackPower => attackPower;
     float defencePower = 1.0f;
@@ -287,6 +287,10 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
 
     private void Start()
     {
+        // 기본값 설정
+        attackPower = baseAttackPower;
+        defencePower = baseDefencePower;
+
         inven = new Inventory(this);    // itemDataManager가 게임메니저에 있어서 반드시 Start이후에 해야 함
         if(GameManager.Instance.InventoryUI != null)
         {

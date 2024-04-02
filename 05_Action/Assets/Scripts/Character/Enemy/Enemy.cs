@@ -58,6 +58,9 @@ public class Enemy : RecycleObject, IBattler, IHealth
                         onStateUpdate = Update_Chase;
                         break;                        
                     case EnemyState.Attack:
+                        agent.isStopped = true;
+                        agent.velocity = Vector3.zero;                        
+                        attackCoolTime = attackInterval;
                         onStateUpdate = Update_Attack;
                         break; 
                     case EnemyState.Dead:
@@ -147,7 +150,7 @@ public class Enemy : RecycleObject, IBattler, IHealth
     /// <summary>
     /// 공격 속도
     /// </summary>
-    public float attackSpeed = 1.0f;
+    public float attackInterval = 1.0f;
 
     /// <summary>
     /// 남아있는 공격 쿨타임
@@ -216,6 +219,7 @@ public class Enemy : RecycleObject, IBattler, IHealth
     Animator animator;
     NavMeshAgent agent;
     SphereCollider bodyCollider;
+    SphereCollider attackArea;
     Rigidbody rigid;
     EnemyHealthBar hpBar;
     ParticleSystem dieEffect;
@@ -227,7 +231,19 @@ public class Enemy : RecycleObject, IBattler, IHealth
     {
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
-        bodyCollider = GetComponent<SphereCollider>();
+
+        SphereCollider[] colliders = GetComponents<SphereCollider>();
+        if (colliders[0].isTrigger)
+        {
+            attackArea = colliders[0];
+            bodyCollider = colliders[1];
+        }
+        else
+        {
+            attackArea = colliders[1];
+            bodyCollider = colliders[0];
+        }
+
         rigid = GetComponent<Rigidbody>();
 
         Transform child = transform.GetChild(2);
@@ -260,6 +276,28 @@ public class Enemy : RecycleObject, IBattler, IHealth
     void Update()
     {
         onStateUpdate();        
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        // 추적상태이고 플레이어가 들어왔으면
+        if(State == EnemyState.Chase && other.CompareTag("Player"))
+        {
+            attackTarget = other.GetComponent<IBattler>();  // 공격 대상 저장해 놓기
+            State = EnemyState.Attack;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            attackTarget = null;
+            if( State != EnemyState.Dead )
+            {
+                State = EnemyState.Chase;
+            }
+        }
     }
 
     /// <summary>
@@ -314,6 +352,13 @@ public class Enemy : RecycleObject, IBattler, IHealth
 
     void Update_Attack()
     {
+        attackCoolTime -= Time.deltaTime;
+        transform.rotation = Quaternion.Slerp(transform.rotation,
+            Quaternion.LookRotation(attackTarget.transform.position - transform.position), 0.1f);
+        if(attackCoolTime < 0)
+        {            
+            Attack(attackTarget);
+        }
     }
 
     void Update_Dead()
@@ -390,25 +435,38 @@ public class Enemy : RecycleObject, IBattler, IHealth
         return result;
     }
 
+    /// <summary>
+    /// 공격처리용 함수
+    /// </summary>
+    /// <param name="target">공격 대상</param>
     public void Attack(IBattler target)
     {
-        target.Defence(AttackPower);
+        animator.SetTrigger("Attack");      // 애니메이션 재생
+        target.Defence(AttackPower);        // 공격 대상에게 데미지 전달
+        attackCoolTime = attackInterval;    // 쿨타임 초기화
     }
 
+    /// <summary>
+    /// 방어 처리용 함수
+    /// </summary>
+    /// <param name="damage">내가 받은 순수 데미지</param>
     public void Defence(float damage)
     {
-        if(IsAlive)
+        if(IsAlive) // 살아있을 때만 데미지를 받음
         {
-            animator.SetTrigger("Hit");
-            HP -= MathF.Max(0, damage - DefencePower);
-            Debug.Log($"적이 맞았다. 남은 HP = {HP}");
+            animator.SetTrigger("Hit");                 // 애니메이션 재생
+            HP -= MathF.Max(0, damage - DefencePower);  // 최종 데미지 계산해서 적용
+            //Debug.Log($"적이 맞았다. 남은 HP = {HP}");
         }
     }
 
+    /// <summary>
+    /// 사망 처리용 함수
+    /// </summary>
     public void Die()
     {
-        Debug.Log("사망");
-        State = EnemyState.Dead;
+        //Debug.Log("사망");
+        State = EnemyState.Dead;        // 상태 변경
         StartCoroutine(DeadSquence());  // 사망 연출 시작
         onDie?.Invoke();                // 죽었다고 알림 보내기
     }
@@ -478,6 +536,7 @@ public class Enemy : RecycleObject, IBattler, IHealth
     }
 
 #if UNITY_EDITOR
+
     private void OnDrawGizmos()
     {
         bool playerShow = SearchPlayer();
@@ -494,7 +553,13 @@ public class Enemy : RecycleObject, IBattler, IHealth
 
         Handles.DrawWireArc(transform.position, transform.up, q1 * forward, sightHalfAngle * 2, farSightRange, 2.0f);   // 호 그리기
 
-        Handles.DrawWireDisc(transform.position, transform.up, nearSightRange);         // 근거리 범위 그리기
+        Handles.DrawWireDisc(transform.position, transform.up, nearSightRange);         // 근거리 시야 범위 그리기
+
+        if(attackArea != null)
+        {
+            Handles.color = Color.red;
+            Handles.DrawWireDisc(transform.position, transform.up, attackArea.radius, 5);   // 공격 범위 그리기
+        }
     }
 
     public void Test_DropItems(int testCount)
