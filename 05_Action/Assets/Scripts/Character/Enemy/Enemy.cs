@@ -224,7 +224,6 @@ public class Enemy : RecycleObject, IBattler, IHealth
     Animator animator;
     NavMeshAgent agent;
     SphereCollider bodyCollider;
-    SphereCollider attackArea;
     Rigidbody rigid;
     EnemyHealthBar hpBar;
     ParticleSystem dieEffect;
@@ -236,25 +235,36 @@ public class Enemy : RecycleObject, IBattler, IHealth
     {
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
-
-        SphereCollider[] colliders = GetComponents<SphereCollider>();
-        if (colliders[0].isTrigger)
-        {
-            attackArea = colliders[0];
-            bodyCollider = colliders[1];
-        }
-        else
-        {
-            attackArea = colliders[1];
-            bodyCollider = colliders[0];
-        }
-
+        bodyCollider = GetComponent<SphereCollider>();
         rigid = GetComponent<Rigidbody>();
 
         Transform child = transform.GetChild(2);
         hpBar = child.GetComponent<EnemyHealthBar>();
         child = transform.GetChild(3);
         dieEffect = child.GetComponent<ParticleSystem>();
+
+        child = transform.GetChild(4);
+        AttackArea attackArea = child.GetComponent<AttackArea>();
+        attackArea.onPlayerIn += (target) =>
+        {
+            // 플레이어가 들어온 상태에서
+            if(State == EnemyState.Chase)   // 추적 상태이면
+            {
+                attackTarget = target;      // 공격 대상 지정하고
+                State = EnemyState.Attack;  // 공격 상태로 변환
+            }
+        };
+        attackArea.onPlayerOut += (target) =>
+        {
+            if( attackTarget == target )            // 공격 대상이 나갔으면
+            {
+                attackTarget = null;                // 공격 대상을 비우고
+                if(State != EnemyState.Dead)        // 죽지 않았다면
+                {
+                    State = EnemyState.Chase;       // 추적 상태를 되돌리기
+                }
+            }
+        };
     }
 
     protected override void OnEnable()
@@ -281,28 +291,6 @@ public class Enemy : RecycleObject, IBattler, IHealth
     void Update()
     {
         onStateUpdate();        
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        // 추적상태이고 플레이어가 들어왔으면
-        if(State == EnemyState.Chase && other.CompareTag("Player"))
-        {
-            attackTarget = other.GetComponent<IBattler>();  // 공격 대상 저장해 놓기
-            State = EnemyState.Attack;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            attackTarget = null;
-            if( State != EnemyState.Dead )
-            {
-                State = EnemyState.Chase;
-            }
-        }
     }
 
     /// <summary>
@@ -562,12 +550,6 @@ public class Enemy : RecycleObject, IBattler, IHealth
         Handles.DrawWireArc(transform.position, transform.up, q1 * forward, sightHalfAngle * 2, farSightRange, 2.0f);   // 호 그리기
 
         Handles.DrawWireDisc(transform.position, transform.up, nearSightRange);         // 근거리 시야 범위 그리기
-
-        if(attackArea != null)
-        {
-            Handles.color = Color.red;
-            Handles.DrawWireDisc(transform.position, transform.up, attackArea.radius, 5);   // 공격 범위 그리기
-        }
     }
 
     public void Test_DropItems(int testCount)
