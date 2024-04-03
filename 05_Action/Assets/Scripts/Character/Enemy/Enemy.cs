@@ -495,6 +495,7 @@ public class Enemy : RecycleObject, IBattler, IHealth
         State = EnemyState.Dead;        // 상태 변경
         StartCoroutine(DeadSquence());  // 사망 연출 시작
         onDie?.Invoke();                // 죽었다고 알림 보내기
+        onDie = null;                   // 죽으면 onDie도 초기화
     }
 
     /// <summary>

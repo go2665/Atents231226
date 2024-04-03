@@ -235,6 +235,52 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
     /// </summary>
     public Action<int> onMoneyChange;
 
+    /// <summary>
+    /// 락온 이팩트 오브젝트의 트랜스폼
+    /// </summary>
+    Transform lockOnEffect;
+
+    /// <summary>
+    /// 락온할 대상의 트랜스폼
+    /// </summary>
+    Transform lockOnTarget;
+
+    Transform LockOnTarget
+    {
+        get => lockOnTarget;
+        set
+        {
+            if (value != lockOnTarget)
+            {
+                lockOnTarget = value;
+                if (lockOnTarget != null)
+                {
+                    // 지금 대상을 락온 한다.
+                    lockOnEffect.SetParent(lockOnTarget);       // lockOnEffect의 부모를 lockOnTarget으로 변경
+                    lockOnEffect.localPosition = Vector3.zero;  // lockOnEffect의 위치를 lockOnTarget의 위치로 변경
+                    lockOnEffect.gameObject.SetActive(true);    // lockOnEffect를 보이게 만들기
+
+                    Enemy enemy = lockOnTarget.GetComponent<Enemy>();
+                    enemy.onDie += () => LockOnTarget = null;
+
+                    // lockOnTarget이 죽었을 떄 LockOnTarget을 null로 만들기
+                }
+                else
+                {
+                    // 락온을 해제한다.
+                    lockOnEffect.gameObject.SetActive(false);   // lockOnEffect를 안보이게 만들기
+                    lockOnEffect.SetParent(this.transform);     // lockOnEffect의 부모를 플레이어로 되돌리기
+                    lockOnEffect.localPosition = Vector3.zero;  // lockOnEffect의 위치를 플레이어의 위치로 변경
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 락온 할 수 있는 범위
+    /// </summary>
+    public float lockOnRange = 5.0f;
+
     // 애니메이터용 해시값 및 상수
     readonly int Speed_Hash = Animator.StringToHash("Speed");
     const float AnimatorStopSpeed = 0.0f;
@@ -321,6 +367,11 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
 
         characterController.Move(Time.deltaTime * currentSpeed * inputDirection);   // 좀 더 수동
         //characterController.SimpleMove(currentSpeed * inputDirection);            // 좀 더 자동
+
+        if( LockOnTarget != null )  // 락온 대상이 있으면 락온 대상을 바라보기
+        {
+            targetRotation = Quaternion.LookRotation(LockOnTarget.transform.position - transform.position);
+        }
 
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * turnSpeed);  // 목표 회전으로 변경
     }
@@ -676,58 +727,43 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
             onHit?.Invoke(Mathf.RoundToInt(final));
         }
     }
+    
 
     /// <summary>
-    /// 락온 이팩트 오브젝트의 트랜스폼
+    /// 락온 입력이 들어왔을 때 실행되는 함수
     /// </summary>
-    Transform lockOnEffect;
-
-    /// <summary>
-    /// 락온할 대상의 트랜스폼
-    /// </summary>
-    Transform lockOnTarget;
-
-    Transform LockOnTarget
-    {
-        get => lockOnTarget;
-        set
-        {
-            if(value != lockOnTarget)
-            {
-                lockOnTarget = value;
-                if(lockOnTarget != null)
-                {
-                    // 지금 대상을 락온 한다.
-
-                    // lockOnEffect의 부모를 lockOnTarget으로 변경
-                    // lockOnEffect의 위치를 lockOnTarget의 위치로 변경
-                    // lockOnEffect를 보이게 만들기
-
-                    // lockOnTarget이 죽었을 떄 LockOnTarget을 null로 만들기
-                }
-                else
-                {
-                    // 락온을 해제한다.
-                    // lockOnEffect를 안보이게 만들기
-                    // lockOnEffect의 부모를 플레이어로 되돌리기
-                    // lockOnEffect의 위치를 플레이어의 위치로 변경
-                }
-            }
-        }
-    }
-
     private void OnLockOnInput()
     {
         // 주변에 있는 적(AttackTarget)을 찾기
-        // 적이 1마리 이상 있을 때 -> 가장 가까운 적을 LockOnTarget으로 설정하기
-        // 적이 없을 때 -> 락온 해제하기
+        Collider[] enemies = Physics.OverlapSphere(transform.position, lockOnRange, LayerMask.GetMask("AttackTarget"));
+                
+        Transform nearest = null;
+        float nearestDistanceSqr = float.MaxValue;
+        foreach(Collider enemy in enemies )     // 가장 가까운 적 찾기
+        {
+            Vector3 dir = enemy.transform.position - transform.position;
+            float distanceSqr = dir.sqrMagnitude;
+            if( distanceSqr < nearestDistanceSqr )
+            {
+                nearest = enemy.transform;
+                nearestDistanceSqr = distanceSqr;
+            }
+        }
+
+        // 적이 1마리 이상 있을 때 -> 가장 가까운 적을 LockOnTarget으로 설정
+        // 적이 없을 때 -> null로 락온 해제
+        LockOnTarget = nearest;          
+
     }
 
 #if UNITY_EDITOR
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
         Handles.color = Color.blue;
         Handles.DrawWireDisc(transform.position, Vector3.up, ItemPickupRange, 2.0f);
+
+        Handles.color = Color.red;
+        Handles.DrawWireDisc(transform.position, Vector3.up, lockOnRange, 2.0f);
     }
 
 
