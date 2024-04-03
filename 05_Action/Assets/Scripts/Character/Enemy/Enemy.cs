@@ -285,10 +285,25 @@ public class Enemy : RecycleObject, IBattler, IHealth
         rigid.isKinematic = true;           // 키네마틱을 꺼서 물리가 적용되게 만들기
         rigid.drag = Mathf.Infinity;        // 무한대로 되어 있던 마찰력을 낮춰서 떨어질 수 있게 하기
         HP = maxHP;                         // HP 최대로
+
+        Player player = GameManager.Instance.Player;
+        if(player != null ) 
+        { 
+            player.onDie += PlayerDie;
+        }
     }
 
     protected override void OnDisable()
-    {        
+    {
+        if(GameManager.Instance != null)
+        {
+            Player player = GameManager.Instance.Player;
+            if(player != null )
+            {
+                player.onDie -= PlayerDie;
+            }
+        }
+
         bodyCollider.enabled = true;        // 컬라이더 활성화
         hpBar.gameObject.SetActive(true);   // HP바 다시 보이게 만들기
         agent.enabled = true;               // agent가 활성화 되어 있으면 항상 네브메시 위에 있음
@@ -379,27 +394,31 @@ public class Enemy : RecycleObject, IBattler, IHealth
         Collider[] colliders = Physics.OverlapSphere(transform.position, farSightRange, LayerMask.GetMask("Player"));
         if( colliders.Length > 0 )
         {
-            // 일정 반경(=farSightRange)안에 플레이어가 있다.
-            Vector3 playerPos = colliders[0].transform.position;    // 0번이 무조건 플레이어다(플레이어는 1명이니까)
-            Vector3 toPlayerDir = playerPos - transform.position;   // 적->플레이어로 가는 방향 백터
-            if(toPlayerDir.sqrMagnitude < nearSightRange * nearSightRange)  // 플레이어는 nearSightRange보다 안쪽에 있다.
+            Player player = colliders[0].GetComponent<Player>();
+            if( player != null && player.IsAlive)   // 플레이어가 살아있을 때만 찾기
             {
-                // 근접범위(=nearSightRange) 안쪽이다.
-                chaseTarget = colliders[0].transform;
-                result = true;
-            }
-            else
-            {
-                // 근접범위 밖이다 => 시야각 확인
-                if(IsInSightAngle(toPlayerDir))     // 시야각 안인지 확인
-                { 
-                    if(IsSightClear(toPlayerDir))   // 적과 플레이어 사이에 시야를 가리는 오브젝트가 있는지 확인
+                // 일정 반경(=farSightRange)안에 플레이어가 있다.
+                Vector3 playerPos = colliders[0].transform.position;    // 0번이 무조건 플레이어다(플레이어는 1명이니까)
+                Vector3 toPlayerDir = playerPos - transform.position;   // 적->플레이어로 가는 방향 백터
+                if (toPlayerDir.sqrMagnitude < nearSightRange * nearSightRange)  // 플레이어는 nearSightRange보다 안쪽에 있다.
+                {
+                    // 근접범위(=nearSightRange) 안쪽이다.
+                    chaseTarget = colliders[0].transform;
+                    result = true;
+                }
+                else
+                {
+                    // 근접범위 밖이다 => 시야각 확인
+                    if (IsInSightAngle(toPlayerDir))     // 시야각 안인지 확인
                     {
-                        chaseTarget = colliders[0].transform;
-                        result = true;
+                        if (IsSightClear(toPlayerDir))   // 적과 플레이어 사이에 시야를 가리는 오브젝트가 있는지 확인
+                        {
+                            chaseTarget = colliders[0].transform;
+                            result = true;
+                        }
                     }
                 }
-            }
+            }            
         }
 
         return result;
@@ -540,6 +559,11 @@ public class Enemy : RecycleObject, IBattler, IHealth
     public void HealthRegenerateByTick(float tickRegen, float tickInterval, uint totalTickCount)
     {
         throw new NotImplementedException();
+    }
+
+    void PlayerDie()
+    {        
+        State = EnemyState.Wait;
     }
 
 #if UNITY_EDITOR

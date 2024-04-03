@@ -25,6 +25,11 @@ public class PlayerInputController : MonoBehaviour
     /// </summary>
     public Action onItemPickUp;
 
+    /// <summary>
+    /// 락온 버튼이 눌려진 입력을 전달하는 델리게이트
+    /// </summary>
+    public Action onLockOn;
+
     // 입력용 인풋 액션
     PlayerInputActions inputActions;
 
@@ -44,10 +49,12 @@ public class PlayerInputController : MonoBehaviour
         inputActions.Player.MoveModeChange.performed += OnMoveModeChange;
         inputActions.Player.Attack.performed += OnAttack;
         inputActions.Player.Pickup.performed += OnPickup;
+        inputActions.Player.LockOn.performed += OnLockOn;
     }
 
     private void OnDisable()
     {
+        inputActions.Player.LockOn.performed -= OnLockOn;
         inputActions.Player.Pickup.performed -= OnPickup;
         inputActions.Player.Attack.performed -= OnAttack;
         inputActions.Player.MoveModeChange.performed -= OnMoveModeChange;
@@ -75,5 +82,10 @@ public class PlayerInputController : MonoBehaviour
     private void OnPickup(UnityEngine.InputSystem.InputAction.CallbackContext _)
     {
         onItemPickUp?.Invoke();
+    }
+
+    private void OnLockOn(UnityEngine.InputSystem.InputAction.CallbackContext _)
+    {
+        onLockOn?.Invoke();
     }
 }

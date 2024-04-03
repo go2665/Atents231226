@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
-
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -280,6 +278,8 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
         shiledParent = shiledParent.GetChild(0);    // hand_l
         shiledParent = shiledParent.GetChild(2);    // weapon_l
 
+        lockOnEffect = transform.GetChild(3);       // 락온
+
         animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
         deadCam = GetComponentInChildren<CinemachineVirtualCamera>();
@@ -290,6 +290,7 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
         inputController.onMoveModeChange += OnMoveModeChageInput;
         inputController.onAttack += OnAttackInput;
         inputController.onItemPickUp += OnItemPickupInput;
+        inputController.onLockOn += OnLockOnInput;
 
         partsSlot = new InvenSlot[Enum.GetValues(typeof(EquipType)).Length];
     }
@@ -674,6 +675,52 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
 
             onHit?.Invoke(Mathf.RoundToInt(final));
         }
+    }
+
+    /// <summary>
+    /// 락온 이팩트 오브젝트의 트랜스폼
+    /// </summary>
+    Transform lockOnEffect;
+
+    /// <summary>
+    /// 락온할 대상의 트랜스폼
+    /// </summary>
+    Transform lockOnTarget;
+
+    Transform LockOnTarget
+    {
+        get => lockOnTarget;
+        set
+        {
+            if(value != lockOnTarget)
+            {
+                lockOnTarget = value;
+                if(lockOnTarget != null)
+                {
+                    // 지금 대상을 락온 한다.
+
+                    // lockOnEffect의 부모를 lockOnTarget으로 변경
+                    // lockOnEffect의 위치를 lockOnTarget의 위치로 변경
+                    // lockOnEffect를 보이게 만들기
+
+                    // lockOnTarget이 죽었을 떄 LockOnTarget을 null로 만들기
+                }
+                else
+                {
+                    // 락온을 해제한다.
+                    // lockOnEffect를 안보이게 만들기
+                    // lockOnEffect의 부모를 플레이어로 되돌리기
+                    // lockOnEffect의 위치를 플레이어의 위치로 변경
+                }
+            }
+        }
+    }
+
+    private void OnLockOnInput()
+    {
+        // 주변에 있는 적(AttackTarget)을 찾기
+        // 적이 1마리 이상 있을 때 -> 가장 가까운 적을 LockOnTarget으로 설정하기
+        // 적이 없을 때 -> 락온 해제하기
     }
 
 #if UNITY_EDITOR
