@@ -31,6 +31,9 @@ public class PlayerInputController : MonoBehaviour
     private void Awake()
     {        
         inputActions = new PlayerInputActions();
+
+        Player player = GetComponent<Player>();
+        player.onDie += inputActions.Player.Disable;
     }
 
     private void OnEnable()

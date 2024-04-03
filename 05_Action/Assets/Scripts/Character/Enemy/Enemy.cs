@@ -220,6 +220,11 @@ public class Enemy : RecycleObject, IBattler, IHealth
     /// </summary>
     Action onStateUpdate;
 
+    /// <summary>
+    /// 공격 이팩트가 생성될 위치
+    /// </summary>
+    Transform hitEffectPosition;
+
     // 컴포넌트들
     Animator animator;
     NavMeshAgent agent;
@@ -265,6 +270,9 @@ public class Enemy : RecycleObject, IBattler, IHealth
                 }
             }
         };
+
+        hitEffectPosition = transform.GetChild(5);  // 공격 이팩트가 나올 위치
+
     }
 
     protected override void OnEnable()
@@ -436,6 +444,9 @@ public class Enemy : RecycleObject, IBattler, IHealth
     {
         animator.SetTrigger("Attack");      // 애니메이션 재생
         target.Defence(AttackPower);        // 공격 대상에게 데미지 전달
+
+        Factory.Instance.GetEnemyHitEffect(hitEffectPosition.position + UnityEngine.Random.insideUnitSphere * 0.1f);
+
         attackCoolTime = attackInterval;    // 쿨타임 초기화
     }
 

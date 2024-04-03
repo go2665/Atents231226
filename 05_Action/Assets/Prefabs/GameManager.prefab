@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 1969670816436485386}
   - component: {fileID: 2894920237340350664}
   m_Layer: 0
-  m_Name: HitEffectPool
+  m_Name: EnemyHitEffectPool
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -239,8 +239,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 9051391333017599141}
   - {fileID: 1969670816436485386}
+  - {fileID: 9179084535929222613}
+  - {fileID: 9051391333017599141}
   - {fileID: 2177899806033509314}
   - {fileID: 2697369249138585774}
   m_Father: {fileID: 0}
@@ -346,6 +347,53 @@ MonoBehaviour:
   originalPrefab: {fileID: 3449852328383834083, guid: b5a95014a244c4f419dd063be69b6ba4,
     type: 3}
   poolSize: 16
+--- !u!1 &6020358355743756441
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9179084535929222613}
+  - component: {fileID: 1156406497519191701}
+  m_Layer: 0
+  m_Name: PlayerHitEffectPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9179084535929222613
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6020358355743756441}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4562130011507692517}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1156406497519191701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6020358355743756441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95aaa28b1fb066745ab61903f3832da9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  originalPrefab: {fileID: 5880797563127281583, guid: 6bbcc01a6b411e6449fa4f4098c14c2f,
+    type: 3}
+  poolSize: 8
 --- !u!1 &8709305667360652701
 GameObject:
   m_ObjectHideFlags: 0

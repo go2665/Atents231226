@@ -10,7 +10,8 @@ public class Factory : Singleton<Factory>
     public float noisePower = 0.5f;
 
     ItemPool itemPool;
-    HitEffectPool hitEffectPool;
+    HitEffectPool enemyHitEffectPool;
+    HitEffectPool playerHitEffectPool;
     EnemyPool enemyPool;
     DamageTextPool damageTextPool;
 
@@ -18,11 +19,16 @@ public class Factory : Singleton<Factory>
     {
         base.OnInitialize();
 
+        Transform child = transform.GetChild(0);
+        enemyHitEffectPool = child.GetComponent<HitEffectPool>();
+        if (enemyHitEffectPool != null) enemyHitEffectPool.Initialize();
+
+        child = transform.GetChild(1);
+        playerHitEffectPool = child.GetComponent<HitEffectPool>();
+        if(playerHitEffectPool != null ) playerHitEffectPool.Initialize();
+
         itemPool = GetComponentInChildren<ItemPool>();
         if(itemPool != null ) itemPool.Initialize();
-
-        hitEffectPool = GetComponentInChildren<HitEffectPool>();
-        if(hitEffectPool != null ) hitEffectPool.Initialize();
 
         enemyPool = GetComponentInChildren<EnemyPool>();
         if (enemyPool != null) enemyPool.Initialize();
@@ -134,13 +140,23 @@ public class Factory : Singleton<Factory>
     }
 
     /// <summary>
-    /// 히트 이팩트를 생성하는 함수
+    /// 적 히트 이팩트를 생성하는 함수
     /// </summary>
     /// <param name="position">생성될 위치</param>
     /// <returns></returns>
-    public GameObject GetHitEffect(Vector3? position)
+    public GameObject GetEnemyHitEffect(Vector3? position)
     {
-        return hitEffectPool.GetObject(position).gameObject;
+        return enemyHitEffectPool.GetObject(position).gameObject;
+    }
+
+    /// <summary>
+    /// 플레이어 히트 이팩트를 생성하는 함수
+    /// </summary>
+    /// <param name="position">생성될 위치</param>
+    /// <returns></returns>
+    public GameObject GetPlayerHitEffect(Vector3? position)
+    {
+        return playerHitEffectPool.GetObject(position).gameObject;
     }
 
     /// <summary>

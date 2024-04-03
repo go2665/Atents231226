@@ -16,7 +16,7 @@ public class Test_EnemyHitAndAttack : TestBase
 
     protected override void OnTest1(InputAction.CallbackContext context)
     {
-        Factory.Instance.GetHitEffect(test.position);
+        Factory.Instance.GetPlayerHitEffect(test.position);
     }
 
     protected override void OnTest2(InputAction.CallbackContext context)

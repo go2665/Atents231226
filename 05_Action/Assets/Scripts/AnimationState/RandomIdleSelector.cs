@@ -21,27 +21,27 @@ public class RandomIdleSelector : StateMachineBehaviour
     /// <returns>0~4</returns>
     int RandomSelect()
     {
-        int select = 0;     // 80%
+        int select = 0;     // 94%
 
         if(prevSelect == 0)     // 이전에 0일 때만 특수 Idle 재생
         { 
             float num = Random.value;
 
-            if(num < 0.05f)
+            if(num < 0.01f)
             {
-                select = 4;     // 5%
+                select = 4;     // 1%
             }
-            else if(num < 0.10f)
+            else if(num < 0.02f)
             {
-                select = 3;     // 5%
+                select = 3;     // 1%
             }
-            else if (num < 0.15f)
+            else if (num < 0.03f)
             {
-                select = 2;     // 5%
+                select = 2;     // 1%
             }
-            else if (num < 0.20f)
+            else if (num < 0.04f)
             {
-                select = 1;     // 5%
+                select = 1;     // 1%
             }
         }
 

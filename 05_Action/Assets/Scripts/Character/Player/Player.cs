@@ -454,7 +454,7 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
     /// </summary>
     public void Die()
     {
-        //animator.SetTrigger("Die");
+        animator.SetTrigger("Die");
         deadCam.Follow = null;      // 플레이어 안따라다님
         deadCam.Priority = 20;
 
@@ -664,8 +664,14 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
     {
         if(IsAlive)
         {
+            //Time.timeScale = 0.1f;
+
+            animator.SetTrigger("Hit");
+            WeaponBladeDisable();           // 공격 중에 피격 당할 경우를 대비
+
             float final = Mathf.Max(0, damage - DefencePower);  // 0 이하로는 데미지가 내려가지 않는다.
             HP -= final;
+
             onHit?.Invoke(Mathf.RoundToInt(final));
         }
     }
