@@ -49,6 +49,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Skill",
+                    "type": "Button",
+                    "id": "da5e4bd5-224b-43ec-bf1f-348567299095",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -159,6 +168,17 @@
                     "processors": "",
                     "groups": "KM",
                     "action": "LockOn",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8a42b979-d948-4efe-be85-1c4f67c57c71",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KM",
+                    "action": "Skill",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

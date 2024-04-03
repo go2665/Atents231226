@@ -71,6 +71,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Skill"",
+                    ""type"": ""Button"",
+                    ""id"": ""da5e4bd5-224b-43ec-bf1f-348567299095"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -181,6 +190,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""KM"",
                     ""action"": ""LockOn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8a42b979-d948-4efe-be85-1c4f67c57c71"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KM"",
+                    ""action"": ""Skill"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -331,6 +351,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Pickup = m_Player.FindAction("Pickup", throwIfNotFound: true);
         m_Player_LockOn = m_Player.FindAction("LockOn", throwIfNotFound: true);
+        m_Player_Skill = m_Player.FindAction("Skill", throwIfNotFound: true);
         // Effect
         m_Effect = asset.FindActionMap("Effect", throwIfNotFound: true);
         m_Effect_PointerMove = m_Effect.FindAction("PointerMove", throwIfNotFound: true);
@@ -405,6 +426,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Pickup;
     private readonly InputAction m_Player_LockOn;
+    private readonly InputAction m_Player_Skill;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -414,6 +436,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
         public InputAction @Pickup => m_Wrapper.m_Player_Pickup;
         public InputAction @LockOn => m_Wrapper.m_Player_LockOn;
+        public InputAction @Skill => m_Wrapper.m_Player_Skill;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -438,6 +461,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @LockOn.started += instance.OnLockOn;
             @LockOn.performed += instance.OnLockOn;
             @LockOn.canceled += instance.OnLockOn;
+            @Skill.started += instance.OnSkill;
+            @Skill.performed += instance.OnSkill;
+            @Skill.canceled += instance.OnSkill;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -457,6 +483,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @LockOn.started -= instance.OnLockOn;
             @LockOn.performed -= instance.OnLockOn;
             @LockOn.canceled -= instance.OnLockOn;
+            @Skill.started -= instance.OnSkill;
+            @Skill.performed -= instance.OnSkill;
+            @Skill.canceled -= instance.OnSkill;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -598,6 +627,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnAttack(InputAction.CallbackContext context);
         void OnPickup(InputAction.CallbackContext context);
         void OnLockOn(InputAction.CallbackContext context);
+        void OnSkill(InputAction.CallbackContext context);
     }
     public interface IEffectActions
     {

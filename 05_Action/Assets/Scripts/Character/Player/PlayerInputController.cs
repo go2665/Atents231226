@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerInputController : MonoBehaviour
 {
@@ -30,6 +31,16 @@ public class PlayerInputController : MonoBehaviour
     /// </summary>
     public Action onLockOn;
 
+    /// <summary>
+    /// 스킬 사용버튼을 누르는 입력을 전달하는 델리게이트
+    /// </summary>
+    public Action onSkillStart;
+
+    /// <summary>
+    /// 스킬 사용버튼을 때는 입력을 전달하는 델리게이트
+    /// </summary>
+    public Action onSkillEnd;
+
     // 입력용 인풋 액션
     PlayerInputActions inputActions;
 
@@ -50,10 +61,14 @@ public class PlayerInputController : MonoBehaviour
         inputActions.Player.Attack.performed += OnAttack;
         inputActions.Player.Pickup.performed += OnPickup;
         inputActions.Player.LockOn.performed += OnLockOn;
+        inputActions.Player.Skill.performed += OnSkillStart;
+        inputActions.Player.Skill.canceled += OnSkillEnd;
     }
 
     private void OnDisable()
     {
+        inputActions.Player.Skill.canceled -= OnSkillEnd;
+        inputActions.Player.Skill.performed -= OnSkillStart;
         inputActions.Player.LockOn.performed -= OnLockOn;
         inputActions.Player.Pickup.performed -= OnPickup;
         inputActions.Player.Attack.performed -= OnAttack;
@@ -88,4 +103,15 @@ public class PlayerInputController : MonoBehaviour
     {
         onLockOn?.Invoke();
     }
+
+    private void OnSkillStart(InputAction.CallbackContext _)
+    {
+        onSkillStart?.Invoke();
+    }
+
+    private void OnSkillEnd(InputAction.CallbackContext _)
+    {
+        onSkillEnd?.Invoke();
+    }
+
 }

@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.InputSystem.XInput;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -261,9 +263,7 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
                     lockOnEffect.gameObject.SetActive(true);    // lockOnEffect를 보이게 만들기
 
                     Enemy enemy = lockOnTarget.GetComponent<Enemy>();
-                    enemy.onDie += () => LockOnTarget = null;
-
-                    // lockOnTarget이 죽었을 떄 LockOnTarget을 null로 만들기
+                    enemy.onDie += () => LockOnTarget = null;   // 죽으면 락온 자동으로 풀기
                 }
                 else
                 {
@@ -303,6 +303,7 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
     CharacterController characterController;
     PlayerInputController inputController;
     CinemachineVirtualCamera deadCam;
+    PlayerSkillArea skillArea;
 
     private void Awake()
     {
@@ -329,6 +330,7 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
         animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
         deadCam = GetComponentInChildren<CinemachineVirtualCamera>();
+        skillArea = GetComponentInChildren<PlayerSkillArea>(true);
 
         inputController = GetComponent<PlayerInputController>();
 
@@ -337,6 +339,8 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
         inputController.onAttack += OnAttackInput;
         inputController.onItemPickUp += OnItemPickupInput;
         inputController.onLockOn += OnLockOnInput;
+        inputController.onSkillStart += OnSkillStart;
+        inputController.onSkillEnd += OnSkillEnd;
 
         partsSlot = new InvenSlot[Enum.GetValues(typeof(EquipType)).Length];
     }
@@ -752,8 +756,17 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
 
         // 적이 1마리 이상 있을 때 -> 가장 가까운 적을 LockOnTarget으로 설정
         // 적이 없을 때 -> null로 락온 해제
-        LockOnTarget = nearest;          
+        LockOnTarget = nearest;         
+    }
 
+    private void OnSkillStart()
+    {
+        skillArea.Activate(AttackPower);
+    }
+
+    private void OnSkillEnd()
+    {
+        skillArea.Deactivate();
     }
 
 #if UNITY_EDITOR
