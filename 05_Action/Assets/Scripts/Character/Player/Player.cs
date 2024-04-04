@@ -49,11 +49,14 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
         get => currentMoveMode;
         set
         {
-            currentMoveMode = value;    // 상태 변경
-            if (currentSpeed > 0.0f)     // 이동 중인지 아닌지 확인
+            if( !skillArea.IsActivate)      // 스킬 사용 중에는 이동 모드 변경 불가
             {
-                // 이동 중이면 모드에 맞게 속도와 애니메이션 변경
-                MoveSpeedChange(currentMoveMode);
+                currentMoveMode = value;    // 상태 변경
+                if (currentSpeed > 0.0f)    // 이동 중인지 아닌지 확인
+                {
+                    // 이동 중이면 모드에 맞게 속도와 애니메이션 변경
+                    MoveSpeedChange(currentMoveMode);
+                }
             }
         }
     }
@@ -183,6 +186,11 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
         {
             if(IsAlive)
             {
+                if( value < 0.0f )
+                {
+                    OnSkillEnd();
+                }
+
                 mp = Mathf.Clamp(value, 0, MaxMP);
                 onManaChange?.Invoke(mp/MaxMP);
             }
@@ -287,6 +295,8 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
     const float AnimatorWalkSpeed = 0.3f;
     const float AnimatorRunSpeed = 1.0f;
     readonly int Attack_Hash = Animator.StringToHash("Attack");
+    readonly int SkillStart_Hash = Animator.StringToHash("SkillStart");
+    readonly int SkillEnd_Hash = Animator.StringToHash("SkillEnd");
 
     /// <summary>
     /// 무기 이펙트 켜고 끄는 신호를 보내는 델리게이트
@@ -759,14 +769,28 @@ public class Player : MonoBehaviour, IHealth, IMana, IEquipTarget, IBattler
         LockOnTarget = nearest;         
     }
 
+    /// <summary>
+    /// 스킬 사용 버튼을 눌렀을 때 실행될 함수
+    /// </summary>
     private void OnSkillStart()
     {
-        skillArea.Activate(AttackPower);
+        if(CurrentMoveMode == MoveMode.Walk && MP > 0)  // 걷기 모드이고 마나가 있을 떄 스킬 사용 가능
+        {
+            ShowWeaponEffect(true);
+            animator.SetTrigger(SkillStart_Hash);
+            animator.SetBool(SkillEnd_Hash, false);
+            skillArea.Activate(AttackPower);
+        }
     }
 
+    /// <summary>
+    /// 스킬 사용을 끝냈을 때 실행될 함수
+    /// </summary>
     private void OnSkillEnd()
     {
+        animator.SetBool(SkillEnd_Hash, true);
         skillArea.Deactivate();
+        ShowWeaponEffect(false);
     }
 
 #if UNITY_EDITOR
