@@ -19,5 +19,6 @@ public class Test_Board : TestBase
     protected override void OnTest1(InputAction.CallbackContext context)
     {
         board.Initialize(width, height, mineCount);
+        board.Test_OpenAllCover();
     }
 }

@@ -275,6 +275,82 @@ PrefabInstance:
       propertyPath: cellPrefab
       value: 
       objectReference: {fileID: 2875765395962078459, guid: 574ed6265aefc4249bb66380ec8757e3, type: 3}
+    - target: {fileID: 1921569588569880227, guid: 0fa9ada6ef4e069439649d69caddf004, type: 3}
+      propertyPath: openCellImage.Array.size
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 1921569588569880227, guid: 0fa9ada6ef4e069439649d69caddf004, type: 3}
+      propertyPath: closeCellImage.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1921569588569880227, guid: 0fa9ada6ef4e069439649d69caddf004, type: 3}
+      propertyPath: openCellImage.Array.data[0]
+      value: 
+      objectReference: {fileID: -721819948, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+    - target: {fileID: 1921569588569880227, guid: 0fa9ada6ef4e069439649d69caddf004, type: 3}
+      propertyPath: openCellImage.Array.data[1]
+      value: 
+      objectReference: {fileID: 121105106, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+    - target: {fileID: 1921569588569880227, guid: 0fa9ada6ef4e069439649d69caddf004, type: 3}
+      propertyPath: openCellImage.Array.data[2]
+      value: 
+      objectReference: {fileID: -1785480366, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+    - target: {fileID: 1921569588569880227, guid: 0fa9ada6ef4e069439649d69caddf004, type: 3}
+      propertyPath: openCellImage.Array.data[3]
+      value: 
+      objectReference: {fileID: -57388063, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+    - target: {fileID: 1921569588569880227, guid: 0fa9ada6ef4e069439649d69caddf004, type: 3}
+      propertyPath: openCellImage.Array.data[4]
+      value: 
+      objectReference: {fileID: 204713545, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+    - target: {fileID: 1921569588569880227, guid: 0fa9ada6ef4e069439649d69caddf004, type: 3}
+      propertyPath: openCellImage.Array.data[5]
+      value: 
+      objectReference: {fileID: 1485786370, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+    - target: {fileID: 1921569588569880227, guid: 0fa9ada6ef4e069439649d69caddf004, type: 3}
+      propertyPath: openCellImage.Array.data[6]
+      value: 
+      objectReference: {fileID: 2010609482, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+    - target: {fileID: 1921569588569880227, guid: 0fa9ada6ef4e069439649d69caddf004, type: 3}
+      propertyPath: openCellImage.Array.data[7]
+      value: 
+      objectReference: {fileID: 1316802720, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+    - target: {fileID: 1921569588569880227, guid: 0fa9ada6ef4e069439649d69caddf004, type: 3}
+      propertyPath: openCellImage.Array.data[8]
+      value: 
+      objectReference: {fileID: -304088283, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+    - target: {fileID: 1921569588569880227, guid: 0fa9ada6ef4e069439649d69caddf004, type: 3}
+      propertyPath: openCellImage.Array.data[9]
+      value: 
+      objectReference: {fileID: 1442981716, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+    - target: {fileID: 1921569588569880227, guid: 0fa9ada6ef4e069439649d69caddf004, type: 3}
+      propertyPath: closeCellImage.Array.data[0]
+      value: 
+      objectReference: {fileID: 899811107, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+    - target: {fileID: 1921569588569880227, guid: 0fa9ada6ef4e069439649d69caddf004, type: 3}
+      propertyPath: closeCellImage.Array.data[1]
+      value: 
+      objectReference: {fileID: -721819948, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+    - target: {fileID: 1921569588569880227, guid: 0fa9ada6ef4e069439649d69caddf004, type: 3}
+      propertyPath: closeCellImage.Array.data[2]
+      value: 
+      objectReference: {fileID: 210425497, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+    - target: {fileID: 1921569588569880227, guid: 0fa9ada6ef4e069439649d69caddf004, type: 3}
+      propertyPath: closeCellImage.Array.data[3]
+      value: 
+      objectReference: {fileID: 1612948507, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+    - target: {fileID: 1921569588569880227, guid: 0fa9ada6ef4e069439649d69caddf004, type: 3}
+      propertyPath: closeCellImage.Array.data[4]
+      value: 
+      objectReference: {fileID: 780137454, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+    - target: {fileID: 1921569588569880227, guid: 0fa9ada6ef4e069439649d69caddf004, type: 3}
+      propertyPath: openCellImage.Array.data[10]
+      value: 
+      objectReference: {fileID: 1236493544, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+    - target: {fileID: 1921569588569880227, guid: 0fa9ada6ef4e069439649d69caddf004, type: 3}
+      propertyPath: openCellImage.Array.data[11]
+      value: 
+      objectReference: {fileID: -1280937540, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
     - target: {fileID: 7319497979053268609, guid: 0fa9ada6ef4e069439649d69caddf004, type: 3}
       propertyPath: m_LocalPosition.x
       value: -7.5

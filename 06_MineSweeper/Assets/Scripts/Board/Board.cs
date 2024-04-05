@@ -41,6 +41,11 @@ public class Board : MonoBehaviour
     /// </summary>
     PlayerInputActions inputActions;
 
+    public Sprite[] openCellImage;
+    public Sprite this[OpenCellType type] => openCellImage[(int)type];
+    public Sprite[] closeCellImage;
+    public Sprite this[CloseCellType type] => closeCellImage[(int)type];
+
     private void Awake()
     {
         inputActions = new PlayerInputActions();
@@ -90,6 +95,7 @@ public class Board : MonoBehaviour
                 cell.transform.localPosition = new Vector3(x * Distance, -y * Distance);
 
                 int id = x + y * width;
+                cell.ID = id;
                 cells[id] = cell;
                 cellObj.name = $"Cell_{id}_({x},{y})";
             }
@@ -103,6 +109,13 @@ public class Board : MonoBehaviour
     /// </summary>
     void ResetBoard()
     {
+        foreach (Cell cell in cells)
+        {
+            cell.ResetData();
+        }
+
+        // mineCount만큼 지뢰 배치하기
+
 
     }
 
@@ -186,4 +199,14 @@ public class Board : MonoBehaviour
     {
         Vector2 screen = context.ReadValue<Vector2>();
     }
+
+#if UNITY_EDITOR
+    public void Test_OpenAllCover()
+    {
+        foreach( Cell cell in cells )
+        {
+            cell.Test_OpenCover();
+        }
+    }
+#endif
 }
