@@ -113,7 +113,10 @@ public class Board : MonoBehaviour
     /// <returns>변환된 그리드 좌표</returns>
     Vector2Int ScreenToGrid(Vector2 screen)
     {
-        return Vector2Int.zero;
+        Vector2 world = Camera.main.ScreenToWorldPoint(screen);
+        Vector2 diff = world - (Vector2)transform.position;
+
+        return new Vector2Int(Mathf.FloorToInt(diff.x / Distance), Mathf.FloorToInt(-diff.y/Distance));
     }
 
     /// <summary>
@@ -124,16 +127,49 @@ public class Board : MonoBehaviour
     /// <returns>변환된 인덱스 값(잘못된 그리드 좌표면 null)</returns>
     int? GridToIndex(int x,  int y)
     {
-        return null;
+        int? result = null;
+        if(IsValidGrid(x, y))
+        {
+            result = x + y * height;
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// 지정된 그리드 좌표가 보드 내부인지 확인하는 함수
+    /// </summary>
+    /// <param name="x">x좌표</param>
+    /// <param name="y">y좌표</param>
+    /// <returns>보드 안이면 true, 밖이면 false</returns>
+    bool IsValidGrid(int x, int y)
+    {
+        return x >= 0 && y >= 0 && x < width && y < height;
+    }
+
+    /// <summary>
+    /// 특정 스크린 좌표에 있는 셀을 리턴하는 함수
+    /// </summary>
+    /// <param name="screen">스크린 좌표</param>
+    /// <returns>셀이 없으면 null, 그 외에는 스크린 좌표에 있는 셀</returns>
+    Cell GetCell(Vector2 screen)
+    {
+        Cell result = null;
+        Vector2Int grid = ScreenToGrid(screen);
+        int? index = GridToIndex(grid.x, grid.y);
+        if( index != null )
+        {
+            result = cells[index.Value];
+        }
+
+        return result;
     }
 
     // 입력 처리용 함수들 ---------------------------------------------------------------------------------
     private void OnLeftPress(InputAction.CallbackContext context)
     {
         Vector2 screen = Mouse.current.position.ReadValue();
-
-        // 셀의 이름 출력하기(레이케스트 사용하지 않기)
-        // cells[index].gameObject.name
+        Debug.Log( GetCell(screen).gameObject.name );
     }
 
     private void OnLeftRelease(InputAction.CallbackContext context)
