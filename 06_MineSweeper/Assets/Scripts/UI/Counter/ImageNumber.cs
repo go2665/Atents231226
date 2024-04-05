@@ -22,7 +22,7 @@ public class ImageNumber : MonoBehaviour
     /// </summary>
     Image[] numberDigits;
 
-    int number = 0;
+    int number = -1;
     public int Number
     {
         get => number;

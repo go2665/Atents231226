@@ -127,6 +127,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f5d7417ade1fa646ad821d6fac5d9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  numberSprites:
+  - {fileID: -2029009346, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: 2045433250, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: 1678414030, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: 747718092, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: 1909584326, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: 1032924395, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: 958690300, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: 1680139064, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: 2117363164, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: 1656721600, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: 637253013, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: 980368803, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
 --- !u!114 &8763947958459833725
 MonoBehaviour:
   m_ObjectHideFlags: 0

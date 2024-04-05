@@ -21,5 +21,4 @@ public class Test_Counter : TestBase
 }
 
 // 실습
-// 1. Timer클래스 완성하기
 // 2. CounterBase 클래스 만들기

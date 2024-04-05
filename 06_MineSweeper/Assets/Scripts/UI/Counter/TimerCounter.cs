@@ -2,20 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TimerCounter : MonoBehaviour
+public class TimerCounter : CounterBase
 {
-    ImageNumber imageNumber;
     Timer timer;
 
-    private void Awake()
+    protected override void Awake()
     {
-        imageNumber = GetComponent<ImageNumber>();
+        base.Awake();
         timer = GetComponent<Timer>();
         timer.onTimeChange += Refresh;
-    }
-
-    void Refresh(int count)
-    {
-        imageNumber.Number = count;
     }
 }
