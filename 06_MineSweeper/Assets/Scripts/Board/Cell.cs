@@ -242,13 +242,25 @@ public class Cell : MonoBehaviour
         {
             isOpen = true;
             cover.gameObject.SetActive(false);
+
+            if(aroundMineCount <= 0)
+            {
+                foreach( var cell in neighbors )
+                {
+                    cell.Open();
+                }
+            }
+            else if(hasMine)
+            {
+                Debug.Log("게임 오버");
+            }
         }
     }
 
     /// <summary>
     /// 원래 커버 이미지로 변경하는 함수
     /// </summary>
-    void RestoreCover()
+    public void RestoreCover()
     {
         switch (CoverState)
         {

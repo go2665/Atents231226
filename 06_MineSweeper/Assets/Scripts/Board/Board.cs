@@ -38,6 +38,25 @@ public class Board : MonoBehaviour
     const float Distance = 1.0f;
 
     /// <summary>
+    /// 현재 마우스가 누르고 있는 셀
+    /// </summary>
+    Cell currentCell = null;
+
+    Cell CurrentCell
+    {
+        get => currentCell;
+        set
+        {
+            if(currentCell != value)
+            {
+                currentCell?.RestoreCover();
+                currentCell = value;
+                currentCell?.LeftPress();
+            }
+        }
+    }
+
+    /// <summary>
     /// 인풋시스템을 위한 인풋액션
     /// </summary>
     PlayerInputActions inputActions;
@@ -46,7 +65,6 @@ public class Board : MonoBehaviour
     public Sprite this[OpenCellType type] => openCellImage[(int)type];
     public Sprite[] closeCellImage;
     public Sprite this[CloseCellType type] => closeCellImage[(int)type];
-
 
     /// <summary>
     /// 게임 매니저
@@ -225,13 +243,6 @@ public class Board : MonoBehaviour
 
         Cell cell = GetCell(screen);
         cell?.LeftPress();
-
-        /*
-         * 눌렀을 때 커버가 변경됨
-             - None : Cell_ClosePress가 보여야 한다.
-             - Flag : 변화가 없다.
-             - Question : Cell_Close_QuestionPress가 보여야 한다.
-         */
     }
 
     private void OnLeftRelease(InputAction.CallbackContext context)
@@ -253,7 +264,13 @@ public class Board : MonoBehaviour
 
     private void OnMouseMove(InputAction.CallbackContext context)
     {
-        Vector2 screen = context.ReadValue<Vector2>();
+        if(Mouse.current.leftButton.isPressed)  // 마우스 왼쪽버튼 눌려진 상태 확인
+        {            
+            Vector2 screen = context.ReadValue<Vector2>();
+            Cell cell = GetCell(screen);
+            CurrentCell = cell;
+        }
+
     }
 
     // 기타 유틸리티 함수들 ------------------------------------------------------------------------------
