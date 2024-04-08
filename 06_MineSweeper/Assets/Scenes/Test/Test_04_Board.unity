@@ -247,7 +247,7 @@ MonoBehaviour:
   seed: -1
   width: 8
   height: 8
-  mineCount: 3
+  mineCount: 30
 --- !u!4 &1111826751
 Transform:
   m_ObjectHideFlags: 0

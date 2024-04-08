@@ -58,6 +58,9 @@ public class Cell : MonoBehaviour
         }
     }
 
+    List<Cell> neighbors;
+    int aroundMineCount = 0;
+
     private void Awake()
     {
         Transform child = transform.GetChild(0);
@@ -67,11 +70,20 @@ public class Cell : MonoBehaviour
     }
 
     /// <summary>
+    /// 셀 생성 초기화 함수(처음에 단 한번만 실행되면 됨)
+    /// </summary>
+    public void Initialize()
+    {
+        neighbors = Board.GetNeightbors(ID);    // 이웃 셀 저장해 놓기
+    }
+
+    /// <summary>
     /// 이 셀의 데이터를 초기화 하는 함수
     /// </summary>
     public void ResetData()
     {
         hasMine = false;
+        aroundMineCount = 0;
         cover.sprite = Board[CloseCellType.Close];
         inside.sprite = Board[OpenCellType.Empty];
         cover.gameObject.SetActive(true);
@@ -84,6 +96,23 @@ public class Cell : MonoBehaviour
     {
         hasMine = true;
         inside.sprite = Board[OpenCellType.Mine];
+
+        foreach(Cell cell in neighbors)
+        {
+            cell.IncreaseAroundMineCount();
+        }
+    }
+
+    /// <summary>
+    /// 주변 지뢰 개수 증가용 함수
+    /// </summary>
+    void IncreaseAroundMineCount()
+    {
+        if (!hasMine)
+        {
+            aroundMineCount++;
+            inside.sprite = Board[(OpenCellType)aroundMineCount];
+        }
     }
 
 #if UNITY_EDITOR

@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -92,13 +93,21 @@ public class Board : MonoBehaviour
             {
                 GameObject cellObj = Instantiate(cellPrefab, transform);
                 Cell cell = cellObj.GetComponent<Cell>();
-                cell.transform.localPosition = new Vector3(x * Distance, -y * Distance);
 
                 int id = x + y * width;
                 cell.ID = id;
-                cells[id] = cell;
+                cell.transform.localPosition = new Vector3(x * Distance, -y * Distance);
+                cell.Board = this;
+
                 cellObj.name = $"Cell_{id}_({x},{y})";
+
+                cells[id] = cell;
             }
+        }
+
+        foreach (Cell cell in cells)
+        {
+            cell.Initialize();
         }
 
         ResetBoard();
@@ -115,9 +124,14 @@ public class Board : MonoBehaviour
         }
 
         // mineCount만큼 지뢰 배치하기
-
-
+        Shuffle(cells.Length, out int[] shuffleResult); // 숫자 섞기(0 ~ cells.length-1)
+        for(int i=0;i<mineCount;i++)
+        {
+            cells[shuffleResult[i]].SetMine();
+        }
     }
+
+    // 셀 확인용 함수들 ------------------------------------------------------------------------------------
 
     /// <summary>
     /// 스크린 좌표를 그리드 좌표로 변경해주는 함수
@@ -150,14 +164,24 @@ public class Board : MonoBehaviour
     }
 
     /// <summary>
+    /// 인덱스 값을 그리드 좌표로 변경해주는 함수
+    /// </summary>
+    /// <param name="index">변경할 인덱스</param>
+    /// <returns>변경 완료된 그리드 좌표</returns>
+    Vector2Int IndexToGrid(int index)
+    {
+        return new(index % width, index / width);
+    }
+
+    /// <summary>
     /// 지정된 그리드 좌표가 보드 내부인지 확인하는 함수
     /// </summary>
     /// <param name="x">x좌표</param>
     /// <param name="y">y좌표</param>
-    /// <returns>보드 안이면 true, 밖이면 false</returns>
+    /// <returns>보드 안이면 true, 밖이면 false, 셀이 초기화 되지 않아도 false</returns>
     bool IsValidGrid(int x, int y)
     {
-        return x >= 0 && y >= 0 && x < width && y < height;
+        return x >= 0 && y >= 0 && x < width && y < height && cells != null;
     }
 
     /// <summary>
@@ -182,7 +206,7 @@ public class Board : MonoBehaviour
     private void OnLeftPress(InputAction.CallbackContext context)
     {
         Vector2 screen = Mouse.current.position.ReadValue();
-        Debug.Log( GetCell(screen).gameObject.name );
+        Debug.Log( GetCell(screen)?.gameObject.name );
     }
 
     private void OnLeftRelease(InputAction.CallbackContext context)
@@ -200,6 +224,58 @@ public class Board : MonoBehaviour
         Vector2 screen = context.ReadValue<Vector2>();
     }
 
+    // 기타 유틸리티 함수들 ------------------------------------------------------------------------------
+    
+    /// <summary>
+    /// 셔플용 함수
+    /// </summary>
+    /// <param name="count">셔플할 숫자 범위(0 ~ count-1)</param>
+    /// <param name="result">셔플된 결과</param>
+    void Shuffle(int count, out int[] result)
+    {
+        result = new int[count];
+        for( int i = 0; i < count; i++ )
+        {
+            result[i] = i;
+        }
+
+        int loopCount = result.Length - 1;
+        for (int i = 0; i < loopCount; i++)
+        {
+            int randomIndex = UnityEngine.Random.Range( 0, result.Length - i );
+            int lastIndex = loopCount - i;
+
+            (result[lastIndex], result[randomIndex]) = (result[randomIndex], result[lastIndex]);
+        }
+    }
+
+    /// <summary>
+    /// 특정 셀의 주변 셀을 돌려주는 함수
+    /// </summary>
+    /// <param name="id">중심 셀의 아이디</param>
+    /// <returns>중심 셀의 주변 셀들의 리스트</returns>
+    public List<Cell> GetNeightbors(int id)
+    {
+        List<Cell> result = new List<Cell>();
+        Vector2Int grid = IndexToGrid( id );
+        for (int y = -1; y < 2; y++)
+        {
+            for(int x = -1; x < 2; x++)
+            {
+                if(!(x == 0 && y == 0))
+                {
+                    int? index = GridToIndex(x + grid.x, y + grid.y);
+                    if(index != null)
+                    {
+                        result.Add(cells[index.Value]);
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
 #if UNITY_EDITOR
     public void Test_OpenAllCover()
     {
@@ -207,6 +283,11 @@ public class Board : MonoBehaviour
         {
             cell.Test_OpenCover();
         }
+    }
+
+    public void Test_BoardReset()
+    {
+        ResetBoard();
     }
 #endif
 }
