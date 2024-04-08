@@ -221,21 +221,34 @@ public class Board : MonoBehaviour
     private void OnLeftPress(InputAction.CallbackContext context)
     {
         Vector2 screen = Mouse.current.position.ReadValue();
-        Debug.Log( GetCell(screen)?.gameObject.name );
+        //Debug.Log( GetCell(screen)?.gameObject.name );
+
+        Cell cell = GetCell(screen);
+        cell?.LeftPress();
+
+        /*
+         * 눌렀을 때 커버가 변경됨
+             - None : Cell_ClosePress가 보여야 한다.
+             - Flag : 변화가 없다.
+             - Question : Cell_Close_QuestionPress가 보여야 한다.
+         */
     }
 
     private void OnLeftRelease(InputAction.CallbackContext context)
     {
         Vector2 screen = Mouse.current.position.ReadValue();
+        Cell cell = GetCell(screen);
+        cell?.LeftRelease();
+
     }
 
     private void OnRightClick(InputAction.CallbackContext context)
     {
         Vector2 screen = Mouse.current.position.ReadValue();
         
-        // 이 위치에 있는 셀의 CellRightPress()가 실행된다.
+        // 이 위치에 있는 셀의 RightPress()가 실행된다.
         Cell cell = GetCell(screen);
-        cell?.CellRightPress();
+        cell?.RightPress();
     }
 
     private void OnMouseMove(InputAction.CallbackContext context)

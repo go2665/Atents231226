@@ -130,6 +130,12 @@ public class Cell : MonoBehaviour
     /// </summary>
     public Action onFlagReturn;
 
+    /// <summary>
+    /// 깃발 설치 여부를 알려주는 프로퍼티
+    /// </summary>
+    public bool IsFlaged => CoverState == CellCoverState.Flag;
+
+
     private void Awake()
     {
         Transform child = transform.GetChild(0);
@@ -189,7 +195,7 @@ public class Cell : MonoBehaviour
     /// <summary>
     /// 셀이 우클릭되면 실행되는 함수
     /// </summary>
-    public void CellRightPress()
+    public void RightPress()
     {
         switch (CoverState)
         {
@@ -207,9 +213,36 @@ public class Cell : MonoBehaviour
         }
     }
 
-    private void Open()
+    public void LeftPress()
     {
+        switch (CoverState)
+        {
+            case CellCoverState.None:
+                cover.sprite = Board[CloseCellType.ClosePress];
+                break;
+            case CellCoverState.Question:
+                cover.sprite = Board[CloseCellType.QuestionPress];
+                break;
+            //case CellCoverState.Flag:
+            default:
+                // 하는 일 없음
+                break;
+        }
+    }
 
+    public void LeftRelease()
+    {
+        //RestoreCover();
+        Open();
+    }
+
+    void Open()
+    {
+        if(!isOpen && !IsFlaged)
+        {
+            isOpen = true;
+            cover.gameObject.SetActive(false);
+        }
     }
 
     /// <summary>
@@ -217,7 +250,19 @@ public class Cell : MonoBehaviour
     /// </summary>
     void RestoreCover()
     {
-
+        switch (CoverState)
+        {
+            case CellCoverState.None:
+                cover.sprite = Board[CloseCellType.Close];
+                break;
+            case CellCoverState.Question:
+                cover.sprite = Board[CloseCellType.Question];
+                break;
+            //case CellCoverState.Flag:
+            default:
+                // 하는 일 없음
+                break;
+        }
     }
 
 #if UNITY_EDITOR
