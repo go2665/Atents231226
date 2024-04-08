@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 
 public class Cell : MonoBehaviour
-{
-    // 지뢰 배치 여부에 따라 inside 이미지 변경
+{    
     // 열기/닫기
     // 보드에 입력에 따른 cover 이미지 변경
 
@@ -40,6 +40,9 @@ public class Cell : MonoBehaviour
     /// </summary>
     bool hasMine = false;
 
+    /// <summary>
+    /// 지뢰 설치 여부를 확인하기 위한 프로퍼티
+    /// </summary>
     public bool HasMine => hasMine;
 
     /// <summary>
@@ -58,8 +61,20 @@ public class Cell : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 자기 주변 셀의 목록
+    /// </summary>
     List<Cell> neighbors;
+
+    /// <summary>
+    /// 자기 주변의 지뢰 개수
+    /// </summary>
     int aroundMineCount = 0;
+
+    /// <summary>
+    /// 셀이 열렸는지 여부
+    /// </summary>
+    bool isOpen = false;
 
     private void Awake()
     {
@@ -84,6 +99,8 @@ public class Cell : MonoBehaviour
     {
         hasMine = false;
         aroundMineCount = 0;
+        isOpen = false;
+
         cover.sprite = Board[CloseCellType.Close];
         inside.sprite = Board[OpenCellType.Empty];
         cover.gameObject.SetActive(true);
@@ -94,12 +111,12 @@ public class Cell : MonoBehaviour
     /// </summary>
     public void SetMine()
     {
-        hasMine = true;
-        inside.sprite = Board[OpenCellType.Mine];
+        hasMine = true;                             // 지뢰 설치했다고 표시
+        inside.sprite = Board[OpenCellType.Mine];   // 이미지 변경
 
         foreach(Cell cell in neighbors)
         {
-            cell.IncreaseAroundMineCount();
+            cell.IncreaseAroundMineCount(); // 주변 셀의 주변 지뢰 개수 증가
         }
     }
 
@@ -108,11 +125,19 @@ public class Cell : MonoBehaviour
     /// </summary>
     void IncreaseAroundMineCount()
     {
-        if (!hasMine)
+        if (!hasMine)   // 지뢰가 아닐 때만 개수 증가
         {
-            aroundMineCount++;
-            inside.sprite = Board[(OpenCellType)aroundMineCount];
+            aroundMineCount++;                                      // 주변 지뢰 개수 증가
+            inside.sprite = Board[(OpenCellType)aroundMineCount];   // 주변 지뢰 개수에 맞게 이미지 변경
         }
+    }
+
+    /// <summary>
+    /// 셀이 우클릭되면 실행되는 함수
+    /// </summary>
+    public void CellRightPress()
+    {
+
     }
 
 #if UNITY_EDITOR

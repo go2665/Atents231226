@@ -44,3 +44,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a2d7e249f4f40e4db9d3542d2dd9e9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cellPrefab: {fileID: 2875765395962078459, guid: 574ed6265aefc4249bb66380ec8757e3, type: 3}
+  openCellImage:
+  - {fileID: -721819948, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: 121105106, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: -1785480366, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: -57388063, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: 204713545, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: 1485786370, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: 2010609482, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: 1316802720, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: -304088283, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: 1442981716, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: 1236493544, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: -1280937540, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  closeCellImage:
+  - {fileID: 899811107, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: -721819948, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: 210425497, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: 1612948507, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
+  - {fileID: 780137454, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}

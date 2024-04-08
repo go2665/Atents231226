@@ -105,11 +105,13 @@ public class Board : MonoBehaviour
             }
         }
 
+        // 셀 전체 초기화
         foreach (Cell cell in cells)
         {
             cell.Initialize();
         }
 
+        // 보드 데이터 리셋
         ResetBoard();
     }
 
@@ -118,7 +120,8 @@ public class Board : MonoBehaviour
     /// </summary>
     void ResetBoard()
     {
-        foreach (Cell cell in cells)
+        // 전체 셀의 데이터 리셋
+        foreach (Cell cell in cells)    
         {
             cell.ResetData();
         }
@@ -217,6 +220,8 @@ public class Board : MonoBehaviour
     private void OnRightClick(InputAction.CallbackContext context)
     {
         Vector2 screen = Mouse.current.position.ReadValue();
+
+        // 이 위치에 있는 셀의 CellRightPress()가 실행된다.
     }
 
     private void OnMouseMove(InputAction.CallbackContext context)
@@ -233,19 +238,22 @@ public class Board : MonoBehaviour
     /// <param name="result">셔플된 결과</param>
     void Shuffle(int count, out int[] result)
     {
+        // count만큼 순서대로 숫자가 들어간 배열 만들기
         result = new int[count];
         for( int i = 0; i < count; i++ )
         {
             result[i] = i;
         }
 
+        // 위에서 만든 배열을 섞기
         int loopCount = result.Length - 1;
-        for (int i = 0; i < loopCount; i++)
+        for (int i = 0; i < loopCount; i++) // 8*8일 때 63번 반복
         {
-            int randomIndex = UnityEngine.Random.Range( 0, result.Length - i );
-            int lastIndex = loopCount - i;
+            int randomIndex = UnityEngine.Random.Range( 0, result.Length - i ); // 처음에는 0~63 중 랜덤으로 선택
+            int lastIndex = loopCount - i;                                      // 처음에는 63
 
-            (result[lastIndex], result[randomIndex]) = (result[randomIndex], result[lastIndex]);
+            // 랜덤으로 고른 것과 마지막을 스왑
+            (result[lastIndex], result[randomIndex]) = (result[randomIndex], result[lastIndex]);    
         }
     }
 
@@ -257,15 +265,15 @@ public class Board : MonoBehaviour
     public List<Cell> GetNeightbors(int id)
     {
         List<Cell> result = new List<Cell>();
-        Vector2Int grid = IndexToGrid( id );
+        Vector2Int grid = IndexToGrid( id );    // id의 그리드 위치를 x와 y 모두 +-1씩해서 구하기
         for (int y = -1; y < 2; y++)
         {
             for(int x = -1; x < 2; x++)
             {
-                if(!(x == 0 && y == 0))
+                if(!(x == 0 && y == 0))         // 자기 자신은 제외
                 {
-                    int? index = GridToIndex(x + grid.x, y + grid.y);
-                    if(index != null)
+                    int? index = GridToIndex(x + grid.x, y + grid.y);   
+                    if(index != null)           // valid한 id면 추가
                     {
                         result.Add(cells[index.Value]);
                     }
