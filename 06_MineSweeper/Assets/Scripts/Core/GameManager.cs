@@ -59,6 +59,34 @@ public class GameManager : Singleton<GameManager>
     public Action onGameGameClear;
     public Action onGameGameOver;
 
+    // 보드 생성 관련 --------------------------------------------------------------------------------------
+    
+    /// <summary>
+    /// 보드 생성시 지뢰 개수
+    /// </summary>
+    public int mineCount = 10;
+
+    /// <summary>
+    /// 보드 생성시 가로 길이
+    /// </summary>
+    public int boardWidth = 8;
+
+    /// <summary>
+    /// 보드 생성시 세로 길이
+    /// </summary>
+    public int boardHeight = 8;
+
+    /// <summary>
+    /// 게임 보드
+    /// </summary>
+    Board board;
+
+    /// <summary>
+    /// 게임 보드 확인용 프로퍼티
+    /// </summary>
+    public Board Board => board;
+
+
     // 깃발 관련 -------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -87,7 +115,31 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public Action<int> onFlagCountChange;
 
+    /// <summary>
+    /// 깃발 개수를 1 증가시키는 함수
+    /// </summary>
+    public void IncreaseFlagCount()
+    {
+        FlagCount++;
+    }
+
+    /// <summary>
+    /// 깃발 개수를 1 감소시키는 함수
+    /// </summary>
+    public void DecreaseFlagCount()
+    {
+        FlagCount--;
+    }
+
     // -----------------------------------------------------------------------------------------------
+
+
+    // 게임 메니저 공용 함수 ----------------------------------------------------------------------------
+    protected override void OnInitialize()
+    {
+        board = FindAnyObjectByType<Board>();
+        board.Initialize(boardWidth, boardHeight, mineCount);
+    }
 
 
 #if UNITY_EDITOR

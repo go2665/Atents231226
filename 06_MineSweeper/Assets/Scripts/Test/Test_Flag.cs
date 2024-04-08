@@ -8,13 +8,11 @@ public class Test_Flag : TestBase
 
     private void Start()
     {
-        board = FindAnyObjectByType<Board>();
-        board.Initialize(8, 8, 10);
+        //board = FindAnyObjectByType<Board>();
+        //board.Initialize(8, 8, 10);
     }
 }
 
-// 닫혀있는 셀을 우클릭할 때마다 커버의 모양이 변경되어야 한다.
-// 닫혀 있는 셀의 상태 : None, Flag, Question
-//      None -> Flag
-//      Flag -> Question
-//      Question -> None
+// 보드가 초기화 될 때 mineCount가 FlagCounter에 설정된다.
+// 보드에 깃발을 설치하면 FlagCounter가 감소한다.
+// 보드에서 깃발 설치를 해제하면 FlagCounter가 증가한다.

@@ -47,6 +47,12 @@ public class Board : MonoBehaviour
     public Sprite[] closeCellImage;
     public Sprite this[CloseCellType type] => closeCellImage[(int)type];
 
+
+    /// <summary>
+    /// 게임 매니저
+    /// </summary>
+    GameManager gameManager;
+
     private void Awake()
     {
         inputActions = new PlayerInputActions();
@@ -78,6 +84,9 @@ public class Board : MonoBehaviour
     /// <param name="newMineCount">배치될 지뢰의 개수</param>
     public void Initialize(int newWidth, int newHieght, int newMineCount)
     {
+        // 게임 매니저 저장해 놓기
+        gameManager = GameManager.Instance;
+
         // 값 설정
         width = newWidth;
         height = newHieght;
@@ -220,8 +229,10 @@ public class Board : MonoBehaviour
     private void OnRightClick(InputAction.CallbackContext context)
     {
         Vector2 screen = Mouse.current.position.ReadValue();
-
+        
         // 이 위치에 있는 셀의 CellRightPress()가 실행된다.
+        Cell cell = GetCell(screen);
+        cell?.CellRightPress();
     }
 
     private void OnMouseMove(InputAction.CallbackContext context)
