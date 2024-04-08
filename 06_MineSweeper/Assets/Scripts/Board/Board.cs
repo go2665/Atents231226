@@ -108,6 +108,9 @@ public class Board : MonoBehaviour
                 cell.transform.localPosition = new Vector3(x * Distance, -y * Distance);
                 cell.Board = this;
 
+                cell.onFlagUse += gameManager.DecreaseFlagCount;
+                cell.onFlagReturn += gameManager.IncreaseFlagCount;
+
                 cellObj.name = $"Cell_{id}_({x},{y})";
 
                 cells[id] = cell;

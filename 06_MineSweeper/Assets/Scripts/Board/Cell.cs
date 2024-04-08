@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.Antlr3.Runtime;
@@ -106,16 +107,28 @@ public class Cell : MonoBehaviour
                     cover.sprite = Board[CloseCellType.Close];
                     break;
                 case CellCoverState.Flag:
-                    cover.sprite = Board[CloseCellType.Flag];                    
+                    cover.sprite = Board[CloseCellType.Flag];
+                    onFlagUse?.Invoke();
                     break;
                 case CellCoverState.Question:
                     cover.sprite = Board[CloseCellType.Question];
+                    onFlagReturn?.Invoke();
                     break;
                 default:
                     break;
             }
         }
     }
+
+    /// <summary>
+    /// 깃발이 설치 되었음을 알리는 델리게이트
+    /// </summary>
+    public Action onFlagUse;
+
+    /// <summary>
+    /// 깃발 설치가 취소 되었음을 알리는 델리게이트
+    /// </summary>
+    public Action onFlagReturn;
 
     private void Awake()
     {
@@ -192,6 +205,19 @@ public class Cell : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    private void Open()
+    {
+
+    }
+
+    /// <summary>
+    /// 원래 커버 이미지로 변경하는 함수
+    /// </summary>
+    void RestoreCover()
+    {
+
     }
 
 #if UNITY_EDITOR
