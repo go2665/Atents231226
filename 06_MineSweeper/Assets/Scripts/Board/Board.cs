@@ -131,6 +131,7 @@ public class Board : MonoBehaviour
 
                 cell.onFlagUse += gameManager.DecreaseFlagCount;        // 셀에 깃발 설치됬을 때 실행될 함수 연결
                 cell.onFlagReturn += gameManager.IncreaseFlagCount;     // 셀의 깃발이 제거되었을 떄 실행될 함수 연결
+                cell.onExplosion += gameManager.GameOver;               // 셀에서 지뢰가 터졌을 때 실행될 함수 연결
 
                 cellObj.name = $"Cell_{id}_({x},{y})";      // 게임 오브젝트의 이름을 알아보기 쉽게 변경
 
@@ -143,6 +144,9 @@ public class Board : MonoBehaviour
         {
             cell.Initialize();
         }
+
+        gameManager.onGameReady += ResetBoard;  // 레디로 가면 보드 리셋
+        gameManager.onGameOver += OnGameOver;
 
         // 보드 데이터 리셋
         ResetBoard();
@@ -164,6 +168,29 @@ public class Board : MonoBehaviour
         for(int i=0;i<mineCount;i++)
         {
             cells[shuffleResult[i]].SetMine();
+        }
+    }
+
+    // 게임 메니저 상태 변화시 사용할 함수들 ----------------------------------------------------------------
+
+    /// <summary>
+    /// 게임오버가 되면 보드가 처리할 일을 기록해 놓은 함수
+    /// </summary>
+    private void OnGameOver()
+    {
+        // Debug.Log("보드 : 게임오버 신호를 받음");
+        foreach (Cell cell in cells)
+        {
+            if(cell.IsFlaged && !cell.HasMine)
+            {
+                // 잘못 설치한 깃발은 Cell_Open_NotMine 스프라이트로 변경
+                cell.FlagMistake();
+            }
+            else if(!cell.IsFlaged && cell.HasMine)
+            {
+                // 못찾은 지뢰는 커버를 제거해서 위치를 보여준다.
+                cell.MineNotFound();
+            }
         }
     }
 
@@ -245,7 +272,11 @@ public class Board : MonoBehaviour
         //Debug.Log( GetCell(screen)?.gameObject.name );
 
         Cell cell = GetCell(screen);
-        cell?.LeftPress();
+        if(cell != null )
+        {
+            gameManager.GameStart();
+            cell.LeftPress();
+        }
     }
 
     private void OnLeftRelease(InputAction.CallbackContext context)
@@ -253,7 +284,6 @@ public class Board : MonoBehaviour
         Vector2 screen = Mouse.current.position.ReadValue();
         Cell cell = GetCell(screen);
         cell?.LeftRelease();
-
     }
 
     private void OnRightClick(InputAction.CallbackContext context)
@@ -262,7 +292,11 @@ public class Board : MonoBehaviour
         
         // 이 위치에 있는 셀의 RightPress()가 실행된다.
         Cell cell = GetCell(screen);
-        cell?.RightPress();
+        if( cell != null )
+        {
+            gameManager.GameStart();
+            cell.RightPress();
+        }
     }
 
     private void OnMouseMove(InputAction.CallbackContext context)

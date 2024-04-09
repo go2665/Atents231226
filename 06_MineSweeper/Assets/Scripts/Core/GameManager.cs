@@ -37,16 +37,17 @@ public class GameManager : Singleton<GameManager>
                 switch(state)
                 {
                     case GameState.Ready:
+                        FlagCount = mineCount;
                         onGameReady?.Invoke();      // 델리게이트 실행
                         break;
                     case GameState.Play:
                         onGamePlay?.Invoke();
                         break;
                     case GameState.GameClear:
-                        onGameGameClear?.Invoke();
+                        onGameClear?.Invoke();
                         break;
                     case GameState.GameOver:
-                        onGameGameOver?.Invoke();
+                        onGameOver?.Invoke();
                         break;
                 }
             }
@@ -56,8 +57,8 @@ public class GameManager : Singleton<GameManager>
     // 상태 변경 알림용 프로퍼티
     public Action onGameReady;
     public Action onGamePlay;
-    public Action onGameGameClear;
-    public Action onGameGameOver;
+    public Action onGameClear;
+    public Action onGameOver;
 
     // 보드 생성 관련 --------------------------------------------------------------------------------------
     
@@ -131,7 +132,30 @@ public class GameManager : Singleton<GameManager>
         FlagCount--;
     }
 
-    // -----------------------------------------------------------------------------------------------
+    // 게임 상태 관련 -----------------------------------------------------------------------------------
+    public void GameStart()
+    {
+        if( State == GameState.Ready )  // 레디 상태일 때만 시작 가능
+        {
+            State = GameState.Play;
+        }
+    }
+
+    public void GameReset()
+    {
+        State = GameState.Ready;
+    }
+
+    public void GameOver()
+    {
+        State = GameState.GameOver;
+    }
+
+    public void GameClear()
+    {
+
+    }
+
 
 
     // 게임 메니저 공용 함수 ----------------------------------------------------------------------------

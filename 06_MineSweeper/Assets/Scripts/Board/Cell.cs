@@ -121,6 +121,16 @@ public class Cell : MonoBehaviour
     }
 
     /// <summary>
+    /// 깃발 설치 여부를 알려주는 프로퍼티
+    /// </summary>
+    public bool IsFlaged => CoverState == CellCoverState.Flag;
+
+    /// <summary>
+    /// 이 셀에 의해 눌려진 셀의 목록(자기자신 or 자기주변에 닫혀 있던 셀들)
+    /// </summary>
+    List<Cell> pressedCells;
+
+    /// <summary>
     /// 깃발이 설치 되었음을 알리는 델리게이트
     /// </summary>
     public Action onFlagUse;
@@ -131,14 +141,9 @@ public class Cell : MonoBehaviour
     public Action onFlagReturn;
 
     /// <summary>
-    /// 깃발 설치 여부를 알려주는 프로퍼티
+    /// 지뢰가 터졌음을 알리는 델리게이트
     /// </summary>
-    public bool IsFlaged => CoverState == CellCoverState.Flag;
-
-    /// <summary>
-    /// 이 셀에 의해 눌려진 셀의 목록(자기자신 or 자기주변에 닫혀 있던 셀들)
-    /// </summary>
-    List<Cell> pressedCells;
+    public Action onExplosion;
 
     private void Awake()
     {
@@ -309,7 +314,9 @@ public class Cell : MonoBehaviour
 
             if (hasMine)                        // 지뢰가 있다.
             {
-                Debug.Log("게임 오버");
+                //Debug.Log("게임 오버");
+                inside.sprite = Board[OpenCellType.Mine_Explotion]; // 터지는 이미지로 변경
+                onExplosion?.Invoke();          // 지뢰가 터짐을 알림
             }
             else if (aroundMineCount <= 0)      // 지뢰가 없고 주변 지뢰개수가 0이하다.(비어있는 셀)
             {
@@ -351,6 +358,23 @@ public class Cell : MonoBehaviour
             cell.RestoreCover();
         }
         pressedCells.Clear();
+    }
+
+    /// <summary>
+    /// 지뢰가 아닌데 지뢰로 잘못 설정했을 때 표시용
+    /// </summary>
+    public void FlagMistake()
+    {
+        cover.gameObject.SetActive(false);
+        inside.sprite = Board[OpenCellType.Mine_Mistake];
+    }
+
+    /// <summary>
+    /// 지뢰인데 못찾았을 때 표시용
+    /// </summary>
+    public void MineNotFound()
+    {
+        cover.gameObject.SetActive(false);
     }
 
 
