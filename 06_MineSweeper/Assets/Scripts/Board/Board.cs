@@ -59,6 +59,9 @@ public class Board : MonoBehaviour
         }
     }
 
+    public Action onBoardLeftPress;
+    public Action onBoardLeftRelease;
+
     /// <summary>
     /// 인풋시스템을 위한 인풋액션
     /// </summary>
@@ -73,6 +76,11 @@ public class Board : MonoBehaviour
     /// 게임 매니저
     /// </summary>
     GameManager gameManager;
+
+    /// <summary>
+    /// 현재 플레이 중인지 확인하는 프로퍼티
+    /// </summary>
+    public bool IsPlaying => gameManager.IsPlaying;
 
     private void Awake()
     {
@@ -276,6 +284,11 @@ public class Board : MonoBehaviour
         {
             gameManager.GameStart();
             cell.LeftPress();
+
+            if (gameManager.IsPlaying)
+            {
+                onBoardLeftPress?.Invoke();
+            }
         }
     }
 
@@ -284,6 +297,10 @@ public class Board : MonoBehaviour
         Vector2 screen = Mouse.current.position.ReadValue();
         Cell cell = GetCell(screen);
         cell?.LeftRelease();
+        if (gameManager.IsPlaying)
+        {
+            onBoardLeftRelease?.Invoke();
+        }
     }
 
     private void OnRightClick(InputAction.CallbackContext context)

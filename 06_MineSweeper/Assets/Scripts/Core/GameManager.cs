@@ -54,6 +54,8 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    public bool IsPlaying => State == GameState.Play;
+
     // 상태 변경 알림용 프로퍼티
     public Action onGameReady;
     public Action onGamePlay;
