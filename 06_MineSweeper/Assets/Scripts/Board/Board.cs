@@ -42,16 +42,19 @@ public class Board : MonoBehaviour
     /// </summary>
     Cell currentCell = null;
 
+    /// <summary>
+    /// 현재 마우스가 누르고 있는 셀을 확인하고 설정하는 프로퍼티
+    /// </summary>
     Cell CurrentCell
     {
         get => currentCell;
         set
         {
-            if(currentCell != value)
+            if(currentCell != value)            // currentCell이 변경되면
             {
-                currentCell?.RestoreCover();
+                currentCell?.RestoreCovers();   // 이전 currentCell이 눌려놓았던 것을 모두 원래대로 복구
                 currentCell = value;
-                currentCell?.LeftPress();
+                currentCell?.LeftPress();       // 새 currentCell에 누르기 처리
             }
         }
     }
@@ -118,20 +121,20 @@ public class Board : MonoBehaviour
         {
             for (int x = 0; x < width; x++)
             {
-                GameObject cellObj = Instantiate(cellPrefab, transform);
+                GameObject cellObj = Instantiate(cellPrefab, transform);    // 셀 게임 오브젝트 생성
                 Cell cell = cellObj.GetComponent<Cell>();
 
                 int id = x + y * width;
-                cell.ID = id;
-                cell.transform.localPosition = new Vector3(x * Distance, -y * Distance);
-                cell.Board = this;
+                cell.ID = id;               // ID 설정
+                cell.transform.localPosition = new Vector3(x * Distance, -y * Distance);    // 위치 설정
+                cell.Board = this;          // Board 기록해 두기
 
-                cell.onFlagUse += gameManager.DecreaseFlagCount;
-                cell.onFlagReturn += gameManager.IncreaseFlagCount;
+                cell.onFlagUse += gameManager.DecreaseFlagCount;        // 셀에 깃발 설치됬을 때 실행될 함수 연결
+                cell.onFlagReturn += gameManager.IncreaseFlagCount;     // 셀의 깃발이 제거되었을 떄 실행될 함수 연결
 
-                cellObj.name = $"Cell_{id}_({x},{y})";
+                cellObj.name = $"Cell_{id}_({x},{y})";      // 게임 오브젝트의 이름을 알아보기 쉽게 변경
 
-                cells[id] = cell;
+                cells[id] = cell;   // 셀을 배열에 저장
             }
         }
 

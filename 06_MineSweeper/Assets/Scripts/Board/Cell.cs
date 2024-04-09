@@ -6,14 +6,14 @@ using UnityEngine;
 
 public class Cell : MonoBehaviour
 {    
-    // 열기/닫기
-    // 보드에 입력에 따른 cover 이미지 변경
-
     /// <summary>
     /// 이 셀의 ID(위치계산에도 사용될 수 있음)
     /// </summary>
     int? id = null;
 
+    /// <summary>
+    /// ID 설정 및 확인용 프로퍼티
+    /// </summary>
     public int ID
     {
         get => id.GetValueOrDefault();  // 0일 경우 맞을 수도 있고 아닐수도 있다.
@@ -108,11 +108,11 @@ public class Cell : MonoBehaviour
                     break;
                 case CellCoverState.Flag:
                     cover.sprite = Board[CloseCellType.Flag];
-                    onFlagUse?.Invoke();
+                    onFlagUse?.Invoke();        // 깃발이 설치되었음을 알림
                     break;
                 case CellCoverState.Question:
                     cover.sprite = Board[CloseCellType.Question];
-                    onFlagReturn?.Invoke();
+                    onFlagReturn?.Invoke();     // 깃발이 해제되었음을 알림
                     break;
                 default:
                     break;
@@ -135,6 +135,10 @@ public class Cell : MonoBehaviour
     /// </summary>
     public bool IsFlaged => CoverState == CellCoverState.Flag;
 
+    /// <summary>
+    /// 이 셀에 의해 눌려진 셀의 목록(자기자신 or 자기주변에 닫혀 있던 셀들)
+    /// </summary>
+    List<Cell> pressedCells;
 
     private void Awake()
     {
@@ -142,6 +146,8 @@ public class Cell : MonoBehaviour
         cover = child.GetComponent<SpriteRenderer>();
         child = transform.GetChild(1);
         inside = child.GetComponent<SpriteRenderer>();
+
+        pressedCells = new List<Cell>(8);
     }
 
     /// <summary>
@@ -161,6 +167,9 @@ public class Cell : MonoBehaviour
         aroundMineCount = 0;
         isOpen = false;
 
+        pressedCells.Clear();
+
+        CoverState = CellCoverState.None;
         cover.sprite = Board[CloseCellType.Close];
         inside.sprite = Board[OpenCellType.Empty];
         cover.gameObject.SetActive(true);
@@ -213,46 +222,101 @@ public class Cell : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 셀이 마우스 왼쪽버튼으로 눌려졌을 때 실행되는 함수
+    /// (셀에 누르는 표시를 한다.)
+    /// </summary>
     public void LeftPress()
     {
-        switch (CoverState)
+        pressedCells.Clear();   // 눌려진 셀들 초기화
+        
+        if (isOpen)
         {
-            case CellCoverState.None:
-                cover.sprite = Board[CloseCellType.ClosePress];
-                break;
-            case CellCoverState.Question:
-                cover.sprite = Board[CloseCellType.QuestionPress];
-                break;
-            //case CellCoverState.Flag:
-            default:
-                // 하는 일 없음
-                break;
+            // 열려있는 셀을 눌렀을 때
+            foreach(var cell in neighbors)          // 모든 이웃 셀에 대해
+            {
+                if(!cell.isOpen && !cell.IsFlaged)  // 닫혀있고 깃발표시가 안되어 있는 셀만
+                {
+                    pressedCells.Add(cell);         // 눌려진 셀로 기록
+                    cell.LeftPress();               // 누르는 처리 실행
+                }
+            }
+        }
+        else
+        {
+            // 닫혀있는 셀을 눌렀을 때
+            switch (CoverState)         // 커버 상태에 따라 눌려진 이미지로 변경
+            {
+                case CellCoverState.None:
+                    cover.sprite = Board[CloseCellType.ClosePress];
+                    break;
+                case CellCoverState.Question:
+                    cover.sprite = Board[CloseCellType.QuestionPress];
+                    break;
+                //case CellCoverState.Flag:
+                default:
+                    // 하는 일 없음
+                    break;
+            }
+            pressedCells.Add(this);     // 눌려진 셀로 기록
+        }        
+    }
+
+    /// <summary>
+    /// 셀이 마우스 왼쪽버튼으로 누르고 있다가 땠을 때 실행되는 함수
+    /// (눌려진 상태 복구용)
+    /// </summary>
+    public void LeftRelease()
+    {
+        if(isOpen)
+        {
+            // 열려 있는 셀의 경우(주변셀 누르기)
+            int flagCount = 0;
+            foreach(var cell in neighbors)          // 주변 깃발 개수 카운팅
+            {
+                if(cell.IsFlaged)
+                    flagCount++;
+            }
+
+            if(aroundMineCount == flagCount)        // 주변 지뢰 개수와 깃발 개수가 같으면
+            {
+                foreach(var cell in pressedCells)
+                {
+                    cell.Open();    // 눌려진 셀을 전부 연다.
+                }
+            }
+            else
+            {
+                RestoreCovers();    // 주변 지뢰 개수와 깃발 개수가 다르면 눌려진 셀을 전부 복구
+            }
+        }
+        else
+        {
+            // 닫혀 있는 셀의 경우
+            Open();     // 그냥 열기
         }
     }
 
-    public void LeftRelease()
-    {
-        //RestoreCover();
-        Open();
-    }
-
+    /// <summary>
+    /// 셀을 여는 함수
+    /// </summary>
     void Open()
     {
-        if(!isOpen && !IsFlaged)
+        if(!isOpen && !IsFlaged)    // 닫혀있고 깃발이 설치되어 있지 않은 셀만 처리
         {
-            isOpen = true;
-            cover.gameObject.SetActive(false);
+            isOpen = true;                      // 열렸다고 표시
+            cover.gameObject.SetActive(false);  // 커버 제거
 
-            if(aroundMineCount <= 0)
+            if (hasMine)                        // 지뢰가 있다.
             {
-                foreach( var cell in neighbors )
+                Debug.Log("게임 오버");
+            }
+            else if (aroundMineCount <= 0)      // 지뢰가 없고 주변 지뢰개수가 0이하다.(비어있는 셀)
+            {
+                foreach( var cell in neighbors )    // 주변 이웃 모두 열기
                 {
                     cell.Open();
                 }
-            }
-            else if(hasMine)
-            {
-                Debug.Log("게임 오버");
             }
         }
     }
@@ -260,7 +324,7 @@ public class Cell : MonoBehaviour
     /// <summary>
     /// 원래 커버 이미지로 변경하는 함수
     /// </summary>
-    public void RestoreCover()
+    void RestoreCover()
     {
         switch (CoverState)
         {
@@ -276,6 +340,19 @@ public class Cell : MonoBehaviour
                 break;
         }
     }
+
+    /// <summary>
+    /// 눌려진 셀을 모두 원래 커버 이미지로 변경하는 함수
+    /// </summary>
+    public void RestoreCovers()
+    {
+        foreach (var cell in pressedCells)
+        {
+            cell.RestoreCover();
+        }
+        pressedCells.Clear();
+    }
+
 
 #if UNITY_EDITOR
     public void Test_OpenCover()
