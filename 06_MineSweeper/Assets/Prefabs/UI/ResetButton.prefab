@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 8201908948543590511}
   - component: {fileID: 7865555764806427778}
   - component: {fileID: 229524853555027201}
-  - component: {fileID: 5677555251752071940}
   m_Layer: 5
   m_Name: ResetButton
   m_TagString: Untagged
@@ -139,16 +138,3 @@ MonoBehaviour:
   - {fileID: 1213883643, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
   - {fileID: 1233964531, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
   - {fileID: 1806013705, guid: 2acc8c80da3d09f4e9524cf59edd6031, type: 3}
---- !u!114 &5677555251752071940
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8198023258574249684}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80e1c9fa5c73e43419f34fb3e98da026, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  seed: -1
