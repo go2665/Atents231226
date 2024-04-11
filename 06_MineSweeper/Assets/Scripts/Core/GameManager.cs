@@ -134,6 +134,31 @@ public class GameManager : Singleton<GameManager>
         FlagCount--;
     }
 
+    // 플레이 행동 관련 ---------------------------------------------------------------------------------
+    int actionCount = 0;
+    public int ActionCount
+    {
+        get => actionCount;
+        private set
+        {
+            if (actionCount != value) 
+            {
+                actionCount = value;
+                onActionCountChange?.Invoke(actionCount);
+            }
+        }
+    }
+    public Action<int> onActionCountChange;
+
+    /// <summary>
+    /// 플래이어의 행동이 끝났을 때 실행될 함수
+    /// </summary>
+    public void PlayerActionEnd()
+    {
+        ActionCount++;
+        Debug.Log($"Player Action Count : {ActionCount}");
+    }
+
     // 게임 상태 관련 -----------------------------------------------------------------------------------
     public void GameStart()
     {

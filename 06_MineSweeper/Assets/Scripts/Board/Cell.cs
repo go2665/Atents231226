@@ -155,6 +155,11 @@ public class Cell : MonoBehaviour
     /// </summary>
     public Action onCellOpen;
 
+    /// <summary>
+    /// 셀에 카운팅 될 행동을 했음을 알리는 델리게이트
+    /// </summary>
+    public Action onCellAction;
+
     private void Awake()
     {
         Transform child = transform.GetChild(0);
@@ -227,9 +232,11 @@ public class Cell : MonoBehaviour
             {
                 case CellCoverState.None:
                     CoverState = CellCoverState.Flag;
+                    onCellAction?.Invoke();     // 행동을 했음을 알림
                     break;
                 case CellCoverState.Flag:
                     CoverState = CellCoverState.Question;
+                    onCellAction?.Invoke();     // 행동을 했음을 알림
                     break;
                 case CellCoverState.Question:
                     CoverState = CellCoverState.None;
@@ -305,8 +312,9 @@ public class Cell : MonoBehaviour
                 {
                     foreach (var cell in pressedCells)
                     {
-                        cell.Open();    // 눌려진 셀을 전부 연다.
+                        cell.Open();            // 눌려진 셀을 전부 연다.
                     }
+                    onCellAction?.Invoke();     // 행동을 했음을 알림
                 }
                 else
                 {
@@ -316,7 +324,8 @@ public class Cell : MonoBehaviour
             else
             {
                 // 닫혀 있는 셀의 경우
-                Open();     // 그냥 열기
+                Open();                     // 그냥 열기
+                onCellAction?.Invoke();     // 행동을 했음을 알림
             }
         }
     }

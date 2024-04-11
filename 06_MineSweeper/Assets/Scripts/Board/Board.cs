@@ -158,17 +158,11 @@ public class Board : MonoBehaviour
                 {
                     closeCellCount--;                   // 닫힌 셀 개수 감소
                     if(closeCellCount == mineCount)     // 닫힌 셀의 개수가 지뢰 개수와 같다 == 게임이 클리어 되어있다.
-                    {
-                        if(gameManager.FlagCount != 0)  // 아직 설치안한 깃발이 있으면
-                        {
-                            foreach(Cell cell in cells)
-                            {
-                                cell.BoardClearProcess();     // 닫혀있고 지뢰가 있는 셀은 깃발 설치하기
-                            }
-                        }
-                        gameManager.GameClear();
+                    {                        
+                        gameManager.GameClear();        // 게임 클리어
                     }
                 };
+                cell.onCellAction += gameManager.PlayerActionEnd;       // 셀에서 행동이 일어났을 때 실행될 함수 연결
 
                 cellObj.name = $"Cell_{id}_({x},{y})";      // 게임 오브젝트의 이름을 알아보기 쉽게 변경
 
@@ -184,6 +178,7 @@ public class Board : MonoBehaviour
 
         gameManager.onGameReady += ResetBoard;  // 레디로 가면 보드 리셋
         gameManager.onGameOver += OnGameOver;
+        gameManager.onGameClear += OnGameClear;
 
         // 보드 데이터 리셋
         ResetBoard();
@@ -230,6 +225,20 @@ public class Board : MonoBehaviour
             {
                 // 못찾은 지뢰는 커버를 제거해서 위치를 보여준다.
                 cell.MineNotFound();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 게임 클리어가 되면 보드가 처리할 일을 기록해 놓은 함수
+    /// </summary>
+    private void OnGameClear()
+    {
+        if (gameManager.FlagCount != 0)     // 아직 설치안한 깃발이 있으면
+        {
+            foreach (Cell cell in cells)
+            {
+                cell.BoardClearProcess();   // 닫혀있고 지뢰가 있는 셀은 깃발 설치하기
             }
         }
     }
