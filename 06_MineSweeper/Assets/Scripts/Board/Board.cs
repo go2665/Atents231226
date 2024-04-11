@@ -1,8 +1,5 @@
-using JetBrains.Annotations;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -56,7 +53,7 @@ public class Board : MonoBehaviour
         get => currentCell;
         set
         {
-            if(currentCell != value)            // currentCell이 변경되면
+            if (currentCell != value)            // currentCell이 변경되면
             {
                 currentCell?.RestoreCovers();   // 이전 currentCell이 눌려놓았던 것을 모두 원래대로 복구
                 currentCell = value;
@@ -138,7 +135,7 @@ public class Board : MonoBehaviour
         cells = new Cell[width * height];
 
         // 셀 하나씩 생성 후 배열에 추가
-        for(int y = 0; y < height; y++)
+        for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
             {
@@ -157,8 +154,8 @@ public class Board : MonoBehaviour
                 cell.onCellOpen += () =>                // 셀이 열릴 때마다 클리어 체크용 람다 함수 실행
                 {
                     closeCellCount--;                   // 닫힌 셀 개수 감소
-                    if(closeCellCount == mineCount)     // 닫힌 셀의 개수가 지뢰 개수와 같다 == 게임이 클리어 되어있다.
-                    {                        
+                    if (closeCellCount == mineCount)     // 닫힌 셀의 개수가 지뢰 개수와 같다 == 게임이 클리어 되어있다.
+                    {
                         gameManager.GameClear();        // 게임 클리어
                     }
                 };
@@ -190,14 +187,14 @@ public class Board : MonoBehaviour
     void ResetBoard()
     {
         // 전체 셀의 데이터 리셋
-        foreach (Cell cell in cells)    
+        foreach (Cell cell in cells)
         {
             cell.ResetData();
         }
 
         // mineCount만큼 지뢰 배치하기
         Shuffle(cells.Length, out int[] shuffleResult); // 숫자 섞기(0 ~ cells.length-1)
-        for(int i=0;i<mineCount;i++)
+        for (int i = 0; i < mineCount; i++)
         {
             cells[shuffleResult[i]].SetMine();
         }
@@ -208,23 +205,29 @@ public class Board : MonoBehaviour
 
     // 게임 메니저 상태 변화시 사용할 함수들 ----------------------------------------------------------------
 
+    int notFoundMineCount = 0;
+    public int FoundMineCount => mineCount - notFoundMineCount;
+    public int NotFoundMineCount => notFoundMineCount;
+
     /// <summary>
     /// 게임오버가 되면 보드가 처리할 일을 기록해 놓은 함수
     /// </summary>
     private void OnGameOver()
     {
         // Debug.Log("보드 : 게임오버 신호를 받음");
+        notFoundMineCount = 0;          // 못찾은 지뢰 개수 초기화
         foreach (Cell cell in cells)
         {
-            if(cell.IsFlaged && !cell.HasMine)
+            if (cell.IsFlaged && !cell.HasMine)
             {
                 // 잘못 설치한 깃발은 Cell_Open_NotMine 스프라이트로 변경
                 cell.FlagMistake();
             }
-            else if(!cell.IsFlaged && cell.HasMine)
+            else if (!cell.IsFlaged && cell.HasMine)
             {
                 // 못찾은 지뢰는 커버를 제거해서 위치를 보여준다.
                 cell.MineNotFound();
+                notFoundMineCount++;    // 못찾은 지뢰 개수 카운트
             }
         }
     }
@@ -234,6 +237,7 @@ public class Board : MonoBehaviour
     /// </summary>
     private void OnGameClear()
     {
+        notFoundMineCount = 0;              // 클리어면 못찾은 지뢰가 없다.
         if (gameManager.FlagCount != 0)     // 아직 설치안한 깃발이 있으면
         {
             foreach (Cell cell in cells)
@@ -255,7 +259,7 @@ public class Board : MonoBehaviour
         Vector2 world = Camera.main.ScreenToWorldPoint(screen);
         Vector2 diff = world - (Vector2)transform.position;
 
-        return new Vector2Int(Mathf.FloorToInt(diff.x / Distance), Mathf.FloorToInt(-diff.y/Distance));
+        return new Vector2Int(Mathf.FloorToInt(diff.x / Distance), Mathf.FloorToInt(-diff.y / Distance));
     }
 
     /// <summary>
@@ -264,10 +268,10 @@ public class Board : MonoBehaviour
     /// <param name="x">x위치</param>
     /// <param name="y">y위치</param>
     /// <returns>변환된 인덱스 값(잘못된 그리드 좌표면 null)</returns>
-    int? GridToIndex(int x,  int y)
+    int? GridToIndex(int x, int y)
     {
         int? result = null;
-        if(IsValidGrid(x, y))
+        if (IsValidGrid(x, y))
         {
             result = x + y * height;
         }
@@ -306,7 +310,7 @@ public class Board : MonoBehaviour
         Cell result = null;
         Vector2Int grid = ScreenToGrid(screen);
         int? index = GridToIndex(grid.x, grid.y);
-        if( index != null )
+        if (index != null)
         {
             result = cells[index.Value];
         }
@@ -321,7 +325,7 @@ public class Board : MonoBehaviour
         //Debug.Log( GetCell(screen)?.gameObject.name );
 
         Cell cell = GetCell(screen);
-        if(cell != null )
+        if (cell != null)
         {
             gameManager.GameStart();
             cell.LeftPress();
@@ -347,10 +351,10 @@ public class Board : MonoBehaviour
     private void OnRightClick(InputAction.CallbackContext context)
     {
         Vector2 screen = Mouse.current.position.ReadValue();
-        
+
         // 이 위치에 있는 셀의 RightPress()가 실행된다.
         Cell cell = GetCell(screen);
-        if( cell != null )
+        if (cell != null)
         {
             gameManager.GameStart();
             cell.RightPress();
@@ -359,8 +363,8 @@ public class Board : MonoBehaviour
 
     private void OnMouseMove(InputAction.CallbackContext context)
     {
-        if(Mouse.current.leftButton.isPressed)  // 마우스 왼쪽버튼 눌려진 상태 확인
-        {            
+        if (Mouse.current.leftButton.isPressed)  // 마우스 왼쪽버튼 눌려진 상태 확인
+        {
             Vector2 screen = context.ReadValue<Vector2>();
             Cell cell = GetCell(screen);
             CurrentCell = cell;
@@ -369,7 +373,7 @@ public class Board : MonoBehaviour
     }
 
     // 기타 유틸리티 함수들 ------------------------------------------------------------------------------
-    
+
     /// <summary>
     /// 셔플용 함수
     /// </summary>
@@ -379,7 +383,7 @@ public class Board : MonoBehaviour
     {
         // count만큼 순서대로 숫자가 들어간 배열 만들기
         result = new int[count];
-        for( int i = 0; i < count; i++ )
+        for (int i = 0; i < count; i++)
         {
             result[i] = i;
         }
@@ -388,11 +392,11 @@ public class Board : MonoBehaviour
         int loopCount = result.Length - 1;
         for (int i = 0; i < loopCount; i++) // 8*8일 때 63번 반복
         {
-            int randomIndex = UnityEngine.Random.Range( 0, result.Length - i ); // 처음에는 0~63 중 랜덤으로 선택
+            int randomIndex = UnityEngine.Random.Range(0, result.Length - i); // 처음에는 0~63 중 랜덤으로 선택
             int lastIndex = loopCount - i;                                      // 처음에는 63
 
             // 랜덤으로 고른 것과 마지막을 스왑
-            (result[lastIndex], result[randomIndex]) = (result[randomIndex], result[lastIndex]);    
+            (result[lastIndex], result[randomIndex]) = (result[randomIndex], result[lastIndex]);
         }
     }
 
@@ -404,15 +408,15 @@ public class Board : MonoBehaviour
     public List<Cell> GetNeightbors(int id)
     {
         List<Cell> result = new List<Cell>();
-        Vector2Int grid = IndexToGrid( id );    // id의 그리드 위치를 x와 y 모두 +-1씩해서 구하기
+        Vector2Int grid = IndexToGrid(id);    // id의 그리드 위치를 x와 y 모두 +-1씩해서 구하기
         for (int y = -1; y < 2; y++)
         {
-            for(int x = -1; x < 2; x++)
+            for (int x = -1; x < 2; x++)
             {
-                if(!(x == 0 && y == 0))         // 자기 자신은 제외
+                if (!(x == 0 && y == 0))         // 자기 자신은 제외
                 {
-                    int? index = GridToIndex(x + grid.x, y + grid.y);   
-                    if(index != null)           // valid한 id면 추가
+                    int? index = GridToIndex(x + grid.x, y + grid.y);
+                    if (index != null)           // valid한 id면 추가
                     {
                         result.Add(cells[index.Value]);
                     }

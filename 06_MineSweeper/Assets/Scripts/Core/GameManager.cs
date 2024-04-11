@@ -37,10 +37,11 @@ public class GameManager : Singleton<GameManager>
                 switch(state)
                 {
                     case GameState.Ready:
-                        FlagCount = mineCount;
+                        FlagCount = mineCount;                        
                         onGameReady?.Invoke();      // 델리게이트 실행
                         break;
                     case GameState.Play:
+                        ActionCount = 0;
                         onGamePlay?.Invoke();
                         break;
                     case GameState.GameClear:
@@ -135,6 +136,10 @@ public class GameManager : Singleton<GameManager>
     }
 
     // 플레이 행동 관련 ---------------------------------------------------------------------------------
+    
+    /// <summary>
+    /// 플레이어 행동 회수
+    /// </summary>
     int actionCount = 0;
     public int ActionCount
     {
@@ -144,10 +149,14 @@ public class GameManager : Singleton<GameManager>
             if (actionCount != value) 
             {
                 actionCount = value;
-                onActionCountChange?.Invoke(actionCount);
+                onActionCountChange?.Invoke(actionCount);   // 행동 회수가 변경되었다고 알림
             }
         }
     }
+
+    /// <summary>
+    /// 행동 회수 변화를 알리는 델리게이트
+    /// </summary>
     public Action<int> onActionCountChange;
 
     /// <summary>
@@ -156,7 +165,6 @@ public class GameManager : Singleton<GameManager>
     public void PlayerActionEnd()
     {
         ActionCount++;
-        Debug.Log($"Player Action Count : {ActionCount}");
     }
 
     // 게임 상태 관련 -----------------------------------------------------------------------------------
