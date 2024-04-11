@@ -310,11 +310,11 @@ public class Cell : MonoBehaviour
 
                 if (aroundMineCount == flagCount)        // 주변 지뢰 개수와 깃발 개수가 같으면
                 {
+                    onCellAction?.Invoke();     // 행동을 했음을 알림
                     foreach (var cell in pressedCells)
                     {
                         cell.Open();            // 눌려진 셀을 전부 연다.
                     }
-                    onCellAction?.Invoke();     // 행동을 했음을 알림
                 }
                 else
                 {
@@ -324,8 +324,8 @@ public class Cell : MonoBehaviour
             else
             {
                 // 닫혀 있는 셀의 경우
-                Open();                     // 그냥 열기
                 onCellAction?.Invoke();     // 행동을 했음을 알림
+                Open();                     // 그냥 열기
             }
         }
     }
@@ -411,7 +411,7 @@ public class Cell : MonoBehaviour
     /// </summary>
     public void BoardClearProcess()
     {
-        if(!isOpen && HasMine)
+        if(!isOpen && HasMine && !IsFlaged)     // 닫혀있고, 지뢰가 있고, 깃발이 설치 안된 경우
         {
             CoverState = CellCoverState.Flag;
         }
