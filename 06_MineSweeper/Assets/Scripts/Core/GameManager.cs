@@ -37,11 +37,17 @@ public class GameManager : Singleton<GameManager>
                 switch(state)
                 {
                     case GameState.Ready:
+                        playerName = string.Empty;
                         FlagCount = mineCount;                        
                         onGameReady?.Invoke();      // 델리게이트 실행
                         break;
                     case GameState.Play:
                         ActionCount = 0;
+                        if(playerName == string.Empty)
+                        {
+                            playerName = $"Player{(uint)DateTime.Now.GetHashCode()}";
+                        }
+                        Debug.Log(playerName);
                         onGamePlay?.Invoke();
                         break;
                     case GameState.GameClear:
@@ -195,6 +201,9 @@ public class GameManager : Singleton<GameManager>
         // 지뢰가 아닌 셀이 모두 열려 있어야 한다.
     }
 
+    // 플레이어 정보용 ----------------------------------------------------------------------------------
+    string playerName = string.Empty;
+    PlayerNameInput playerNameInput;
 
 
     // 게임 메니저 공용 함수 ----------------------------------------------------------------------------
@@ -205,6 +214,9 @@ public class GameManager : Singleton<GameManager>
         board.Initialize(boardWidth, boardHeight, mineCount);   
 
         FlagCount = mineCount;  // 깃발 개수 설정
+
+        playerNameInput = FindAnyObjectByType<PlayerNameInput>();
+        playerNameInput.onPlayerNameSet += (name) => playerName = name;
     }
 
 
