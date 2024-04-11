@@ -150,6 +150,11 @@ public class Cell : MonoBehaviour
     /// </summary>
     public Action onExplosion;
 
+    /// <summary>
+    /// 셀이 열렸음을 알리는 델리게이트
+    /// </summary>
+    public Action onCellOpen;
+
     private void Awake()
     {
         Transform child = transform.GetChild(0);
@@ -325,6 +330,7 @@ public class Cell : MonoBehaviour
         {
             isOpen = true;                      // 열렸다고 표시
             cover.gameObject.SetActive(false);  // 커버 제거
+            onCellOpen?.Invoke();               // 셀이 열렸다고 알림
 
             if (hasMine)                        // 지뢰가 있다.
             {
@@ -391,6 +397,16 @@ public class Cell : MonoBehaviour
         cover.gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// 게임 클리어가 되었을 때 실행될 함수
+    /// </summary>
+    public void BoardClearProcess()
+    {
+        if(!isOpen && HasMine)
+        {
+            CoverState = CellCoverState.Flag;
+        }
+    }
 
 #if UNITY_EDITOR
     public void Test_OpenCover()

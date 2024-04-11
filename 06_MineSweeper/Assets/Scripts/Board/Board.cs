@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -26,6 +27,11 @@ public class Board : MonoBehaviour
     /// 배치될 지뢰의 개수
     /// </summary>
     int mineCount = 10;
+
+    /// <summary>
+    /// 닫혀 있는 셀의 개수
+    /// </summary>
+    int closeCellCount;
 
     /// <summary>
     /// 이 보드가 생성한 모든 셀
@@ -59,7 +65,14 @@ public class Board : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 보드에 마우스 왼쪽 버튼이 눌렸을 떄 실행될 델리게이트
+    /// </summary>
     public Action onBoardLeftPress;
+
+    /// <summary>
+    /// 보드에 마우스 왼쪽 버튼이 떨어졌을 때 실행될 델리게이트
+    /// </summary>
     public Action onBoardLeftRelease;
 
     /// <summary>
@@ -141,6 +154,22 @@ public class Board : MonoBehaviour
                 cell.onFlagReturn += gameManager.IncreaseFlagCount;     // 셀의 깃발이 제거되었을 떄 실행될 함수 연결
                 cell.onExplosion += gameManager.GameOver;               // 셀에서 지뢰가 터졌을 때 실행될 함수 연결
 
+                cell.onCellOpen += () =>                // 셀이 열릴 때마다 클리어 체크용 람다 함수 실행
+                {
+                    closeCellCount--;                   // 닫힌 셀 개수 감소
+                    if(closeCellCount == mineCount)     // 닫힌 셀의 개수가 지뢰 개수와 같다 == 게임이 클리어 되어있다.
+                    {
+                        if(gameManager.FlagCount != 0)  // 아직 설치안한 깃발이 있으면
+                        {
+                            foreach(Cell cell in cells)
+                            {
+                                cell.BoardClearProcess();     // 닫혀있고 지뢰가 있는 셀은 깃발 설치하기
+                            }
+                        }
+                        gameManager.GameClear();
+                    }
+                };
+
                 cellObj.name = $"Cell_{id}_({x},{y})";      // 게임 오브젝트의 이름을 알아보기 쉽게 변경
 
                 cells[id] = cell;   // 셀을 배열에 저장
@@ -177,6 +206,9 @@ public class Board : MonoBehaviour
         {
             cells[shuffleResult[i]].SetMine();
         }
+
+        // 닫힌 셀의 개수 초기화
+        closeCellCount = cells.Length;
     }
 
     // 게임 메니저 상태 변화시 사용할 함수들 ----------------------------------------------------------------

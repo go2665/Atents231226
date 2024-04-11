@@ -155,7 +155,11 @@ public class GameManager : Singleton<GameManager>
 
     public void GameClear()
     {
+        State = GameState.GameClear;
+        Debug.Log("Game Clear");
 
+        // 깃발이 다 설치되어있고
+        // 지뢰가 아닌 셀이 모두 열려 있어야 한다.
     }
 
 
