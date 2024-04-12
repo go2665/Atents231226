@@ -53,7 +53,7 @@ public class RankDataManager : MonoBehaviour
         actionRank.Sort();
     }
 
-    public void Test_TimeUpdate(int rank, string name)
+    public void Test_TimeUpdate(float rank, string name)
     {
         timeRank.Add(new(rank, name));
         timeRank.Sort();
