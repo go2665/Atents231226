@@ -37,17 +37,17 @@ public class GameManager : Singleton<GameManager>
                 switch(state)
                 {
                     case GameState.Ready:
-                        playerName = string.Empty;
+                        PlayerName = string.Empty;
                         FlagCount = mineCount;                        
                         onGameReady?.Invoke();      // 델리게이트 실행
                         break;
                     case GameState.Play:
                         ActionCount = 0;
-                        if(playerName == string.Empty)
+                        if(PlayerName == string.Empty)
                         {
-                            playerName = $"Player{(uint)DateTime.Now.GetHashCode()}";
+                            PlayerName = $"Player{(uint)DateTime.Now.GetHashCode()}";
                         }
-                        Debug.Log(playerName);
+                        Debug.Log($"시작할 때 플레이어 이름 : {PlayerName}");
                         onGamePlay?.Invoke();
                         break;
                     case GameState.GameClear:
@@ -202,8 +202,20 @@ public class GameManager : Singleton<GameManager>
     }
 
     // 플레이어 정보용 ----------------------------------------------------------------------------------
-    string playerName = string.Empty;
+    
+    /// <summary>
+    /// 플레이어 이름 입력용 UI
+    /// </summary>
     PlayerNameInput playerNameInput;
+
+    /// <summary>
+    /// 플레이어의 이름을 설정하고 확인하기 위한 프로퍼티
+    /// </summary>
+    string PlayerName
+    {
+        get => playerNameInput?.GetPlayerName();
+        set => playerNameInput?.SetPlayerName(value);
+    }
 
 
     // 게임 메니저 공용 함수 ----------------------------------------------------------------------------
@@ -216,7 +228,6 @@ public class GameManager : Singleton<GameManager>
         FlagCount = mineCount;  // 깃발 개수 설정
 
         playerNameInput = FindAnyObjectByType<PlayerNameInput>();
-        playerNameInput.onPlayerNameSet += (name) => playerName = name;
     }
 
 
