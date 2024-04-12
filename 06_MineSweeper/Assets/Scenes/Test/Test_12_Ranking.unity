@@ -1743,6 +1743,7 @@ GameObject:
   - component: {fileID: 217347864}
   - component: {fileID: 217347863}
   - component: {fileID: 217347862}
+  - component: {fileID: 217347865}
   m_Layer: 5
   m_Name: OpenCloseButton
   m_TagString: Untagged
@@ -1851,6 +1852,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 217347860}
   m_CullTransparentMesh: 1
+--- !u!114 &217347865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 217347860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57bf4d9a5d2099943806770d8e874616, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onSprite: {fileID: 21300000, guid: fdff4e51aa5b6a64287fb2f9a0b10bc0, type: 3}
+  offSprite: {fileID: 21300000, guid: 1023dc51a47ee2646b092add613fd71f, type: 3}
 --- !u!1 &242541051
 GameObject:
   m_ObjectHideFlags: 0
@@ -7441,7 +7456,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2661687998953526576, guid: 52e8fbc92da069a42b5f9b0bdacb0b6e, type: 3}
       propertyPath: mineCount
-      value: 4
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2661687998953526576, guid: 52e8fbc92da069a42b5f9b0bdacb0b6e, type: 3}
       propertyPath: boardWidth
