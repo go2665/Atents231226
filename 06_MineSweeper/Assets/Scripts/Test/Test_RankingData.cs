@@ -23,4 +23,14 @@ public class Test_RankingData : TestBase
     {
         GameManager.Instance.RankDataManager.Test_TimeUpdate(time, rankerName);
     }
+
+    protected override void OnTest4(InputAction.CallbackContext context)
+    {
+        GameManager.Instance.RankDataManager.Test_Save();
+    }
+
+    protected override void OnTest5(InputAction.CallbackContext context)
+    {
+        GameManager.Instance.RankDataManager.Test_Load();
+    }
 }
