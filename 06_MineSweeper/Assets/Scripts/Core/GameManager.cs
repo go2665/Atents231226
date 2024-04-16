@@ -45,7 +45,7 @@ public class GameManager : Singleton<GameManager>
                         ActionCount = 0;
                         if(PlayerName == string.Empty)
                         {
-                            PlayerName = $"Player{(uint)DateTime.Now.GetHashCode()}";
+                            PlayerName = $"Player{(uint)(DateTime.Now.GetHashCode() % 10000000)}";
                         }
                         Debug.Log($"시작할 때 플레이어 이름 : {PlayerName}");
                         onGamePlay?.Invoke();
@@ -173,6 +173,17 @@ public class GameManager : Singleton<GameManager>
         ActionCount++;
     }
 
+    // 시간 관련 ---------------------------------------------------------------------------------------
+    /// <summary>
+    /// 타이머
+    /// </summary>
+    Timer timer;
+
+    /// <summary>
+    /// 현재 플레이 진행 시간
+    /// </summary>
+    public float PlayTime => timer.ElapsedTime;
+
     // 게임 상태 관련 -----------------------------------------------------------------------------------
     public void GameStart()
     {
@@ -211,10 +222,10 @@ public class GameManager : Singleton<GameManager>
     /// <summary>
     /// 플레이어의 이름을 설정하고 확인하기 위한 프로퍼티
     /// </summary>
-    string PlayerName
+    public string PlayerName
     {
         get => playerNameInput?.GetPlayerName();
-        set => playerNameInput?.SetPlayerName(value);
+        private set => playerNameInput?.SetPlayerName(value);
     }
 
     // 랭킹 관련 ---------------------------------------------------------------------------------------
@@ -231,6 +242,7 @@ public class GameManager : Singleton<GameManager>
         board.Initialize(boardWidth, boardHeight, mineCount);   
 
         FlagCount = mineCount;  // 깃발 개수 설정
+        timer = FindAnyObjectByType<Timer>();   // 타이머 찾기
 
         playerNameInput = FindAnyObjectByType<PlayerNameInput>();
     }

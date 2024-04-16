@@ -48,11 +48,13 @@ public class RankDataManager : MonoBehaviour
     /// 랭킹 정보(행동 순위)
     /// </summary>
     List<RankData<int>> actionRank;
+    public List<RankData<int>> ActionRank => actionRank;
 
     /// <summary>
     /// 랭킹 정보(시간 순위)
     /// </summary>
     List<RankData<float>> timeRank;
+    public List<RankData<float>> TimeRank => timeRank;
 
     // 상수들
     const string RankDataFolder = "Save";           // 세이브 폴더 이름
@@ -62,6 +64,17 @@ public class RankDataManager : MonoBehaviour
     {
         actionRank = new List<RankData<int>>(RankCount + 1);    // 랭킹 10개 + 새 정보 = 11개
         timeRank = new List<RankData<float>>(RankCount + 1);
+    }
+
+    private void Start()
+    {
+        LoadRankData(); // 시작할 때 데이터 로딩
+
+        // 게임 클리어 될 때 업데이트
+        GameManager.Instance.onGameClear += () => UpdateData(
+            GameManager.Instance.ActionCount, 
+            GameManager.Instance.PlayTime,
+            GameManager.Instance.PlayerName);
     }
 
     /// <summary>
@@ -137,7 +150,26 @@ public class RankDataManager : MonoBehaviour
     /// <param name="rankerName">플레이어 이름</param>
     void UpdateData(int actionCount, float playTime, string rankerName)
     {
-        // 적절한 타이밍에 실행해서 파라메터 값에 따라 랭크 갱신
+        // 일단 추가하고
+        actionRank.Add(new(actionCount, rankerName));
+        timeRank.Add(new(playTime, rankerName));
+
+        // 정렬한 다음
+        actionRank.Sort();
+        timeRank.Sort();
+
+        // 랭크의 개수가 RankCount보다 커지면 넘친 부분 제거
+        if(actionRank.Count > RankCount)
+        {
+            actionRank.RemoveAt(RankCount);
+        }
+        if(timeRank.Count > RankCount)
+        {
+            timeRank.RemoveAt(RankCount);
+        }
+
+        // 마무리로 저장
+        SaveRankData();
     }
 
 #if UNITY_EDITOR
