@@ -43,9 +43,11 @@ public class GameManager : Singleton<GameManager>
                         break;
                     case GameState.Play:
                         ActionCount = 0;
-                        if(PlayerName == string.Empty)
+                        if(PlayerName == string.Empty || PlayerName == "")
                         {
-                            PlayerName = $"Player{(uint)(DateTime.Now.GetHashCode() % 10000000)}";
+                            int test = 1234512345;
+                            //DateTime.Now.GetHashCode()
+                            PlayerName = $"Player{(uint)(test % 10000000)}";
                         }
                         Debug.Log($"시작할 때 플레이어 이름 : {PlayerName}");
                         onGamePlay?.Invoke();

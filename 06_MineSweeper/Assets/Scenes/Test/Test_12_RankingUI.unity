@@ -554,6 +554,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3e633155fdfec54e8589bb075b1373b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  seed: -1
+  action: 0
+  time: 0
+  rankerName: Test
 --- !u!4 &23755113
 Transform:
   m_ObjectHideFlags: 0
@@ -10057,6 +10061,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ccaef3c8704c5a4ca6ff875448ff7eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rankType: 1
 --- !u!114 &1387802066
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12685,6 +12690,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ccaef3c8704c5a4ca6ff875448ff7eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rankType: 0
 --- !u!1 &1662538914
 GameObject:
   m_ObjectHideFlags: 0
