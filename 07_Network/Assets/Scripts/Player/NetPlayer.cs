@@ -1,10 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR;
 
-public class Player : MonoBehaviour
+public class NetPlayer : NetworkBehaviour
 {
     /// <summary>
     /// 이동 속도
@@ -17,14 +19,14 @@ public class Player : MonoBehaviour
     public float rotateSpeed = 90.0f;
 
     /// <summary>
-    /// 마지막 입력으로 인한 이동 방향(전진, 정지, 후진)
+    /// 마지막 입력으로 인한 이동 방향(전진, 정지, 후진), 네트워크에서 공유되는 변수
     /// </summary>
-    float moveDir = 0.0f;
+    NetworkVariable<float> netMoveDir = new NetworkVariable<float>(0.0f);
 
     /// <summary>
     /// 마지막 입력으로 인한 회전 방향(좌회전, 정지, 우회전)
     /// </summary>
-    float rotate = 0.0f;
+    NetworkVariable<float> rotate = new NetworkVariable<float>(0.0f);
 
     /// <summary>
     /// 애니메이션 상태
@@ -42,21 +44,21 @@ public class Player : MonoBehaviour
     /// </summary>
     AnimationState state = AnimationState.None;
 
-    /// <summary>
-    /// 애니메이션 상태 설정 및 확인용 프로퍼티
-    /// </summary>
-    AnimationState State
-    {
-        get => state;
-        set
-        {
-            if (value != state)
-            {
-                state = value;
-                animator.SetTrigger(state.ToString());
-            }
-        }
-    }
+    ///// <summary>
+    ///// 애니메이션 상태 설정 및 확인용 프로퍼티
+    ///// </summary>
+    //AnimationState State
+    //{
+    //    get => state; 
+    //    set
+    //    {
+    //        if (value != state)
+    //        {
+    //            state = value;
+    //            animator.SetTrigger(state.ToString());
+    //        }
+    //    }
+    //}
 
     // 컴포넌트 들
     CharacterController controller;
@@ -69,6 +71,8 @@ public class Player : MonoBehaviour
         animator = GetComponent<Animator>();
 
         inputActions = new PlayerInputActions();
+
+        //netMoveDir.OnValueChanged += aaa;
     }
 
     private void OnEnable()
@@ -92,31 +96,60 @@ public class Player : MonoBehaviour
     private void OnMoveInput(InputAction.CallbackContext context)
     {
         float moveInput = context.ReadValue<float>();   // 키보드라 -1, 0, 1 중 하나
-        moveDir = moveInput * moveSpeed;
+        SetMoveInput(moveInput);
+    }
 
-        if (moveDir > 0.001f)
+    void SetMoveInput(float moveInput)
+    {
+        float moveDir = moveInput * moveSpeed;
+        
+        if( NetworkManager.Singleton.IsServer )
         {
-            State = AnimationState.Walk;
+            netMoveDir.Value = moveDir;
         }
-        else if (moveDir < -0.001f)
+        else if(IsOwner)
         {
-            State = AnimationState.BackWalk;
+            MoveRequestServerRpc(moveDir);
         }
-        else
-        {
-            State = AnimationState.Idle;
-        }
+
+        //if(moveDir > 0.001f)
+        //{
+        //    State = AnimationState.Walk;
+        //}
+        //else if(moveDir < -0.001f)
+        //{
+        //    State = AnimationState.BackWalk;
+        //}
+        //else
+        //{
+        //    State = AnimationState.Idle;
+        //}
+    }
+
+    [ServerRpc]
+    void MoveRequestServerRpc(float move)
+    {
+        netMoveDir.Value = move;
     }
 
     private void OnRotate(InputAction.CallbackContext context)
     {
         float rotateInput = context.ReadValue<float>(); // 키보드라 -1, 0, 1 중 하나
-        rotate = rotateInput * rotateSpeed;
+
+
+        //rotate = rotateInput * rotateSpeed;
     }
 
     private void Update()
     {
-        controller.SimpleMove(moveDir * transform.forward);
-        transform.Rotate(0, rotate * Time.deltaTime, 0, Space.World);
+        if(netMoveDir.Value != 0.0f)
+        {
+            controller.SimpleMove(netMoveDir.Value * transform.forward);
+        }
+        //transform.Rotate(0, rotate * Time.deltaTime, 0, Space.World);
     }
 }
+
+// 실습
+// 1. rotate도 네트워크 변수로 적용하기
+// 2. netAnimState 네트워크 변수 만들어서 상태 변환 처리하기

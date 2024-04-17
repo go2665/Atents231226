@@ -1705,9 +1705,10 @@ GameObject:
   - component: {fileID: 3614317053338502274}
   - component: {fileID: 7673088074580952698}
   - component: {fileID: 4675074721942219770}
-  - component: {fileID: 6412864738225280704}
+  - component: {fileID: -2860959286933372720}
+  - component: {fileID: 7818214203790908274}
   m_Layer: 8
-  m_Name: Player
+  m_Name: NetPlayer
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1778,7 +1779,7 @@ CharacterController:
   m_SkinWidth: 0.02
   m_MinMoveDistance: 0
   m_Center: {x: 0, y: 0.93, z: 0}
---- !u!114 &6412864738225280704
+--- !u!114 &-2860959286933372720
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1787,7 +1788,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 7209545910464972187}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b8c3b8739977a194fb477cc587ebc855, type: 3}
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 477243650
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &7818214203790908274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7209545910464972187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 562857f4b520110449a628501a1bc3ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 3.5
