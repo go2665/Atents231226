@@ -8,7 +8,7 @@ public class TestBase : MonoBehaviour
 {
     public int seed = -1;
     const int allRandom = -1;
-    TestInputActions inputActions;
+    protected TestInputActions inputActions;
 
     private void Awake()
     {
@@ -20,7 +20,7 @@ public class TestBase : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         inputActions.Test.Enable();
         inputActions.Test.Test1.performed += OnTest1;
@@ -32,7 +32,7 @@ public class TestBase : MonoBehaviour
         inputActions.Test.RClick.performed += OnTestRClick;
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         inputActions.Test.RClick.performed -= OnTestRClick;
         inputActions.Test.LClick.performed -= OnTestLClick;
