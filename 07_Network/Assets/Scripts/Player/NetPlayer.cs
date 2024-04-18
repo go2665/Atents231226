@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -49,6 +50,11 @@ public class NetPlayer : NetworkBehaviour
     /// </summary>
     NetworkVariable<AnimationState> netAnimState = new NetworkVariable<AnimationState>();
 
+    /// <summary>
+    /// 채팅용 네트워크 변수
+    /// </summary>
+    NetworkVariable<FixedString512Bytes> chatString = new NetworkVariable<FixedString512Bytes>();
+
 
     // 컴포넌트 들
     CharacterController controller;
@@ -64,6 +70,7 @@ public class NetPlayer : NetworkBehaviour
         inputActions = new PlayerInputActions();
 
         netAnimState.OnValueChanged += OnAnimStateChange;
+        chatString.OnValueChanged += OnChatRecieve;
     }
 
     private void OnEnable()
@@ -171,6 +178,15 @@ public class NetPlayer : NetworkBehaviour
     public void SendChat(string message)
     {
 
+    }
+
+    /// <summary>
+    /// 채팅을 받았을 때 처리하는 함수
+    /// </summary>
+    /// <param name="previousValue"></param>
+    /// <param name="newValue"></param>
+    private void OnChatRecieve(FixedString512Bytes previousValue, FixedString512Bytes newValue)
+    {
     }
 
 
