@@ -57,6 +57,8 @@ public class GameManager : NetSingleton<GameManager>
     }
     public Action<Color> onUserColorChange;
 
+    NetPlayerDecorator deco;
+
 
     protected override void OnInitialize()
     {
@@ -80,8 +82,11 @@ public class GameManager : NetSingleton<GameManager>
         {
             player = netObj.GetComponent<NetPlayer>();
             player.gameObject.name = $"Player_{id}";
+            
+            deco = netObj.GetComponent<NetPlayerDecorator>();
+            deco.SetName(UserName);
 
-            foreach(var other in NetworkManager.SpawnManager.SpawnedObjectsList)
+            foreach (var other in NetworkManager.SpawnManager.SpawnedObjectsList)
             {                
                 NetPlayer otherPlayer = other.GetComponent<NetPlayer>();
                 if (otherPlayer != null && otherPlayer != player)

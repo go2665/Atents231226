@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class TestNetController : MonoBehaviour
 {
     TextMeshProUGUI playerInGame;
+    TextMeshProUGUI userName;
 
     private void Start()
     {
@@ -53,5 +54,14 @@ public class TestNetController : MonoBehaviour
 
         GameManager gameManager = GameManager.Instance;
         gameManager.onPlayersInGameChange += (count) => playerInGame.text = count.ToString();   // 동접자 숫자 변경 델리게이트가 실행되면 UI 갱신
+
+
+        child = transform.GetChild(4);
+        child = child.GetChild(1);
+        userName = child.GetComponent<TextMeshProUGUI>();
+        gameManager.onUserNameChange += (name) =>
+        {
+            userName.text = gameManager.UserName;
+        };
     }
 }

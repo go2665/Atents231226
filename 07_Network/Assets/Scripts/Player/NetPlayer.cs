@@ -91,6 +91,14 @@ public class NetPlayer : NetworkBehaviour
         inputActions.Player.Disable();
     }
 
+    public override void OnNetworkSpawn()
+    {
+        if(IsOwner)
+        {
+
+        }
+    }
+
     private void Update()
     {
         if (netMoveDir.Value != 0.0f)

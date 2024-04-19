@@ -47,7 +47,7 @@ public class Logger : MonoBehaviour
         {
             // 입력한 라인의 첫번째 글자가 '/'라면 콘솔 명령을 처리한다.
 
-            if(false/*첫글자 확인*/)
+            if (text[0] == '/')
             {
                 ConsoleCommand(text);
             }
@@ -215,5 +215,21 @@ public class Logger : MonoBehaviour
 
         // command가 "/setname 가가가"로 입력되면 GameManager의 UserName이 "가가가"로 설정된다.
         // command가 "/setcolor 1,0,0"로 입력되면 플레이어의 색상은 빨간색이 되어야 한다.
+
+        int space = command.IndexOf(' ');
+
+        string commandToken = command.Substring(0, space);  // 첫번째 ~ space위치 앞까지
+        commandToken = commandToken.ToLower();              // 전부 소문자로 바꾸기
+        string dataToken = command.Substring(space + 1);    // space위치 다음 칸 ~ 끝까지
+
+        GameManager gameManager = GameManager.Instance;
+        switch (commandToken)
+        {
+            case "/setname":
+                gameManager.UserName = dataToken;
+                break;
+            case "/setcolor":
+                break;
+        }
     }
 }
