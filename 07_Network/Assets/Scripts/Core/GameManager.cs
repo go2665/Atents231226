@@ -11,8 +11,21 @@ public class GameManager : NetSingleton<GameManager>
     /// </summary>
     Logger logger;
 
+    /// <summary>
+    /// 내 플레이어(접속 안했으면 null)
+    /// </summary>
     NetPlayer player;
     public NetPlayer Player => player;
+
+    /// <summary>
+    /// 현재 동접자 수
+    /// </summary>
+    NetworkVariable<int> playersInGame = new NetworkVariable<int>(0);
+
+    /// <summary>
+    /// 동접자의 수가 변경되었음을 알리는 델리게이트
+    /// </summary>
+    public Action<int> onPlayersInGameChange;
 
 
     protected override void OnInitialize()
@@ -22,6 +35,8 @@ public class GameManager : NetSingleton<GameManager>
         // 어떤 클라이언트가 접속/접속해제 했을 때 실행(서버에는 항상 실행, 클라이언트는 자기것만 실행)
         NetworkManager.OnClientConnectedCallback += OnClientConnect;        
         NetworkManager.OnClientDisconnectCallback += OnClientDisconnect;    // 어떤 클라이언트가 접속해제할 때마다 실행
+
+        playersInGame.OnValueChanged += (_, newValue) => onPlayersInGameChange?.Invoke(newValue);   // 동접자 숫자 변경 알리기
     }
 
     /// <summary>
@@ -53,6 +68,11 @@ public class GameManager : NetSingleton<GameManager>
                 netObj.gameObject.name = $"OtherPlayer_{id}";
             }
         }
+
+        if(IsServer)
+        {
+            playersInGame.Value++;  // 서버에서만 증가
+        }
     }
 
     /// <summary>
@@ -65,7 +85,12 @@ public class GameManager : NetSingleton<GameManager>
         if (netObj.IsOwner)
         {
             player = null;
-        }        
+        }
+
+        if (IsServer)
+        {
+            playersInGame.Value--;  // 서버에서만 감소
+        }
     }
 
 
@@ -78,3 +103,6 @@ public class GameManager : NetSingleton<GameManager>
         logger.Log(message);
     }
 }
+
+// 실습
+// 현재 접속해있는 플레이어의 수를 UI로 표시하기
