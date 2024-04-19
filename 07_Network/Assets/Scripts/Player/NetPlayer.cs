@@ -114,18 +114,23 @@ public class NetPlayer : NetworkBehaviour
     }
 
     // 기타 ------------------------------------------------------------------------------------------
+    
+    /// <summary>
+    /// 이동 입력 처리용 함수
+    /// </summary>
+    /// <param name="moveInput">이동 입력 된 정도</param>
     void SetMoveInput(float moveInput)
     {        
-        if(IsOwner)
+        if(IsOwner) // 오너일 일때만 이동 처리
         {
-            float moveDir = moveInput * moveSpeed;
+            float moveDir = moveInput * moveSpeed;  // 이동 정도 결정
             if(IsServer)
             {
-                netMoveDir.Value = moveDir;
+                netMoveDir.Value = moveDir;         // 서버면 직접 수정
             }
             else
             {
-                MoveRequestServerRpc(moveDir);
+                MoveRequestServerRpc(moveDir);      // 서버가 아이면 서버에게 수정 요청하는 Rpc 실행
             }
 
             // 애니메이션 변경
@@ -141,8 +146,9 @@ public class NetPlayer : NetworkBehaviour
             {
                 state = AnimationState.Idle;
             }
-            if (state != netAnimState.Value)
+            if (state != netAnimState.Value)    // 애니메이션 상태가 변경되면
             {
+                // 서버 인지 아닌지에 따라 수정하기
                 if (IsServer)
                 {
                     netAnimState.Value = state;
@@ -156,25 +162,34 @@ public class NetPlayer : NetworkBehaviour
         
     }
 
+    /// <summary>
+    /// 회전 입력을 처리하는 함수
+    /// </summary>
+    /// <param name="rotateInput">회전 입력 정도</param>
     void SetRotateInput(float rotateInput)
     {
-        if(IsOwner)
+        if(IsOwner) // 오너일 때만 처리
         {
-            float rotate = rotateInput * rotateSpeed;
+            float rotate = rotateInput * rotateSpeed;   // 회전량 결정
             if(IsServer)
             {
-                netRotate.Value = rotate;
+                netRotate.Value = rotate;       // 서버면 직접 주성
             }
             else
             {
-                RotateRequestServerRpc(rotate);
+                RotateRequestServerRpc(rotate); // 서버가 아니면 Rpc요청
             }
         }
     }
 
+    /// <summary>
+    /// 애니메이션 상태가 변경되면 실행되는 함수
+    /// </summary>
+    /// <param name="previousValue">이전 값</param>
+    /// <param name="newValue">새 값</param>
     private void OnAnimStateChange(AnimationState previousValue, AnimationState newValue)
     {
-        animator.SetTrigger(newValue.ToString());
+        animator.SetTrigger(newValue.ToString());   // 새 값으로 변경
     }
 
 
@@ -186,7 +201,8 @@ public class NetPlayer : NetworkBehaviour
     /// <param name="message"></param>
     public void SendChat(string message)
     {
-        if(IsServer)
+        // chatString 변경
+        if (IsServer)
         {
             chatString.Value = message;
         }
@@ -197,13 +213,13 @@ public class NetPlayer : NetworkBehaviour
     }
 
     /// <summary>
-    /// 채팅을 받았을 때 처리하는 함수
+    /// 채팅을 받았을 때 처리하는 함수(chatString이 변경되었다 = 채팅을 받았다)
     /// </summary>
     /// <param name="previousValue"></param>
     /// <param name="newValue"></param>
     private void OnChatRecieve(FixedString512Bytes previousValue, FixedString512Bytes newValue)
     {
-        GameManager.Instance.Log(newValue.ToString());
+        GameManager.Instance.Log(newValue.ToString());  // 받은 채팅 내용을 logger에 찍기
     }
 
 
@@ -234,7 +250,3 @@ public class NetPlayer : NetworkBehaviour
     }
 
 }
-
-// 실습
-// 1. rotate도 네트워크 변수로 적용하기
-// 2. 네트워크로 애니메이션 되게 만들기(netAnimState 네트워크 변수 만들어서 상태 변환 처리하기)
