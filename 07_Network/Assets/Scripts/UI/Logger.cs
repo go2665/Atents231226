@@ -45,7 +45,15 @@ public class Logger : MonoBehaviour
         // onSubmit;    // 입력이 완료되었을 때 실행(엔터쳤을 때만 실행)
         inputField.onSubmit.AddListener((text) =>
         {
-            Log(text);
+            if(GameManager.Instance.Player != null)
+            {
+                GameManager.Instance.Player.SendChat(text);
+            }
+            else
+            {
+                Log(text);
+            }
+
             inputField.text = string.Empty;     // 입력 완료되면 비우기
             inputField.ActivateInputField();    // 포커스 다시 활성화
             //inputField.Select();    // 활성화 되어 있을 떄는 비활성화, 비활성화 되어있을 때는 활성화

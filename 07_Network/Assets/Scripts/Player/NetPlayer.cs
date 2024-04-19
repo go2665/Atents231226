@@ -115,54 +115,60 @@ public class NetPlayer : NetworkBehaviour
 
     // 기타 ------------------------------------------------------------------------------------------
     void SetMoveInput(float moveInput)
-    {
-        float moveDir = moveInput * moveSpeed;
-        
-        if( NetworkManager.Singleton.IsServer )
+    {        
+        if(IsOwner)
         {
-            netMoveDir.Value = moveDir;
-        }
-        else if(IsOwner)
-        {
-            MoveRequestServerRpc(moveDir);
-        }
-
-        // 애니메이션 변경
-        if (moveDir > 0.001f)
-        {
-            state = AnimationState.Walk;
-        }
-        else if (moveDir < -0.001f)
-        {
-            state = AnimationState.BackWalk;
-        }
-        else
-        {
-            state = AnimationState.Idle;
-        }
-        if(state != netAnimState.Value)
-        {
+            float moveDir = moveInput * moveSpeed;
             if(IsServer)
             {
-                netAnimState.Value = state;
+                netMoveDir.Value = moveDir;
             }
-            else if(IsOwner)
+            else
             {
-                UpdateAnimStateServerRpc(state);
+                MoveRequestServerRpc(moveDir);
+            }
+
+            // 애니메이션 변경
+            if (moveDir > 0.001f)
+            {
+                state = AnimationState.Walk;
+            }
+            else if (moveDir < -0.001f)
+            {
+                state = AnimationState.BackWalk;
+            }
+            else
+            {
+                state = AnimationState.Idle;
+            }
+            if (state != netAnimState.Value)
+            {
+                if (IsServer)
+                {
+                    netAnimState.Value = state;
+                }
+                else
+                {
+                    UpdateAnimStateServerRpc(state);
+                }
             }
         }
+        
     }
 
     void SetRotateInput(float rotateInput)
     {
-        float rotate = rotateInput * rotateSpeed;
-        if(NetworkManager.Singleton.IsServer )
+        if(IsOwner)
         {
-            netRotate.Value = rotate;
-        }
-        else if(IsOwner)
-        {
-            RotateRequestServerRpc(rotate);
+            float rotate = rotateInput * rotateSpeed;
+            if(IsServer)
+            {
+                netRotate.Value = rotate;
+            }
+            else
+            {
+                RotateRequestServerRpc(rotate);
+            }
         }
     }
 
@@ -171,13 +177,23 @@ public class NetPlayer : NetworkBehaviour
         animator.SetTrigger(newValue.ToString());
     }
 
+
+    // 채팅 ----------------------------------------------------------------------------------
+
     /// <summary>
     /// 채팅을 보내는 함수
     /// </summary>
     /// <param name="message"></param>
     public void SendChat(string message)
     {
-
+        if(IsServer)
+        {
+            chatString.Value = message;
+        }
+        else
+        {
+            RequestChatServerRpc(message);
+        }
     }
 
     /// <summary>
@@ -187,6 +203,7 @@ public class NetPlayer : NetworkBehaviour
     /// <param name="newValue"></param>
     private void OnChatRecieve(FixedString512Bytes previousValue, FixedString512Bytes newValue)
     {
+        GameManager.Instance.Log(newValue.ToString());
     }
 
 
@@ -208,6 +225,12 @@ public class NetPlayer : NetworkBehaviour
     void UpdateAnimStateServerRpc(AnimationState state)
     {
         netAnimState.Value = state;
+    }
+
+    [ServerRpc]
+    void RequestChatServerRpc(FixedString512Bytes message)
+    {
+        chatString.Value = message;
     }
 
 }
