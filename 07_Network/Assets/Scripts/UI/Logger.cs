@@ -45,13 +45,22 @@ public class Logger : MonoBehaviour
         // onSubmit;    // 입력이 완료되었을 때 실행(엔터쳤을 때만 실행)
         inputField.onSubmit.AddListener((text) =>
         {
-            if(GameManager.Instance.Player != null)
+            // 입력한 라인의 첫번째 글자가 '/'라면 콘솔 명령을 처리한다.
+
+            if(false/*첫글자 확인*/)
             {
-                GameManager.Instance.Player.SendChat(text);
+                ConsoleCommand(text);
             }
             else
             {
-                Log(text);
+                if(GameManager.Instance.Player != null)
+                {
+                    GameManager.Instance.Player.SendChat(text);
+                }
+                else
+                {
+                    Log(text);
+                }
             }
 
             inputField.text = string.Empty;     // 입력 완료되면 비우기
@@ -194,5 +203,17 @@ public class Logger : MonoBehaviour
         }
 
         return result;
+    }
+
+    /// <summary>
+    /// 개발용 콘솔 명령어 처리하는 함수
+    /// </summary>
+    /// <param name="command">입력받은 명령어</param>
+    void ConsoleCommand(string command)
+    {
+        // command의 첫글자는 '/'
+
+        // command가 "/setname 가가가"로 입력되면 GameManager의 UserName이 "가가가"로 설정된다.
+        // command가 "/setcolor 1,0,0"로 입력되면 플레이어의 색상은 빨간색이 되어야 한다.
     }
 }

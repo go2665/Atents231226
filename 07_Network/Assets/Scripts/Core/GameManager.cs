@@ -27,6 +27,36 @@ public class GameManager : NetSingleton<GameManager>
     /// </summary>
     public Action<int> onPlayersInGameChange;
 
+    /// <summary>
+    /// 현재 사용자의 이름
+    /// </summary>
+    string userName = "디폴트";
+    public string UserName
+    {
+        get => userName;
+        set
+        {
+            userName = value;
+            onUserNameChange?.Invoke(userName);
+        }
+    }
+    public Action<string> onUserNameChange;
+
+    /// <summary>
+    /// 현재 사용자의 색상
+    /// </summary>
+    Color userColor = Color.clear;
+    public Color UserColor
+    {
+        get => userColor;
+        set
+        {
+            userColor = value;
+            onUserColorChange?.Invoke(userColor);
+        }
+    }
+    public Action<Color> onUserColorChange;
+
 
     protected override void OnInitialize()
     {
