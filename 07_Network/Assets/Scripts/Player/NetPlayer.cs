@@ -99,6 +99,14 @@ public class NetPlayer : NetworkBehaviour
         }
     }
 
+    public override void OnNetworkDespawn()
+    {
+        if(IsOwner)
+        {
+            GameManager.Instance.onPlayerDisconnected?.Invoke();
+        }
+    }
+
     private void Update()
     {
         if (netMoveDir.Value != 0.0f)

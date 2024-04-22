@@ -20,6 +20,8 @@ public class NetPlayerDecorator : NetworkBehaviour
     NetworkVariable<FixedString32Bytes> userName = new NetworkVariable<FixedString32Bytes>();
     NamePlate namePlate;
 
+    
+
     private void Awake()
     {
         playerRenderer = GetComponentInChildren<Renderer>();
@@ -32,12 +34,6 @@ public class NetPlayerDecorator : NetworkBehaviour
         userName.OnValueChanged += OnNameSet;
     }
 
-
-    private void OnBodyColorChange(Color previousValue, Color newValue)
-    {
-        bodyMaterial.SetColor(BaseColor_Hash, newValue);
-    }
-
     public override void OnNetworkSpawn()
     {
         if(IsServer)
@@ -47,6 +43,7 @@ public class NetPlayerDecorator : NetworkBehaviour
         bodyMaterial.SetColor(BaseColor_Hash, bodyColor.Value);
     }
 
+    // 이름 설정용 -------------------------------------------------------------------------------------
     public void SetName(string name)
     {
         if(IsOwner)
@@ -76,5 +73,33 @@ public class NetPlayerDecorator : NetworkBehaviour
     public void RefreshNamePlate()
     {
         namePlate.SetName(userName.Value.ToString());
+    }
+
+    // 색상 설정용 -------------------------------------------------------------------------------------------------
+
+    public void SetColor(Color color)
+    {
+        if(IsOwner)
+        {
+            if(IsServer)
+            {
+                bodyColor.Value = color;
+            }
+            else
+            {
+                RequestBodyColorChangeServerRpc(color);
+            }
+        }
+    }
+
+    [ServerRpc]
+    void RequestBodyColorChangeServerRpc(Color color)
+    {
+        bodyColor.Value = color;
+    }
+
+    private void OnBodyColorChange(Color previousValue, Color newValue)
+    {
+        bodyMaterial.SetColor(BaseColor_Hash, newValue);
     }
 }

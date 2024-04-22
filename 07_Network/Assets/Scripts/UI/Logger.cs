@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.UI;
 
 public class Logger : MonoBehaviour
 {
@@ -227,8 +225,44 @@ public class Logger : MonoBehaviour
         {
             case "/setname":
                 gameManager.UserName = dataToken;
+                if (gameManager.PlayerDeco != null)
+                {
+                    // 접속을 하지 않았으면 없다.
+                    gameManager.PlayerDeco.SetName(dataToken);
+                }
                 break;
             case "/setcolor":
+                string[] colorStrings = dataToken.Split(',', ' ');
+                float[] colorValues = new float[3] { 0, 0, 0 };
+
+                int count = 0;
+                foreach(string color in  colorStrings)
+                {
+                    if (color.Length == 0)
+                        continue;
+
+                    if (count > 2)  // 총 3개만 처리
+                        break;
+
+                    if (!float.TryParse(color, out colorValues[count]))
+                    {
+                        colorValues[count] = 0;
+                    }
+                    count++;
+                }
+
+                for(int i = 0;i<colorValues.Length;i++)
+                {
+                    colorValues[i] = Mathf.Clamp01(colorValues[i]);
+                }
+
+                Color resultColor = new Color(colorValues[0], colorValues[1], colorValues[2]);
+                if (gameManager.PlayerDeco != null)
+                {
+                    // 접속을 하지 않았으면 없다.
+                    gameManager.PlayerDeco.SetColor(resultColor);
+                }
+                gameManager.UserColor = resultColor;
                 break;
         }
     }
