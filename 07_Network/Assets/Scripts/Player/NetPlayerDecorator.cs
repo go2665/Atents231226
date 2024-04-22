@@ -20,7 +20,29 @@ public class NetPlayerDecorator : NetworkBehaviour
     NetworkVariable<FixedString32Bytes> userName = new NetworkVariable<FixedString32Bytes>();
     NamePlate namePlate;
 
-    
+
+    // 이팩트 -------------------------------------------------------------------------------------
+    NetworkVariable<bool> netEffectState = new NetworkVariable<bool>(false);
+    public bool IsEffectOn
+    {
+        get => netEffectState.Value;
+        set
+        {
+            if (netEffectState.Value != value)
+            {
+                if (IsServer)
+                {
+                    netEffectState.Value = value;
+                }
+                else
+                {
+                    UpdateEffectStateServerRpc(value);
+                }
+            }
+        }
+    }
+    readonly int EmissionIntensity_Hash = Shader.PropertyToID("_EmissionIntensity");
+
 
     private void Awake()
     {
@@ -32,6 +54,9 @@ public class NetPlayerDecorator : NetworkBehaviour
 
         namePlate = GetComponentInChildren<NamePlate>();
         userName.OnValueChanged += OnNameSet;
+
+
+        netEffectState.OnValueChanged += OnEffectStateChange;
     }
 
     public override void OnNetworkSpawn()
@@ -101,5 +126,27 @@ public class NetPlayerDecorator : NetworkBehaviour
     private void OnBodyColorChange(Color previousValue, Color newValue)
     {
         bodyMaterial.SetColor(BaseColor_Hash, newValue);
+    }
+
+
+    // 이팩트용 ------------------------------------------------------------------------------
+
+
+    private void OnEffectStateChange(bool previousValue, bool newValue)
+    {
+        if(newValue)
+        {
+            bodyMaterial.SetFloat(EmissionIntensity_Hash, 1.0f);
+        }
+        else
+        {
+            bodyMaterial.SetFloat(EmissionIntensity_Hash, 0.0f);
+        }
+    }
+
+    [ServerRpc]
+    void UpdateEffectStateServerRpc(bool isOn)
+    {
+        netEffectState.Value = isOn;
     }
 }

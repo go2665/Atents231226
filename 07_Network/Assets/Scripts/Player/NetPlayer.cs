@@ -55,7 +55,6 @@ public class NetPlayer : NetworkBehaviour
     /// </summary>
     NetworkVariable<FixedString512Bytes> chatString = new NetworkVariable<FixedString512Bytes>();
 
-
     // 컴포넌트 들
     CharacterController controller;
     Animator animator;
@@ -70,7 +69,7 @@ public class NetPlayer : NetworkBehaviour
         inputActions = new PlayerInputActions();
 
         netAnimState.OnValueChanged += OnAnimStateChange;
-        chatString.OnValueChanged += OnChatRecieve;
+        chatString.OnValueChanged += OnChatRecieve;        
     }
 
     private void OnEnable()
