@@ -55,6 +55,21 @@ public class NetPlayer : NetworkBehaviour
     /// </summary>
     NetworkVariable<FixedString512Bytes> chatString = new NetworkVariable<FixedString512Bytes>();
 
+    /// <summary>
+    /// 공격용 총알 프리팹
+    /// </summary>
+    public GameObject bulletPrefab;
+
+    /// <summary>
+    /// 공격용 오브 프리팹
+    /// </summary>
+    public GameObject orbPrefab;
+
+    /// <summary>
+    /// 발사 위치용 트랜스폼
+    /// </summary>
+    Transform fireTransform;
+
     // 컴포넌트 들
     CharacterController controller;
     Animator animator;
@@ -69,7 +84,9 @@ public class NetPlayer : NetworkBehaviour
         inputActions = new PlayerInputActions();
 
         netAnimState.OnValueChanged += OnAnimStateChange;
-        chatString.OnValueChanged += OnChatRecieve;        
+        chatString.OnValueChanged += OnChatRecieve;
+
+        fireTransform = transform.GetChild(4);
     }
 
     private void OnEnable()
@@ -79,10 +96,14 @@ public class NetPlayer : NetworkBehaviour
         inputActions.Player.MoveForward.canceled += OnMoveInput;
         inputActions.Player.Rotate.performed += OnRotate;
         inputActions.Player.Rotate.canceled += OnRotate;
+        inputActions.Player.Attack1.performed += OnAttack1;
+        inputActions.Player.Attack2.performed += OnAttack2;
     }
 
     private void OnDisable()
     {
+        inputActions.Player.Attack2.performed -= OnAttack2;
+        inputActions.Player.Attack1.performed -= OnAttack1;
         inputActions.Player.Rotate.canceled -= OnRotate;
         inputActions.Player.Rotate.performed -= OnRotate;
         inputActions.Player.MoveForward.canceled -= OnMoveInput;
@@ -92,7 +113,7 @@ public class NetPlayer : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if(IsOwner)
+        if (IsOwner)
         {
             GameManager.Instance.VCam.Follow = transform.GetChild(0);
         }
@@ -100,7 +121,7 @@ public class NetPlayer : NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
-        if(IsOwner)
+        if (IsOwner)
         {
             GameManager.Instance.VCam.Follow = null;
             GameManager.Instance.onPlayerDisconnected?.Invoke();
@@ -128,19 +149,30 @@ public class NetPlayer : NetworkBehaviour
         float rotateInput = context.ReadValue<float>(); // 키보드라 -1, 0, 1 중 하나
         SetRotateInput(rotateInput);
     }
+    private void OnAttack1(InputAction.CallbackContext obj)
+    {
+        // 좌클릭 : 총알 발사
+        Attack1();
+    }
 
-    // 기타 ------------------------------------------------------------------------------------------
-    
+    private void OnAttack2(InputAction.CallbackContext obj)
+    {
+        // 우클릭 : 오브발사
+        Attack2();
+    }
+
+    // 이동 및 공격 ----------------------------------------------------------------------------------------
+
     /// <summary>
     /// 이동 입력 처리용 함수
     /// </summary>
     /// <param name="moveInput">이동 입력 된 정도</param>
     void SetMoveInput(float moveInput)
-    {        
-        if(IsOwner) // 오너일 일때만 이동 처리
+    {
+        if (IsOwner) // 오너일 일때만 이동 처리
         {
             float moveDir = moveInput * moveSpeed;  // 이동 정도 결정
-            if(IsServer)
+            if (IsServer)
             {
                 netMoveDir.Value = moveDir;         // 서버면 직접 수정
             }
@@ -175,7 +207,7 @@ public class NetPlayer : NetworkBehaviour
                 }
             }
         }
-        
+
     }
 
     /// <summary>
@@ -184,10 +216,10 @@ public class NetPlayer : NetworkBehaviour
     /// <param name="rotateInput">회전 입력 정도</param>
     void SetRotateInput(float rotateInput)
     {
-        if(IsOwner) // 오너일 때만 처리
+        if (IsOwner) // 오너일 때만 처리
         {
             float rotate = rotateInput * rotateSpeed;   // 회전량 결정
-            if(IsServer)
+            if (IsServer)
             {
                 netRotate.Value = rotate;       // 서버면 직접 주성
             }
@@ -208,6 +240,15 @@ public class NetPlayer : NetworkBehaviour
         animator.SetTrigger(newValue.ToString());   // 새 값으로 변경
     }
 
+    void Attack1()
+    {
+
+    }
+
+    void Attack2()
+    {
+        GameObject orb = Instantiate(orbPrefab, fireTransform.position, fireTransform.rotation);
+    }
 
     // 채팅 ----------------------------------------------------------------------------------
 
