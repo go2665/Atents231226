@@ -23,7 +23,7 @@ public class NetEnergyOrb : NetworkBehaviour
     public float expolsionRadius = 5.0f;
 
 
-    bool isUsed = false;
+    //bool isUsed = false;
 
     Rigidbody rigid;
     VisualEffect effect;
@@ -34,48 +34,66 @@ public class NetEnergyOrb : NetworkBehaviour
         effect = GetComponent<VisualEffect>();
     }
 
-    private void Start()
-    {
-        transform.Rotate(-30.0f, 0, 0);
-        rigid.velocity = speed * transform.forward;
-    }
-
     public override void OnNetworkSpawn()
     {
-        if(IsOwner)
+        if(IsServer && IsOwner)
         {
+            transform.Rotate(-30.0f, 0, 0);
+            rigid.velocity = speed * transform.forward;
             StartCoroutine(SelfDespawn());
         }
+    }
+
+    [ServerRpc]
+    void SetVelocityServerRpc(Vector3 newVelocity)
+    {
+        rigid.velocity = newVelocity;
     }
 
     IEnumerator SelfDespawn()
     {
         yield return new WaitForSeconds(lifeTime);
-        if(IsServer)
+
+        if(IsOwner && this.NetworkObject.IsSpawned)
         {
-            this.NetworkObject.Despawn();
-        }
-        else
-        {
-            RequestDespawnServerRpc();
+            if(IsServer)
+            {
+                this.NetworkObject.Despawn();
+            }
+            else
+            {
+                RequestDespawnServerRpc();
+            }
         }
     }
 
+    // 충돌은 서버만 감지 가능
     private void OnCollisionEnter(Collision collision)
     {
-        if (!IsOwner && !this.NetworkObject.IsSpawned)  // 오너가 아니면 무시. spawn되기 전에 일어난 충돌은 무시
+        if (!this.NetworkObject.IsSpawned)  // spawn되기 전에 일어난 충돌은 무시
             return;
 
-        if(!isUsed)
+        //if(!isUsed)
         {
             Collider[] result = Physics.OverlapSphere(transform.position, expolsionRadius, LayerMask.GetMask("Player"));
 
             if(result.Length > 0)
             {
+                List<ulong> targets = new List<ulong>(result.Length);
                 foreach(Collider col in result)
                 {
-                    Debug.Log(col.gameObject.name);
+                    NetPlayer hitted = col.gameObject.GetComponent<NetPlayer>();
+                    targets.Add(hitted.OwnerClientId);
                 }
+
+                ClientRpcParams clientRpcParams = new ClientRpcParams
+                {
+                    Send = new ClientRpcSendParams
+                    {
+                        TargetClientIds = targets.ToArray()
+                    }
+                };
+                PlayerDieClientRpc(clientRpcParams);
             }
 
             EffectProcessClientRpc();            
@@ -88,13 +106,17 @@ public class NetEnergyOrb : NetworkBehaviour
     [ClientRpc]
     void EffectProcessClientRpc()
     {
-        if(IsOwner)
-        { 
-            rigid.useGravity = false;
-            rigid.isKinematic = true;
-            StartCoroutine(EffectFinishProcess());
-            isUsed = true;
-        }
+        rigid.useGravity = false;
+        rigid.drag = Mathf.Infinity;
+        StartCoroutine(EffectFinishProcess());
+        //isUsed = true;
+    }
+
+    [ClientRpc]
+    void PlayerDieClientRpc(ClientRpcParams clientRpcParams = default)
+    {
+        NetPlayer player = GameManager.Instance.Player;
+        player.SendChat($"[{GameManager.Instance.Player.name}]이 죽었음");
     }
 
     IEnumerator EffectFinishProcess()
@@ -145,11 +167,14 @@ public class NetEnergyOrb : NetworkBehaviour
         // 모든 파티클 제거
         if(IsServer)
         {
-            NetworkObject.Despawn();
+            this.NetworkObject.Despawn();
         }
         else
         {
-            RequestDespawnServerRpc();
+            if(IsOwner)
+            {
+                RequestDespawnServerRpc();
+            }
         }
     }
 
