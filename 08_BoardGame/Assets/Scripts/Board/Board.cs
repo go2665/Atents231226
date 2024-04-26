@@ -134,7 +134,7 @@ public class Board : MonoBehaviour
     public Vector2Int GetMouseGridPosition()
     {
         Vector2 screen = Mouse.current.position.ReadValue();
-        Vector3 world = Camera.main.ScreenToWorldPoint(screen);
+        Vector3 world = Camera.main.ScreenToWorldPoint(screen);        
         return WorldToGrid(world);
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Test_Board : TestBase
+public class Test_02_Board : TestBase
 {
     public Board board;
 
