@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Board : MonoBehaviour
 {
@@ -14,9 +17,9 @@ public class Board : MonoBehaviour
     /// </summary>
     /// <param name="index">인덱스 값</param>
     /// <returns>보드 상의 그리드 위치</returns>
-    public Vector2Int IndexToGrid(int index)
+    public Vector2Int IndexToGrid(uint index)
     {
-        return Vector2Int.zero;
+        return new Vector2Int((int)index % BoardSize, (int)index / BoardSize);
     }
 
     /// <summary>
@@ -24,9 +27,25 @@ public class Board : MonoBehaviour
     /// </summary>
     /// <param name="index">인덱스 값</param>
     /// <returns>계산된 월드 좌표</returns>
-    public Vector3 IndexToWorld(int index)
+    public Vector3 IndexToWorld(uint index)
     {
-        return Vector3.zero;
+        return GridToWorld(IndexToGrid(index));
+    }
+
+    /// <summary>
+    /// 그리드 좌표를 배열의 인덱스 값으로 변경하는 함수
+    /// </summary>
+    /// <param name="x">그리드의 x좌표</param>
+    /// <param name="y">그리드의 y좌표</param>
+    /// <returns>그리드 좌표가 보드 안이면 해당하는 인덱스, 아니면 null</returns>
+    public int? GridToIndex(int x, int y)
+    {
+        int? result = null;
+        if( IsInBoard(x,y) )
+        {
+            result = x + y * BoardSize;
+        }
+        return result;
     }
 
     /// <summary>
@@ -36,7 +55,7 @@ public class Board : MonoBehaviour
     /// <returns>그리드 좌표가 보드 안이면 해당하는 인덱스, 아니면 null</returns>
     public int? GridToIndex(Vector2Int grid)
     {
-        return null;
+        return GridToIndex(grid.x, grid.y);
     }
 
     /// <summary>
@@ -44,10 +63,20 @@ public class Board : MonoBehaviour
     /// </summary>
     /// <param name="x">그리드의 x좌표</param>
     /// <param name="y">그리드의 y좌표</param>
-    /// <returns>계산된 월드좌표</returns>
+    /// <returns>계산된 월드좌표(그리드의 중심점)</returns>
     public Vector3 GridToWorld(int x, int y)
     {
-        return Vector3.zero;
+        return transform.position + new Vector3(x + 0.5f, 0, -(y + 0.5f));
+    }
+
+    /// <summary>
+    /// 그리드 좌표를 월드 좌표로 변경해주는 함수
+    /// </summary>
+    /// <param name="grid">그리드 좌표</param>
+    /// <returns>계산된 월드좌표(그리드의 중심점)</returns>
+    public Vector3 GridToWorld(Vector2Int grid)
+    {
+        return GridToWorld(grid.x, grid.y);
     }
 
     /// <summary>
@@ -57,7 +86,11 @@ public class Board : MonoBehaviour
     /// <returns>계산된 그리드 좌표</returns>
     public Vector2Int WorldToGrid(Vector3 world)
     {
-        return Vector2Int.zero;
+        world.y = transform.position.y; // x,z의 차이만 구하기 위해 y는 보드의 위치와 일치시키기
+
+        Vector3 diff = world - transform.position;
+
+        return new Vector2Int(Mathf.FloorToInt(diff.x), Mathf.FloorToInt(-diff.z));
     }    
 
     /// <summary>
@@ -67,7 +100,10 @@ public class Board : MonoBehaviour
     /// <returns>true면 보드 안, false면 보드 밖</returns>
     public bool IsInBoard(Vector3 world)
     {
-        return false;
+        world.y = transform.position.y;
+        Vector3 diff = world - transform.position;
+
+        return diff.x >= 0 && diff.x <= BoardSize && diff.z <= 0 && diff.z >= -BoardSize;
     }
 
     /// <summary>
@@ -78,7 +114,7 @@ public class Board : MonoBehaviour
     /// <returns>true면 보드 안, false면 보드 밖</returns>
     public bool IsInBoard(int x, int y)
     {
-        return false;
+        return x > -1 && x < BoardSize && y > -1 && y < BoardSize;
     }
 
     /// <summary>
@@ -88,7 +124,7 @@ public class Board : MonoBehaviour
     /// <returns>true면 보드 안, false면 보드 밖</returns>
     public bool IsInBoard(Vector2Int grid)
     {
-        return false;
+        return IsInBoard(grid.x, grid.y);
     }
 
     /// <summary>
@@ -97,6 +133,8 @@ public class Board : MonoBehaviour
     /// <returns>그리드 좌표</returns>
     public Vector2Int GetMouseGridPosition()
     {
-        return Vector2Int.zero;
+        Vector2 screen = Mouse.current.position.ReadValue();
+        Vector3 world = Camera.main.ScreenToWorldPoint(screen);
+        return WorldToGrid(world);
     }
 }
