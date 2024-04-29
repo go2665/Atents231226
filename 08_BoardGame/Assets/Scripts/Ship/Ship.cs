@@ -122,7 +122,7 @@ public class Ship : MonoBehaviour
         set
         {
             direction = value;
-            //modelRoot
+            modelRoot.rotation = Quaternion.Euler(0, (int)direction * 90.0f, 0);    // 방향이 변경되면 방향에 맞게 회전
         }
     }
 
@@ -171,6 +171,8 @@ public class Ship : MonoBehaviour
     /// </summary>
     public Action<Ship> onSink;
 
+    int shipDirectionCount;
+
     /// <summary>
     /// 배 초기화용 함수
     /// </summary>
@@ -187,6 +189,8 @@ public class Ship : MonoBehaviour
 
         gameObject.name = $"{Type}_{Size}";
         gameObject.SetActive(false);
+
+        shipDirectionCount = ShipManager.Instance.ShipDirectionCount;
     }
 
     /// <summary>
@@ -230,7 +234,17 @@ public class Ship : MonoBehaviour
     /// <param name="isCW">true면 시계방향, false면 반시계방향</param>
     public void Rotate(bool isCW = true)
     {
-
+        // 회전방향에 따라 방향 +-1
+        if(isCW)
+        {
+            Direction = (ShipDirection)(((int)Direction + 1) % shipDirectionCount);
+        }
+        else
+        {
+            // 음수 %연산이 일어나는 것을 방지
+            // %연산을 할 때는 나누는 숫자를 몇번을 더해도 결과에 영향을 주지 않는다.
+            Direction = (ShipDirection)(((int)Direction + (shipDirectionCount - 1)) % shipDirectionCount);
+        }
     }
 
     /// <summary>
