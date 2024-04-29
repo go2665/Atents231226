@@ -7,8 +7,67 @@ using UnityEngine.InputSystem;
 
 public class Board : MonoBehaviour
 {
-    // 각종 유틸리티 함수들(위치 관련)
+    /// <summary>
+    /// 보드 크기
+    /// </summary>
     public const int BoardSize = 10;
+
+    /// <summary>
+    /// 보드에 배치되어 있는 배의 정보(빈곳은 None) 
+    /// </summary>
+    ShipType[] shipInfo;
+
+    private void Awake()
+    {
+        shipInfo = new ShipType[BoardSize * BoardSize]; // 기본적으로 None으로 세팅
+    }
+
+    // 함선 배치 관련 함수들 -----------------------------------------------------------------------------------------
+    
+    /// <summary>
+    /// 함선을 배치하는 함수
+    /// </summary>
+    /// <param name="ship">배치할 함선(위치, 방향, 크기 등의 정보 사용)</param>
+    /// <param name="grid">배치될 위치(함선의 머리 위치, 그리드 좌표)</param>
+    /// <returns>배치 성공하면 true, 아니면 false</returns>
+    public bool ShipDeployment(Ship ship, Vector2Int grid)
+    {
+        return false;
+    }
+
+    /// <summary>
+    /// 함선을 배치하는 함수
+    /// </summary>
+    /// <param name="ship">배치할 함선(위치, 방향, 크기 등의 정보 사용)</param>
+    /// <param name="world">배치될 위치(함선의 머리 위치, 월드좌표)</param>
+    /// <returns>배치 성공하면 true, 아니면 false</returns>
+    public bool ShipDeployment(Ship ship, Vector3 world)
+    {
+        return ShipDeployment(ship, WorldToGrid(world));
+    }
+
+    /// <summary>
+    /// 함선이 특정 위치에 배치될 수 있는지 확인하는 함수
+    /// </summary>
+    /// <param name="ship">확인할 배</param>
+    /// <param name="grid">확인할 배치 위치(함선의 머리 위치, 그리드 좌표)</param>
+    /// <returns>true면 배치가능, false면 배치 불가능</returns>
+    public bool IsShipDeploymentAvailable(Ship ship, Vector2Int grid)
+    {
+        return false;
+    }
+
+    /// <summary>
+    /// 함선이 특정 위치에 배치될 수 있는지 확인하는 함수
+    /// </summary>
+    /// <param name="ship">확인할 배</param>
+    /// <param name="world">확인할 배치 위치(함선의 머리 위치, 월드 좌표)</param>
+    /// <returns>true면 배치가능, false면 배치 불가능</returns>
+    public bool IsShipDeploymentAvailable(Ship ship, Vector3 world)
+    {
+        return IsShipDeploymentAvailable(ship, WorldToGrid(world));
+    }
+
 
     // 좌표 변환용 유틸리티 함수들-------------------------------------------------------------------------------------
 
