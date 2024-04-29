@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Test_04_ShipDeployment : TestBase
+public class Test_04_ShipMovement : TestBase
 {
     public Board board;
     public Ship ship;
