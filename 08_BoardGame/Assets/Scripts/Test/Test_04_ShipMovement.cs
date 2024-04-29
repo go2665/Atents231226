@@ -29,21 +29,26 @@ public class Test_04_ShipMovement : TestBase
 
     private void OnMouseMove(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        //Debug.Log(context.ReadValue<Vector2>());
-        
-        Vector2Int grid = board.GetMouseGridPosition();
-        Vector3 world = board.GridToWorld(grid);
-        ship.transform.position = world;
+        if(ship != null)
+        {
+            //Debug.Log(context.ReadValue<Vector2>());
+            Vector2Int grid = board.GetMouseGridPosition();
+            Vector3 world = board.GridToWorld(grid);
+            ship.transform.position = world;
+        }
     }
 
     private void OnMouseWheel(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        //Debug.Log(context.ReadValue<float>());
-        float wheel = context.ReadValue<float>();
-        if (wheel > 0)
-            ship.Rotate(false);
-        else
-            ship.Rotate(true);
+        if(ship != null)
+        {
+            //Debug.Log(context.ReadValue<float>());
+            float wheel = context.ReadValue<float>();
+            if (wheel > 0)
+                ship.Rotate(false);
+            else
+                ship.Rotate(true);
+        }
     }
 
 }

@@ -218,6 +218,8 @@ public class Ship : MonoBehaviour
     /// <param name="deployPositions">배치되는 위치들</param>
     public void Deploy(Vector2Int[] deployPositions)
     {
+        isDeployed = true;              // 배치되었다고 표시
+        positions = deployPositions;    // 배치된 위치(그리드 좌표) 기록
     }
 
     /// <summary>
@@ -225,7 +227,7 @@ public class Ship : MonoBehaviour
     /// </summary>
     public void UnDeploy()
     {
-
+        ResetData();                    // 모든 데이터 초기화
     }
 
     /// <summary>
