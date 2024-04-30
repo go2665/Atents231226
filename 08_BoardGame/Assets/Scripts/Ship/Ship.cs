@@ -263,7 +263,11 @@ public class Ship : MonoBehaviour
     /// </summary>
     public void RandomRotate()
     {
-
+        int rotateCount = UnityEngine.Random.Range(0, shipDirectionCount);  // 0~3 중 하나를 랜덤으로 정하기
+        for(int i=0;i<rotateCount; i++)
+        {
+            Rotate();   // 그만큼 회전 시키기
+        }
     }
 
     /// <summary>

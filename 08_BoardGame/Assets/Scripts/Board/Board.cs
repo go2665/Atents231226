@@ -163,12 +163,15 @@ public class Board : MonoBehaviour
     /// <param name="ship">배치 해제할 함선</param>
     public void UndoShipDeployment(Ship ship)
     {
-        foreach(var pos in ship.Positions)
+        if(ship.IsDeployed) // 배치된 배만 배치 해제할 수 있다.
         {
-            shipInfo[GridToIndex(pos).Value] = ShipType.None;   // 기록된 위치들을 초기화
+            foreach(var pos in ship.Positions)
+            {
+                shipInfo[GridToIndex(pos).Value] = ShipType.None;   // 기록된 위치들을 초기화
+            }
+            ship.UnDeploy();                    // 함선 개별 배치 해제 처리
+            ship.gameObject.SetActive(false);   // 함선 안보이게 만들기
         }
-        ship.UnDeploy();                    // 함선 개별 배치 해제 처리
-        ship.gameObject.SetActive(false);   // 함선 안보이게 만들기
     }
 
     /// <summary>
@@ -178,6 +181,10 @@ public class Board : MonoBehaviour
     public void ResetBoard(Ship[] ships)
     {
         // ships 전부 배치 해제
+        foreach (var ship in ships)
+        {
+            UndoShipDeployment(ship);
+        }
     }
 
     // 좌표 변환용 유틸리티 함수들-------------------------------------------------------------------------------------
