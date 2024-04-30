@@ -16,7 +16,7 @@ public class Test_05_ShipDeployment : Test_04_ShipMovement
     /// <summary>
     /// 모든 배
     /// </summary>
-    Ship[] testShips;
+    protected Ship[] testShips;
 
     /// <summary>
     /// 현재 배치하기 위해 선택 중인 배를 확인하고 설정하기 위한 프로퍼티
@@ -33,7 +33,7 @@ public class Test_05_ShipDeployment : Test_04_ShipMovement
 
             ship = value;
 
-            if(ship != null)    // 새로 배가 설정되면
+            if (ship != null && !ship.IsDeployed)    // 새로 배가 설정되면
             {
                 ship.SetMaterialType(false);        // 머티리얼 배치 모드로 바꾸기
                 ship.transform.position = board.GridToWorld(board.GetMouseGridPosition());  // 마우스 위치로 배 옮기고
@@ -43,7 +43,7 @@ public class Test_05_ShipDeployment : Test_04_ShipMovement
         }
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         testShips = new Ship[ShipManager.Instance.ShipTypeCount];
         testShips[(int)ShipType.Carrier - 1] = ShipManager.Instance.MakeShip(ShipType.Carrier, transform);
@@ -88,7 +88,7 @@ public class Test_05_ShipDeployment : Test_04_ShipMovement
         }
         else
         {
-            Debug.Log("배치 실패");
+            //Debug.Log("배치 실패");
         }
     }
 

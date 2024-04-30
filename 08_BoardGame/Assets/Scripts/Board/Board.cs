@@ -171,6 +171,15 @@ public class Board : MonoBehaviour
         ship.gameObject.SetActive(false);   // 함선 안보이게 만들기
     }
 
+    /// <summary>
+    /// 보드 초기화용 함수
+    /// </summary>
+    /// <param name="ships">배치 해제할 배들</param>
+    public void ResetBoard(Ship[] ships)
+    {
+        // ships 전부 배치 해제
+    }
+
     // 좌표 변환용 유틸리티 함수들-------------------------------------------------------------------------------------
 
     /// <summary>
