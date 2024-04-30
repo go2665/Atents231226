@@ -210,6 +210,14 @@ public class Ship : MonoBehaviour
     /// <param name="isNormal">true면 불투명한 머티리얼, false면 배치모드용 반투명 머티리얼</param>
     public void SetMaterialType(bool isNormal = true)
     {
+        if(isNormal)
+        {
+            shipRenderer.material = ShipManager.Instance.NormalShipMaterial;
+        }
+        else
+        {
+            shipRenderer.material = ShipManager.Instance.DeplyModeShipMaterial;
+        }
     }
 
     /// <summary>
@@ -218,6 +226,7 @@ public class Ship : MonoBehaviour
     /// <param name="deployPositions">배치되는 위치들</param>
     public void Deploy(Vector2Int[] deployPositions)
     {
+        SetMaterialType();              // 머티리얼을 정상으로 돌리기
         isDeployed = true;              // 배치되었다고 표시
         positions = deployPositions;    // 배치된 위치(그리드 좌표) 기록
     }

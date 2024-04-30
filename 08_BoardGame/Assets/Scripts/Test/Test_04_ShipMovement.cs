@@ -35,6 +35,8 @@ public class Test_04_ShipMovement : TestBase
             Vector2Int grid = board.GetMouseGridPosition();
             Vector3 world = board.GridToWorld(grid);
             ship.transform.position = world;
+
+            OnShipMovement();
         }
     }
 
@@ -48,7 +50,13 @@ public class Test_04_ShipMovement : TestBase
                 ship.Rotate(false);
             else
                 ship.Rotate(true);
+
+            OnShipMovement();
         }
+    }
+
+    protected virtual void OnShipMovement()
+    {
     }
 
 }
