@@ -21,7 +21,7 @@ public class Test_05_ShipDeployment : Test_04_ShipMovement
     /// <summary>
     /// 현재 배치하기 위해 선택 중인 배를 확인하고 설정하기 위한 프로퍼티
     /// </summary>
-    Ship TargetShip
+    protected Ship TargetShip
     {
         get => ship;
         set

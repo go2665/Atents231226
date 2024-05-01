@@ -22,7 +22,7 @@ public class Test_06_AutoShipDeployment : Test_05_ShipDeployment
     /// <summary>
     /// 아직 배치되지 않는 배를 모두 자동으로 배치하는 함수
     /// </summary>
-    void AutoShipDeployment()
+    protected void AutoShipDeployment()
     {
         Debug.Log("함선 자동 배치 실행");
 
