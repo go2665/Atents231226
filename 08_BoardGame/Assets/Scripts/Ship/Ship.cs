@@ -177,11 +177,6 @@ public class Ship : MonoBehaviour
     int shipDirectionCount;
 
     /// <summary>
-    /// 함선이 침몰했을 때 보일 배너
-    /// </summary>
-    SinkBanner sinkBanner;
-
-    /// <summary>
     /// 배 초기화용 함수
     /// </summary>
     /// <param name="shipType">배의 종류</param>
@@ -189,9 +184,6 @@ public class Ship : MonoBehaviour
     {
         Type = shipType;    // 종류 결정
         HP = Size;          // HP 종류에 맞게 설정
-
-        sinkBanner = GetComponentInChildren<SinkBanner>();
-        sinkBanner.Close();
 
         modelRoot = transform.GetChild(1);
         shipRenderer = modelRoot.GetComponentInChildren<Renderer>();
@@ -298,7 +290,6 @@ public class Ship : MonoBehaviour
     void OnSinking()
     {
         Debug.Log($"{ShipName} 침몰");
-        sinkBanner.Open(this);
         onSink?.Invoke(this);
     }
 
@@ -306,7 +297,8 @@ public class Ship : MonoBehaviour
 
     public void Test_SinkBanner()
     {
-        sinkBanner.Open(this);
+        //sinkBanner.Open(this);
+        onSink?.Invoke(this);
     }
 #endif
 

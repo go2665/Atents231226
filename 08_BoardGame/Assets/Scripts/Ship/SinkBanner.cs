@@ -15,7 +15,16 @@ public class SinkBanner : MonoBehaviour
         letter2 = transform.GetChild(2);
     }
 
-    public void Open(Ship ship)
+    private void Start()
+    {
+        Ship ship = GetComponentInParent<Ship>();
+        ship.onSink += Open;
+
+        Close();
+    }
+
+    // 침몰 배너 열기
+    void Open(Ship ship)
     {
         transform.rotation = Quaternion.Euler(0, (int)ship.Direction * 90, 0);
 
@@ -23,12 +32,9 @@ public class SinkBanner : MonoBehaviour
         background.localScale = new Vector3(1, ship.Size, 1);
         background.localPosition = new Vector3(0, 0, 0.5f + -0.5f * ship.Size);
 
-        // 글자가 바로 보이게 돌리기
+        // 글자가 바로 보이게 돌리기        
         letter1.localRotation = Quaternion.Euler(90, 0, (int)ship.Direction * 90);
         letter2.localRotation = Quaternion.Euler(90, 0, (int)ship.Direction * 90);
-
-        Vector3 letter1Pos = Vector3.zero;
-        Vector3 letter2Pos = Vector3.zero;
 
         // 글자 방향 확인
         Vector3 dir = Vector3.zero; // 배 머리 -> 꼬리 방향
@@ -56,25 +62,14 @@ public class SinkBanner : MonoBehaviour
                 break;         
         }
 
-        switch (ship.Size)
-        {
-            case 2:
-                letter1Pos = letter1.position + dir * 0.0f;
-                letter2Pos = letter2.position + dir * 0.0f;
-                break;
-            case 3:
-                letter1Pos = letter1.position + dir * 0.5f;
-                letter2Pos = letter1.position + dir * 1.5f;
-                break;
-            case 4:
-                letter1Pos = letter1.position + dir * 0.5f;
-                letter2Pos = letter1.position + dir * 2.5f;
-                break;
-            case 5:
-                letter1Pos = letter1.position + dir * 1.0f;
-                letter2Pos = letter1.position + dir * 3.0f;
-                break;
-        }
+        // 글자 위치 초기화
+        letter1.localPosition = Vector3.up * 0.01f;
+        letter2.localPosition = Vector3.up * 0.01f;
+
+        // 글자 위치 계산하기
+        float diff = (ship.Size - 2) * 0.25f;
+        Vector3 letter1Pos = letter1.position + dir * diff;
+        Vector3 letter2Pos = letter1.position + dir * (ship.Size - 1.0f - diff);
 
         // 글이 역순일 경우 위치 스왑
         if( ship.Direction == ShipDirection.East || ship.Direction == ShipDirection.South )
@@ -86,10 +81,14 @@ public class SinkBanner : MonoBehaviour
         letter1.position = letter1Pos;
         letter2.position = letter2Pos;
 
+        // 보이게 만들기
         gameObject.SetActive(true);
     }
 
-    public void Close()
+    /// <summary>
+    /// 침몰 배너 닫기
+    /// </summary>
+    void Close()
     {
         gameObject.SetActive(false);
     }

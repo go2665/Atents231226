@@ -28,11 +28,11 @@ public class Test_07_BoardAttack : Test_06_AutoShipDeployment
 
         AutoShipDeployment();
 
-        GetShip(ShipType.Carrier).Test_SinkBanner();
-        GetShip(ShipType.BattleShip).Test_SinkBanner();
-        GetShip(ShipType.Destroyer).Test_SinkBanner();
-        GetShip(ShipType.Submarine).Test_SinkBanner();
-        GetShip(ShipType.PatrolBoat).Test_SinkBanner();
+        //GetShip(ShipType.Carrier).Test_SinkBanner();
+        //GetShip(ShipType.BattleShip).Test_SinkBanner();
+        //GetShip(ShipType.Destroyer).Test_SinkBanner();
+        //GetShip(ShipType.Submarine).Test_SinkBanner();
+        //GetShip(ShipType.PatrolBoat).Test_SinkBanner();
     }
 
     protected override void OnTestLClick(InputAction.CallbackContext context)
