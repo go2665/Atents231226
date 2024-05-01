@@ -27,6 +27,12 @@ public class Test_07_BoardAttack : Test_06_AutoShipDeployment
         board.onShipAttacked[ShipType.PatrolBoat] += GetShip(ShipType.PatrolBoat).OnHitted;
 
         AutoShipDeployment();
+
+        GetShip(ShipType.Carrier).Test_SinkBanner();
+        GetShip(ShipType.BattleShip).Test_SinkBanner();
+        GetShip(ShipType.Destroyer).Test_SinkBanner();
+        GetShip(ShipType.Submarine).Test_SinkBanner();
+        GetShip(ShipType.PatrolBoat).Test_SinkBanner();
     }
 
     protected override void OnTestLClick(InputAction.CallbackContext context)
@@ -37,8 +43,11 @@ public class Test_07_BoardAttack : Test_06_AutoShipDeployment
         if(TargetShip == null)
         {
             Vector2Int attackPos = board.GetMouseGridPosition();
-            //Debug.Log($"{attackPos} 공격");
-            board.OnAttacked(attackPos);
+            if (board.IsInBoard(attackPos) && board.IsAttackable(attackPos))
+            {
+                //Debug.Log($"{attackPos} 공격");
+                board.OnAttacked(attackPos);
+            }
         }
     }
 

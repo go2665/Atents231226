@@ -58,10 +58,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2591656255018271098, guid: afcef755050c437418a811b49b9b6d1c,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2591656255018271098, guid: afcef755050c437418a811b49b9b6d1c,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2
+      objectReference: {fileID: 0}
     - target: {fileID: 3637608584671463500, guid: afcef755050c437418a811b49b9b6d1c,
         type: 3}
       propertyPath: m_Name
-      value: ShipMode_5_Carrior Variant
+      value: ShipModel_5_Carrior Variant
       objectReference: {fileID: 0}
     - target: {fileID: 6051469638572171689, guid: afcef755050c437418a811b49b9b6d1c,
         type: 3}

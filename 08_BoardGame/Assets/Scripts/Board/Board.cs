@@ -249,6 +249,21 @@ public class Board : MonoBehaviour
         return result;
     }
 
+    public bool IsAttackable(int index)
+    {
+        return !isAttacked[index];
+    }
+
+    public bool IsAttackable(Vector2Int grid)
+    {
+        bool result = false;
+        int? index = GridToIndex(grid);
+        if(index.HasValue)       
+            result = IsAttackable(index.Value);
+
+        return result;
+    }
+
     // 좌표 변환용 유틸리티 함수들-------------------------------------------------------------------------------------
 
     /// <summary>

@@ -61,7 +61,7 @@ PrefabInstance:
     - target: {fileID: 3637608584671463500, guid: afcef755050c437418a811b49b9b6d1c,
         type: 3}
       propertyPath: m_Name
-      value: ShipModel Variant
+      value: ShipModel_2_PatrolBoatl Variant
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
