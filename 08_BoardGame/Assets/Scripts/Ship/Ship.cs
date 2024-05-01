@@ -275,7 +275,10 @@ public class Ship : MonoBehaviour
     /// </summary>
     public void OnHitted()
     {
+        Debug.Log($"{ShipName} 명중");
 
+        onHit?.Invoke(this);
+        HP--;
     }
 
     /// <summary>
@@ -283,6 +286,7 @@ public class Ship : MonoBehaviour
     /// </summary>
     void OnSinking()
     {
-
+        Debug.Log($"{ShipName} 침몰");        
+        onSink?.Invoke(this);
     }
 }
