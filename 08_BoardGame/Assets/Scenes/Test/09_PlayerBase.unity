@@ -136,6 +136,11 @@ PrefabInstance:
       propertyPath: m_Lens.OrthographicSize
       value: 8.5
       objectReference: {fileID: 0}
+    - target: {fileID: 4684868793940545738, guid: bcfc189488dd0fd4ebac59239a3e01b1,
+        type: 3}
+      propertyPath: m_ImpulseDefinition.m_ImpulseDuration
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 8095236029911347384, guid: bcfc189488dd0fd4ebac59239a3e01b1,
         type: 3}
       propertyPath: m_Name
@@ -1689,6 +1694,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9342be3a6ce742346ac8f54ddd000bc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  seed: -1
   reset: {fileID: 785084747}
   random: {fileID: 1522905568}
   resetAndRandom: {fileID: 1368554533}
