@@ -19,6 +19,7 @@ public class SinkBanner : MonoBehaviour
     {
         Ship ship = GetComponentInParent<Ship>();
         ship.onSink += Open;
+        ship.onDeploy += (_) => Close();
 
         Close();
     }

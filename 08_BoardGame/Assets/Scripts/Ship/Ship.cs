@@ -201,6 +201,7 @@ public class Ship : MonoBehaviour
     /// </summary>
     void ResetData()
     {        
+        HP = Size;
         Direction = ShipDirection.North;
         isDeployed = false;
         positions = null;
@@ -232,6 +233,8 @@ public class Ship : MonoBehaviour
         SetMaterialType();              // 머티리얼을 정상으로 돌리기
         isDeployed = true;              // 배치되었다고 표시
         positions = deployPositions;    // 배치된 위치(그리드 좌표) 기록
+
+        onDeploy?.Invoke(true);
     }
 
     /// <summary>
@@ -240,6 +243,7 @@ public class Ship : MonoBehaviour
     public void UnDeploy()
     {
         ResetData();                    // 모든 데이터 초기화
+        onDeploy?.Invoke(false);
     }
 
     /// <summary>
