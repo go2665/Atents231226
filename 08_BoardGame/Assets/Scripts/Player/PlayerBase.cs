@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -56,6 +57,7 @@ public class PlayerBase : MonoBehaviour
 
             ships[i].onHit += (_) => gameManager.CameraShake(1);    // 명중시와 침몰시 카메라 흔들림 추가
             ships[i].onSink += (_) => gameManager.CameraShake(3);
+            ships[i].onSink += OnShipDestroy;
 
             board.onShipAttacked[shipType] += ships[i].OnHitted;    // 공격 당했을 때 실행할 함수 연결
         }
@@ -73,9 +75,9 @@ public class PlayerBase : MonoBehaviour
             temp[i] = i;    // 배열 순서대로 채우고
         }
         Util.Shuffle(temp); // 섞은 후
-        normalAttackIndice = new List<uint>(temp);  // 리스트로 만들기
+        normalAttackIndices = new List<uint>(temp);  // 리스트로 만들기
 
-        criticalAttackIndice = new List<uint>(10);  // 우선 순위가 높은 공격 후보지역 만들기(비어있음)
+        criticalAttackIndices = new List<uint>(10);  // 우선 순위가 높은 공격 후보지역 만들기(비어있음)
 
         lastSuccessAttackPosition = NOT_SUCCESS;    // 이전 공격이 성공한 적 없다고 초기화
 
@@ -362,7 +364,42 @@ public class PlayerBase : MonoBehaviour
         if (opponentBoard.IsInBoard(attackGrid) && opponentBoard.IsAttackable(attackGrid))
         {
             //Debug.Log($"{attackPos} 공격");
-            opponentBoard.OnAttacked(attackGrid);
+            bool result = opponentBoard.OnAttacked(attackGrid);
+            if(result)
+            {
+                if(opponentShipDestroyed)
+                {
+                    // 지금 공격으로 적의 함선이 침몰한 경우
+                    RemoveAllCriticalPositions();   // 우선 순위가 높은 후보지역 모두 제거
+                    opponentShipDestroyed = false;  // 확인 되었으니 false로 리셋
+                }
+                else
+                {
+                    // 지금 공격으로 적의 함선이 침몰하지 않은 경우
+
+                    if(lastSuccessAttackPosition != NOT_SUCCESS)
+                    {
+                        // 연속으로 공격이 성공했다. => 한줄로 공격이 성공했다.
+                        AddCriticalFromTwoPoint(attackGrid, lastSuccessAttackPosition);
+                    }
+                    else
+                    {
+                        // 처음 성공한 공격
+                        AddCriticalFromNeighbors(attackGrid);
+                    }
+
+                    lastSuccessAttackPosition = attackGrid;
+                }
+            }
+            else
+            {
+                lastSuccessAttackPosition = NOT_SUCCESS;
+            }
+
+            uint attackIndex = (uint)board.GridToIndex(attackGrid).Value;
+            RemoveCriticalPosition(attackIndex);
+            normalAttackIndices.Remove(attackIndex);
+
         }
     }
 
@@ -387,12 +424,12 @@ public class PlayerBase : MonoBehaviour
     /// <summary>
     /// 일반 공격 후보 지역들의 인덱스들
     /// </summary>
-    List<uint> normalAttackIndice;
+    List<uint> normalAttackIndices;
 
     /// <summary>
     /// 우선 순위가 높은 공격 후보지역들의 인덱스들
     /// </summary>
-    List<uint> criticalAttackIndice;
+    List<uint> criticalAttackIndices;
 
     /// <summary>
     /// 마지막으로 공격이 성공한 그리드 좌표. NOT_SUCCESS면 이전 공격은 실패한 것
@@ -403,6 +440,18 @@ public class PlayerBase : MonoBehaviour
     /// 이전 공격이 성공하지 않았다고 표시하는 읽기 전용 변수
     /// </summary>
     readonly Vector2Int NOT_SUCCESS = -Vector2Int.one;
+
+    /// <summary>
+    /// 이웃 위치 확인용
+    /// </summary>
+    readonly Vector2Int[] neighbors = { new(-1, 0), new(1, 0), new(0, 1), new(0, -1) };
+
+    /// <summary>
+    /// 이번 공격으로 상대방의 함선이 침몰했는지 알려주는 변수(true면 침몰했다, false면 침몰하지 않았다)
+    /// </summary>
+    bool opponentShipDestroyed = false;
+
+
 
     /// <summary>
     /// 자동으로 공격하는 함수. Enemy가 공격할 때나 User가 타임 아웃되었을 때 사용하는 목적.
@@ -423,24 +472,88 @@ public class PlayerBase : MonoBehaviour
         // 공격으로 함선이 침몰되면 무조건 1번부터 시작
 
         uint target;
-        if(criticalAttackIndice.Count > 0)      // 우선 순위가 높은 공격 후보 지역이 있는지 확인
+        if(criticalAttackIndices.Count > 0)      // 우선 순위가 높은 공격 후보 지역이 있는지 확인
         {
-            target = criticalAttackIndice[0];   // 있는 것 꺼내기
-            criticalAttackIndice.RemoveAt(0);
-            normalAttackIndice.Remove(target);  // normal에서도 제거
+            target = criticalAttackIndices[0];   // 있는 것 꺼내기
+            criticalAttackIndices.RemoveAt(0);
+            normalAttackIndices.Remove(target);  // normal에서도 제거
         }
         else
         {
-            target = normalAttackIndice[0];     // 우선 순위가 높은 공격 후보지역이 없으면 normal에서 꺼내기
-            normalAttackIndice.RemoveAt(0);
+            target = normalAttackIndices[0];     // 우선 순위가 높은 공격 후보지역이 없으면 normal에서 꺼내기
+            normalAttackIndices.RemoveAt(0);
         }
 
         Attack(target);
+    }
 
+    /// <summary>
+    /// grid 사방을 우선 순위가 높은 지역으로 설정
+    /// </summary>
+    /// <param name="grid">기준 위치</param>
+    private void AddCriticalFromNeighbors(Vector2Int grid)
+    {
+        Util.Shuffle(neighbors);
+        foreach(var neighbor in neighbors)
+        {
+            Vector2Int pos = grid + neighbor;
+            if( board.IsAttackable(pos))
+            {
+                AddCritical((uint)board.GridToIndex(pos).Value);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 현재 성공지점의 양끝을 우선 순위가 높은 후보지역으로 만드는 함수
+    /// </summary>
+    /// <param name="now">지금 공격 성공한 위치</param>
+    /// <param name="last">직전에 공격 성공한 위치</param>
+    private void AddCriticalFromTwoPoint(Vector2Int now, Vector2Int last)
+    {
+    }
+
+    /// <summary>
+    /// 우선 순위가 높은 후보지역에 인덱스를 추가하는 함수
+    /// </summary>
+    /// <param name="index">추가할 인덱스</param>
+    private void AddCritical(uint index)
+    {
+        if(!criticalAttackIndices.Contains(index))  // 없을 때만 추가
+        {
+            criticalAttackIndices.Insert(0, index); // 항상 앞에 추가(새로 추가되는 위치가 성공 확률이 더 높기 때문)
+        }
+    }
+
+    /// <summary>
+    /// 우선 순위가 낮은 후보지역을 제거
+    /// </summary>
+    /// <param name="index"></param>
+    private void RemoveCriticalPosition(uint index)
+    {
+        if (criticalAttackIndices.Contains(index))
+        {
+            criticalAttackIndices.Remove(index);
+        }
+    }
+
+    /// <summary>
+    /// 모든 우선 순위가 높은 후보지역을 제거
+    /// </summary>
+    private void RemoveAllCriticalPositions()
+    {
+        criticalAttackIndices.Clear();
+        lastSuccessAttackPosition = NOT_SUCCESS;
     }
 
     // 턴 관리용 함수 ------------------------------------------------------------------------------
     // 함선 침몰 빛 패배처리 함수 -------------------------------------------------------------------
+    void OnShipDestroy(Ship ship)
+    {
+        opponent.opponentShipDestroyed = true;              // 상대방에게 (상대방의 상대방(나)) 함선이 침몰되었다고 표시
+        opponent.lastSuccessAttackPosition = NOT_SUCCESS;   // 상대방의 마지막 공격 성공 위치도 초기화(함선이 침몰했으니 의미없음)
+    }
+
     // 기타 ---------------------------------------------------------------------------------------
 
     /// <summary>
@@ -448,6 +561,7 @@ public class PlayerBase : MonoBehaviour
     /// </summary>
     public void Clear()
     {
+        opponentShipDestroyed = false;
         Board.ResetBoard(Ships);
     }
 
