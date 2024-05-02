@@ -63,6 +63,22 @@ public class PlayerBase : MonoBehaviour
         // 보드 초기화
         Board.ResetBoard(ships);
 
+        // 공격 관련 초기화
+        int fullSize = Board.BoardSize * Board.BoardSize;
+
+        // 일반 공격 후보지역 만들기
+        uint[] temp = new uint[fullSize];
+        for(uint i=0; i < fullSize; i++)
+        {
+            temp[i] = i;    // 배열 순서대로 채우고
+        }
+        Util.Shuffle(temp); // 섞은 후
+        normalAttackIndice = new List<uint>(temp);  // 리스트로 만들기
+
+        criticalAttackIndice = new List<uint>(10);  // 우선 순위가 높은 공격 후보지역 만들기(비어있음)
+
+        lastSuccessAttackPosition = NOT_SUCCESS;    // 이전 공격이 성공한 적 없다고 초기화
+
     }
 
     // 함선배치 관련 함수 --------------------------------------------------------------------------
@@ -335,6 +351,11 @@ public class PlayerBase : MonoBehaviour
     }
 
     // 공격 관련 함수 ------------------------------------------------------------------------------
+    
+    /// <summary>
+    /// 적을 공격하는 함수
+    /// </summary>
+    /// <param name="attackGrid">공격할 위치(그리드 좌표)</param>
     public void Attack(Vector2Int attackGrid)
     {
         Board opponentBoard = opponent.Board;
@@ -345,14 +366,77 @@ public class PlayerBase : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 적을 공격하는 함수
+    /// </summary>
+    /// <param name="world">공격할 위치(월드 좌표)</param>
     public void Attack(Vector3 world)
     {
         Attack(opponent.Board.WorldToGrid(world));
     }
 
+    /// <summary>
+    /// 적을 공격하는 함수
+    /// </summary>
+    /// <param name="index">공격할 위치(인덱스)</param>
     public void Attack(uint index)
     {
         Attack(opponent.Board.IndexToGrid(index));
+    }
+
+    /// <summary>
+    /// 일반 공격 후보 지역들의 인덱스들
+    /// </summary>
+    List<uint> normalAttackIndice;
+
+    /// <summary>
+    /// 우선 순위가 높은 공격 후보지역들의 인덱스들
+    /// </summary>
+    List<uint> criticalAttackIndice;
+
+    /// <summary>
+    /// 마지막으로 공격이 성공한 그리드 좌표. NOT_SUCCESS면 이전 공격은 실패한 것
+    /// </summary>
+    Vector2Int lastSuccessAttackPosition;
+
+    /// <summary>
+    /// 이전 공격이 성공하지 않았다고 표시하는 읽기 전용 변수
+    /// </summary>
+    readonly Vector2Int NOT_SUCCESS = -Vector2Int.one;
+
+    /// <summary>
+    /// 자동으로 공격하는 함수. Enemy가 공격할 때나 User가 타임 아웃되었을 때 사용하는 목적.
+    /// </summary>
+    public void AutoAttack()
+    {
+        // 똑똑하게 다음 목표를 설정하는 방법
+        // 1. 무작위로 공격
+        // 2. 이전 공격이 성공했을 때 성공한 위치의 위,아래,좌,우 중 한군대를 공격
+        // 3. 공격이 한줄로 성공했을 때 
+
+        // 확인할 순서 : 3 -> 2 -> 1
+
+        // 필요한 요소
+        // 1. 한줄로 공격이 성공했는지 확인이 가능해야 한다.
+        // 2. 이전 공격이 성공했는지 확인이 가능해야 한다.
+
+        // 공격으로 함선이 침몰되면 무조건 1번부터 시작
+
+        uint target;
+        if(criticalAttackIndice.Count > 0)      // 우선 순위가 높은 공격 후보 지역이 있는지 확인
+        {
+            target = criticalAttackIndice[0];   // 있는 것 꺼내기
+            criticalAttackIndice.RemoveAt(0);
+            normalAttackIndice.Remove(target);  // normal에서도 제거
+        }
+        else
+        {
+            target = normalAttackIndice[0];     // 우선 순위가 높은 공격 후보지역이 없으면 normal에서 꺼내기
+            normalAttackIndice.RemoveAt(0);
+        }
+
+        Attack(target);
+
     }
 
     // 턴 관리용 함수 ------------------------------------------------------------------------------
