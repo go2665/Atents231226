@@ -12,6 +12,51 @@ public class PlayerBase : MonoBehaviour
     public Board Board => board;
 
     /// <summary>
+    /// 일반 공격 후보 지역들의 인덱스들
+    /// </summary>
+    List<uint> normalAttackIndices;
+
+    /// <summary>
+    /// 우선 순위가 높은 공격 후보지역들의 인덱스들
+    /// </summary>
+    List<uint> criticalAttackIndices;
+
+    /// <summary>
+    /// 마지막으로 공격이 성공한 그리드 좌표. NOT_SUCCESS면 이전 공격은 실패한 것
+    /// </summary>
+    Vector2Int lastSuccessAttackPosition;
+
+    /// <summary>
+    /// 이전 공격이 성공하지 않았다고 표시하는 읽기 전용 변수
+    /// </summary>
+    readonly Vector2Int NOT_SUCCESS = -Vector2Int.one;
+
+    /// <summary>
+    /// 이웃 위치 확인용
+    /// </summary>
+    readonly Vector2Int[] neighbors = { new(-1, 0), new(1, 0), new(0, 1), new(0, -1) };
+
+    /// <summary>
+    /// 이번 공격으로 상대방의 함선이 침몰했는지 알려주는 변수(true면 침몰했다, false면 침몰하지 않았다)
+    /// </summary>
+    bool opponentShipDestroyed = false;
+
+    /// <summary>
+    /// 공격 후보지역 표시용 프리팹
+    /// </summary>
+    public GameObject criticalMarkPrefab;
+
+    /// <summary>
+    /// 공격 후보지역들이 생성후 붙을 부모 트랜스폼
+    /// </summary>
+    Transform criticalMarkParent;
+
+    /// <summary>
+    /// 생성한 공격 후보지역들
+    /// </summary>
+    Dictionary<uint, GameObject> criticalMarks;
+
+    /// <summary>
     /// 이 플레이어가 가지는 함선들
     /// </summary>
     protected Ship[] ships;
@@ -36,6 +81,9 @@ public class PlayerBase : MonoBehaviour
     {
         Transform child = transform.GetChild(0);
         board = child.GetComponent<Board>();
+
+        criticalMarkParent = transform.GetChild(1);
+        criticalMarks = new Dictionary<uint, GameObject>(10);
     }
 
     protected virtual void Start()
@@ -422,38 +470,6 @@ public class PlayerBase : MonoBehaviour
     }
 
     /// <summary>
-    /// 일반 공격 후보 지역들의 인덱스들
-    /// </summary>
-    List<uint> normalAttackIndices;
-
-    /// <summary>
-    /// 우선 순위가 높은 공격 후보지역들의 인덱스들
-    /// </summary>
-    List<uint> criticalAttackIndices;
-
-    /// <summary>
-    /// 마지막으로 공격이 성공한 그리드 좌표. NOT_SUCCESS면 이전 공격은 실패한 것
-    /// </summary>
-    Vector2Int lastSuccessAttackPosition;
-
-    /// <summary>
-    /// 이전 공격이 성공하지 않았다고 표시하는 읽기 전용 변수
-    /// </summary>
-    readonly Vector2Int NOT_SUCCESS = -Vector2Int.one;
-
-    /// <summary>
-    /// 이웃 위치 확인용
-    /// </summary>
-    readonly Vector2Int[] neighbors = { new(-1, 0), new(1, 0), new(0, 1), new(0, -1) };
-
-    /// <summary>
-    /// 이번 공격으로 상대방의 함선이 침몰했는지 알려주는 변수(true면 침몰했다, false면 침몰하지 않았다)
-    /// </summary>
-    bool opponentShipDestroyed = false;
-
-
-
-    /// <summary>
     /// 자동으로 공격하는 함수. Enemy가 공격할 때나 User가 타임 아웃되었을 때 사용하는 목적.
     /// </summary>
     public void AutoAttack()
@@ -494,10 +510,10 @@ public class PlayerBase : MonoBehaviour
     private void AddCriticalFromNeighbors(Vector2Int grid)
     {
         Util.Shuffle(neighbors);
-        foreach(var neighbor in neighbors)
+        foreach(var neighbor in neighbors)      // 4방향 추가
         {
             Vector2Int pos = grid + neighbor;
-            if( board.IsAttackable(pos))
+            if( opponent.Board.IsAttackable(pos))
             {
                 AddCritical((uint)board.GridToIndex(pos).Value);
             }
@@ -518,13 +534,13 @@ public class PlayerBase : MonoBehaviour
             Vector2Int grid = now;
             for(grid.x = now.x + 1; grid.x<Board.BoardSize; grid.x++ )  // now의 오른쪽 확인해서 추가
             {
-                if (!Board.IsInBoard(grid))
+                if (!Board.IsInBoard(grid))                             // 보드 밖이면 끝
                     break;
-                if (opponent.Board.IsAttackFailPosition(grid))
+                if (opponent.Board.IsAttackFailPosition(grid))          // 공격 실패한 지역이면 끝
                     break;
-                if( opponent.Board.IsAttackable(grid))
+                if( opponent.Board.IsAttackable(grid))                  // 공격 가능하면
                 {
-                    AddCritical((uint)Board.GridToIndex(grid).Value);
+                    AddCritical((uint)Board.GridToIndex(grid).Value);   // 추가하고 끝
                     break;
                 }    
             }
@@ -661,6 +677,14 @@ public class PlayerBase : MonoBehaviour
         if(!criticalAttackIndices.Contains(index))  // 없을 때만 추가
         {
             criticalAttackIndices.Insert(0, index); // 항상 앞에 추가(새로 추가되는 위치가 성공 확률이 더 높기 때문)
+
+            // 후보지역 표시
+            GameObject obj = Instantiate(criticalMarkPrefab, criticalMarkParent);   // 프리팹 생성
+            obj.transform.position = opponent.Board.IndexToWorld(index);            // 적 보드 위치에 맞게 위치 수정
+            Vector2Int grid = opponent.Board.IndexToGrid(index);        
+            obj.name = $"Critical_({grid.x},{grid.y})";     // 이름 알아보기 쉽게 바꾸기
+            
+            criticalMarks[index] = obj; // criticalMarks.Add(index, obj);
         }
     }
 
@@ -670,9 +694,17 @@ public class PlayerBase : MonoBehaviour
     /// <param name="index"></param>
     private void RemoveCriticalPosition(uint index)
     {
-        if (criticalAttackIndices.Contains(index))
+        if (criticalAttackIndices.Contains(index))  // 공격 후보지역이 있으면
         {
-            criticalAttackIndices.Remove(index);
+            criticalAttackIndices.Remove(index);    // 공격 후보지역에서 제거
+
+            // 표시용 오브젝트 삭제
+            if(criticalMarks.ContainsKey(index))    // 키가 있는지 확인
+            {
+                Destroy(criticalMarks[index]);  // 오브젝트 제거
+                criticalMarks[index] = null;    // 제거했다고 표시
+                criticalMarks.Remove(index);    // 키값 제거
+            }
         }
     }
 
@@ -681,7 +713,15 @@ public class PlayerBase : MonoBehaviour
     /// </summary>
     private void RemoveAllCriticalPositions()
     {
-        criticalAttackIndices.Clear();
+        while(criticalMarkParent.childCount > 0)    // 생성한 공격 후보지역 표시용 오브젝트 모두 삭제
+        {
+            Transform child = criticalMarkParent.GetChild(0);
+            child.SetParent(null);
+            Destroy(child.gameObject);
+        }
+        criticalMarks.Clear();                      // 딕셔너리 초기화
+        
+        criticalAttackIndices.Clear();              // 공격 후보지역 리스트 초기화
         lastSuccessAttackPosition = NOT_SUCCESS;
     }
 

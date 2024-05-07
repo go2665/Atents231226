@@ -90,3 +90,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d12522d5e0521404fa0a378317042c64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  criticalMarkPrefab: {fileID: 3079063446896874621, guid: d8f18a4cef78c44479193bc2fbc04cad,
+    type: 3}
