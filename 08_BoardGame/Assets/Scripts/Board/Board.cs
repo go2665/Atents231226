@@ -264,6 +264,27 @@ public class Board : MonoBehaviour
         return result;
     }
 
+
+    /// <summary>
+    /// 특정 위치가 공격이 성공한 위치인지를 확인하는 함수
+    /// </summary>
+    /// <param name="grid">확인할 위치</param>
+    /// <returns>true면 공격이 성공한 위치, false면 공격이 실패한 위치</returns>
+    public bool IsAttackSuccessPosition(Vector2Int grid)
+    {
+        return false;
+    }
+
+    /// <summary>
+    /// 특정 위치가 공격이 실패한 위치인지를 확인하는 함수
+    /// </summary>
+    /// <param name="grid">확인할 위치</param>
+    /// <returns>true면 공격이 실패한 위치, false면 공격이 성공한 위치</returns>
+    public bool IsAttackFailPosition(Vector2Int grid)
+    {
+        return false;
+    }
+
     // 좌표 변환용 유틸리티 함수들-------------------------------------------------------------------------------------
 
     /// <summary>

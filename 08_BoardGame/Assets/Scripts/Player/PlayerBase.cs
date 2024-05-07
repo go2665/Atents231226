@@ -511,6 +511,31 @@ public class PlayerBase : MonoBehaviour
     /// <param name="last">직전에 공격 성공한 위치</param>
     private void AddCriticalFromTwoPoint(Vector2Int now, Vector2Int last)
     {
+        if (IsSuccessLine(last, now, true))
+        {
+            // 양끝에 위치를 Critical에 추가
+        }
+        else if (IsSuccessLine(last, now, false))
+        {
+            // 양끝에 위치를 Critical에 추가
+        }
+        else
+        {
+            // 같은 줄이 아니다.(= 다른 배다 = 이웃들을 추가한다)
+        }
+    }
+
+    /// <summary>
+    /// 한줄로 공격이 성공했는지(start에서 end까지 모두 공격 성공이었는지)를 체크하는 함수
+    /// </summary>
+    /// <param name="start">확인 시작점</param>
+    /// <param name="end">확인 종료지점</param>
+    /// <param name="isHorizontal">true면 가로로 체크, false면 세로로 체크</param>
+    /// <returns>같은 라인에 있고 그 사이는 모두 공격 성공이면 true, 다른 라인이거나 하나라도 공격 실패가 있으면 false</returns>
+    private bool IsSuccessLine(Vector2Int start, Vector2Int end, bool isHorizontal)
+    {
+        bool result = true;
+        return result;
     }
 
     /// <summary>
