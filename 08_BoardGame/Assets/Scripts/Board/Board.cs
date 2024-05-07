@@ -272,7 +272,10 @@ public class Board : MonoBehaviour
     /// <returns>true면 공격이 성공한 위치, false면 공격이 실패한 위치</returns>
     public bool IsAttackSuccessPosition(Vector2Int grid)
     {
-        return false;
+        int? index = GridToIndex(grid);
+
+        // grid가 보드 안쪽이고, 공격 당한 위치고, 배가 있다.
+        return index != null && isAttacked[index.Value] && shipInfo[index.Value] != ShipType.None;
     }
 
     /// <summary>
@@ -282,7 +285,10 @@ public class Board : MonoBehaviour
     /// <returns>true면 공격이 실패한 위치, false면 공격이 성공한 위치</returns>
     public bool IsAttackFailPosition(Vector2Int grid)
     {
-        return false;
+        int? index = GridToIndex(grid);
+
+        // grid가 보드 안쪽이고, 공격 당한 위치고, 배가 없다.
+        return index != null && isAttacked[index.Value] && shipInfo[index.Value] == ShipType.None;
     }
 
     // 좌표 변환용 유틸리티 함수들-------------------------------------------------------------------------------------

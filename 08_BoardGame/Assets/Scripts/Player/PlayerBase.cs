@@ -513,15 +513,67 @@ public class PlayerBase : MonoBehaviour
     {
         if (IsSuccessLine(last, now, true))
         {
-            // 양끝에 위치를 Critical에 추가
+            // 양끝(수평)에 위치를 Critical에 추가
+
+            Vector2Int grid = now;
+            for(grid.x = now.x + 1; grid.x<Board.BoardSize; grid.x++ )  // now의 오른쪽 확인해서 추가
+            {
+                if (!Board.IsInBoard(grid))
+                    break;
+                if (opponent.Board.IsAttackFailPosition(grid))
+                    break;
+                if( opponent.Board.IsAttackable(grid))
+                {
+                    AddCritical((uint)Board.GridToIndex(grid).Value);
+                    break;
+                }    
+            }
+            for (grid.x = now.x - 1; grid.x > -1; grid.x--) // now의 왼쪽 확인해서 추가
+            {
+                if (!Board.IsInBoard(grid))
+                    break;
+                if (opponent.Board.IsAttackFailPosition(grid))
+                    break;
+                if (opponent.Board.IsAttackable(grid))
+                {
+                    AddCritical((uint)Board.GridToIndex(grid).Value);
+                    break;
+                }
+            }
         }
         else if (IsSuccessLine(last, now, false))
         {
-            // 양끝에 위치를 Critical에 추가
+            // 양끝(수직)에 위치를 Critical에 추가
+            Vector2Int grid = now;
+            for (grid.y = now.y + 1; grid.y < Board.BoardSize; grid.y++)  // now의 아래쪽 확인해서 추가
+            {
+                if (!Board.IsInBoard(grid))
+                    break;
+                if (opponent.Board.IsAttackFailPosition(grid))
+                    break;
+                if (opponent.Board.IsAttackable(grid))
+                {
+                    AddCritical((uint)Board.GridToIndex(grid).Value);
+                    break;
+                }
+            }
+            for (grid.y = now.y - 1; grid.y > -1; grid.y--) // now의 위쪽 확인해서 추가
+            {
+                if (!Board.IsInBoard(grid))
+                    break;
+                if (opponent.Board.IsAttackFailPosition(grid))
+                    break;
+                if (opponent.Board.IsAttackable(grid))
+                {
+                    AddCritical((uint)Board.GridToIndex(grid).Value);
+                    break;
+                }
+            }
         }
         else
         {
             // 같은 줄이 아니다.(= 다른 배다 = 이웃들을 추가한다)
+            AddCriticalFromNeighbors(now);
         }
     }
 
@@ -535,6 +587,68 @@ public class PlayerBase : MonoBehaviour
     private bool IsSuccessLine(Vector2Int start, Vector2Int end, bool isHorizontal)
     {
         bool result = true;
+
+        Vector2Int pos = start; // start에서 end까지 순차적으로 위치를 저장할 임시 변수
+        int dir = 1;            // start에서 end로 가는 방향( 1 or -1 )
+
+        if(isHorizontal)
+        {
+            if(start.y == end.y)        // y가 같으면 가로로 된 줄이 맞다.
+            {
+                if(start.x > end.y)     // start가 end보다 오른쪽에 있다.
+                {
+                    dir = -1;           // 진행 방향을 반대로 설정(역방향)
+                }
+
+                start.x *= dir;         // 역방향일 경우 for문에서 정상적으로 돌리기 위해 뒤집기
+                end.x *= dir;
+                end.x++;                // end의 x까지 확인하기 위해 1증가
+
+                for (int i = start.x; i<end.x; i++)  // i는 start의 x에서 end의 x까지 증가
+                {
+                    pos.x = i * dir;
+                    if( opponent.Board.IsAttackFailPosition(pos) )  // 공격이 실패한 지점인지 확인
+                    {
+                        result = false;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                // 가로로 된 직선이 아니다
+                result = false;
+            }
+        }
+        else
+        {
+            if (start.x == end.x)       // x가 같으면 세로로 된 줄이 맞다.
+            {
+                if (start.y > end.y)    // start가 end보다 아래쪽에 있다.
+                {
+                    dir = -1;           // 진행 방향을 반대로 설정(역방향)
+                }
+
+                start.y *= dir;         // 역방향일 경우 for문에서 정상적으로 돌리기 위해 뒤집기
+                end.y *= dir;
+                end.y++;                // end의 y까지 확인하기 위해 1증가
+
+                for (int i = start.y; i < end.y; i++)  // i는 start의 y에서 end의 y까지 증가
+                {
+                    pos.y = i * dir;
+                    if (opponent.Board.IsAttackFailPosition(pos))  // 공격이 실패한 지점인지 확인
+                    {
+                        result = false;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                // 가로로 된 직선이 아니다
+                result = false;
+            }
+        }
         return result;
     }
 
@@ -591,4 +705,21 @@ public class PlayerBase : MonoBehaviour
     }
 
     // 테스트 --------------------------------------------------------------------------------------
+#if UNITY_EDITOR
+    public void Test_IsSuccessLine(Vector2Int grid)
+    {
+        if( IsSuccessLine(grid, lastSuccessAttackPosition, true) )
+        {
+            Debug.Log("수평으로 공격이 성공했습니다.");
+        }
+        else if (IsSuccessLine(grid, lastSuccessAttackPosition, false))
+        {
+            Debug.Log("수직으로 공격이 성공했습니다.");
+        }
+        else
+        {
+            Debug.Log("한 줄이 아닙니다.");
+        }
+    }
+#endif
 }
