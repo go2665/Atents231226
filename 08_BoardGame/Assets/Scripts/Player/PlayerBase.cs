@@ -135,8 +135,8 @@ public class PlayerBase : MonoBehaviour
     /// <summary>
     /// 아직 배치되지 않는 배를 모두 자동으로 배치하는 함수
     /// </summary>
-    /// <param name="isShipShips">true면 배치 후 함선 표시, false면 미표시</param>
-    public void AutoShipDeployment(bool isShipShips)
+    /// <param name="isShipShow">true면 배치 후 함선 표시, false면 미표시</param>
+    public void AutoShipDeployment(bool isShipShow)
     {
         //Debug.Log("함선 자동 배치 실행");
 
@@ -264,7 +264,7 @@ public class PlayerBase : MonoBehaviour
 
                 // 실제 배치
                 board.ShipDeployment(ship, grid);
-                ship.gameObject.SetActive(isShipShips);
+                ship.gameObject.SetActive(isShipShow);
 
                 // 배치된 위치를 high와 low에서 제거
                 List<int> tempList = new List<int>(shipPositions.Length);
@@ -441,7 +441,8 @@ public class PlayerBase : MonoBehaviour
             }
             else
             {
-                lastSuccessAttackPosition = NOT_SUCCESS;
+                // 성공->실패->성공 순서였을 때 두번 째 성공에서 주변 모두를 추가하는 문제 수정용
+                //lastSuccessAttackPosition = NOT_SUCCESS;  
             }
 
             uint attackIndex = (uint)board.GridToIndex(attackGrid).Value;
@@ -529,9 +530,24 @@ public class PlayerBase : MonoBehaviour
     {
         if (IsSuccessLine(last, now, true))
         {
-            // 양끝(수평)에 위치를 Critical에 추가
+            // 같은 줄에 있는 것이 아니면 제거
+            Vector2Int grid;
+            List<uint> deleteTarget = new List<uint>(16);
+            foreach(var index in criticalAttackIndices)
+            {
+                grid = Board.IndexToGrid(index);
+                if(grid.y != now.y)             // y가 다르면 한줄에 있는 것이 아니다.
+                {
+                    deleteTarget.Add(index);
+                }
+            }
+            foreach(var index in deleteTarget)
+            {
+                RemoveCriticalPosition(index);  // 같은 줄에 있는 것이 아니면 삭제
+            }
 
-            Vector2Int grid = now;
+            // 양끝(수평)에 위치를 Critical에 추가
+            grid = now;
             for(grid.x = now.x + 1; grid.x<Board.BoardSize; grid.x++ )  // now의 오른쪽 확인해서 추가
             {
                 if (!Board.IsInBoard(grid))                             // 보드 밖이면 끝
@@ -559,8 +575,24 @@ public class PlayerBase : MonoBehaviour
         }
         else if (IsSuccessLine(last, now, false))
         {
+            // 같은 줄에 있는 것이 아니면 제거
+            Vector2Int grid;
+            List<uint> deleteTarget = new List<uint>(16);
+            foreach (var index in criticalAttackIndices)
+            {
+                grid = Board.IndexToGrid(index);
+                if (grid.x != now.x)             // x가 다르면 한줄에 있는 것이 아니다.
+                {
+                    deleteTarget.Add(index);
+                }
+            }
+            foreach (var index in deleteTarget)
+            {
+                RemoveCriticalPosition(index);  // 같은 줄에 있는 것이 아니면 삭제
+            }
+
             // 양끝(수직)에 위치를 Critical에 추가
-            Vector2Int grid = now;
+            grid = now;
             for (grid.y = now.y + 1; grid.y < Board.BoardSize; grid.y++)  // now의 아래쪽 확인해서 추가
             {
                 if (!Board.IsInBoard(grid))
@@ -611,7 +643,7 @@ public class PlayerBase : MonoBehaviour
         {
             if(start.y == end.y)        // y가 같으면 가로로 된 줄이 맞다.
             {
-                if(start.x > end.y)     // start가 end보다 오른쪽에 있다.
+                if(start.x > end.x)     // start가 end보다 오른쪽에 있다.
                 {
                     dir = -1;           // 진행 방향을 반대로 설정(역방향)
                 }
@@ -679,12 +711,15 @@ public class PlayerBase : MonoBehaviour
             criticalAttackIndices.Insert(0, index); // 항상 앞에 추가(새로 추가되는 위치가 성공 확률이 더 높기 때문)
 
             // 후보지역 표시
-            GameObject obj = Instantiate(criticalMarkPrefab, criticalMarkParent);   // 프리팹 생성
-            obj.transform.position = opponent.Board.IndexToWorld(index);            // 적 보드 위치에 맞게 위치 수정
-            Vector2Int grid = opponent.Board.IndexToGrid(index);        
-            obj.name = $"Critical_({grid.x},{grid.y})";     // 이름 알아보기 쉽게 바꾸기
+            if(GameManager.Instance.IsTestMode)
+            {
+                GameObject obj = Instantiate(criticalMarkPrefab, criticalMarkParent);   // 프리팹 생성
+                obj.transform.position = opponent.Board.IndexToWorld(index);            // 적 보드 위치에 맞게 위치 수정
+                Vector2Int grid = opponent.Board.IndexToGrid(index);        
+                obj.name = $"Critical_({grid.x},{grid.y})";     // 이름 알아보기 쉽게 바꾸기
+                criticalMarks[index] = obj; // criticalMarks.Add(index, obj);
+            }
             
-            criticalMarks[index] = obj; // criticalMarks.Add(index, obj);
         }
     }
 

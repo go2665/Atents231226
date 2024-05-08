@@ -136,6 +136,11 @@ PrefabInstance:
       propertyPath: m_Lens.OrthographicSize
       value: 8.5
       objectReference: {fileID: 0}
+    - target: {fileID: 4121425868018848659, guid: bcfc189488dd0fd4ebac59239a3e01b1,
+        type: 3}
+      propertyPath: IsTestMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4684868793940545738, guid: bcfc189488dd0fd4ebac59239a3e01b1,
         type: 3}
       propertyPath: m_ImpulseDefinition.m_ImpulseDuration
@@ -1932,9 +1937,9 @@ SceneRoots:
   - {fileID: 203844589}
   - {fileID: 1160234427}
   - {fileID: 4797866079374943139}
+  - {fileID: 124812034}
   - {fileID: 1072214922}
   - {fileID: 317771116}
-  - {fileID: 124812034}
   - {fileID: 308228810}
   - {fileID: 1213587575}
   - {fileID: 1557955294}
