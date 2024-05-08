@@ -68,6 +68,21 @@ public class PlayerBase : MonoBehaviour
     protected PlayerBase opponent;
 
     /// <summary>
+    /// 행동여부를 표시하는 변수(true면 행동완료, false면 미행동)
+    /// </summary>
+    bool isActionDone = false;
+
+    /// <summary>
+    /// 이 플레이어의 행동이 완료되었음을 알리는 델리게이트
+    /// </summary>
+    public Action onActionEnd;
+
+    /// <summary>
+    /// 이 플레이어가 패배했음을 알리는 델리게이트
+    /// </summary>
+    public Action<PlayerBase> onDefeat;
+
+    /// <summary>
     /// 함선 매니저
     /// </summary>
     protected ShipManager shipManager;
@@ -76,6 +91,11 @@ public class PlayerBase : MonoBehaviour
     /// 게임 매니저
     /// </summary>
     protected GameManager gameManager;
+
+    /// <summary>
+    /// 턴 매니저
+    /// </summary>
+    protected TurnManager turnManager;
 
     protected virtual void Awake()
     {
@@ -90,6 +110,8 @@ public class PlayerBase : MonoBehaviour
     {
         shipManager = ShipManager.Instance;
         gameManager = GameManager.Instance;
+        turnManager = gameManager.TurnManager;
+
         Initialize();
     }
 
@@ -128,6 +150,9 @@ public class PlayerBase : MonoBehaviour
         criticalAttackIndices = new List<uint>(10);  // 우선 순위가 높은 공격 후보지역 만들기(비어있음)
 
         lastSuccessAttackPosition = NOT_SUCCESS;    // 이전 공격이 성공한 적 없다고 초기화
+
+        turnManager.onTurnStart += OnPlayerTurnStart;   // 턴 시작 함수 연결
+        turnManager.onTurnEnd += OnPlayerTurnEnd;       // 턴 종료 함수 연결
 
     }
 
@@ -409,7 +434,7 @@ public class PlayerBase : MonoBehaviour
     public void Attack(Vector2Int attackGrid)
     {
         Board opponentBoard = opponent.Board;
-        if (opponentBoard.IsInBoard(attackGrid) && opponentBoard.IsAttackable(attackGrid))
+        if (!isActionDone && opponentBoard.IsInBoard(attackGrid) && opponentBoard.IsAttackable(attackGrid))
         {
             //Debug.Log($"{attackPos} 공격");
             bool result = opponentBoard.OnAttacked(attackGrid);
@@ -449,6 +474,8 @@ public class PlayerBase : MonoBehaviour
             RemoveCriticalPosition(attackIndex);
             normalAttackIndices.Remove(attackIndex);
 
+            isActionDone = true;
+            onActionEnd?.Invoke();
         }
     }
 
@@ -761,6 +788,26 @@ public class PlayerBase : MonoBehaviour
     }
 
     // 턴 관리용 함수 ------------------------------------------------------------------------------
+    
+    /// <summary>
+    /// 턴이 시작될 때 플레이어가 해야할 일을 수행하는 함수
+    /// </summary>
+    protected virtual void OnPlayerTurnStart(int _)
+    {
+        isActionDone = false;
+    }
+
+    /// <summary>
+    /// 턴이 종료될 때 플레이어가 해야할 일을 수행하는 함수
+    /// </summary>
+    protected virtual void OnPlayerTurnEnd()
+    {
+        if(!isActionDone)   // 턴이 끝났는데도 아무행동을 안했으면 자동 공격
+        {
+            AutoAttack();
+        }
+    }
+
     // 함선 침몰 빛 패배처리 함수 -------------------------------------------------------------------
     void OnShipDestroy(Ship ship)
     {

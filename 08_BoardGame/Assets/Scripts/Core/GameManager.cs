@@ -23,6 +23,13 @@ public class GameManager : Singleton<GameManager>
     CinemachineImpulseSource cameraImpulseSource;
 
     /// <summary>
+    /// 턴 매니저
+    /// </summary>
+    TurnManager turnManager;
+
+    public TurnManager TurnManager => turnManager;
+
+    /// <summary>
     /// 테스트 모드인지 표시용
     /// </summary>
     public bool IsTestMode = false;
@@ -38,6 +45,9 @@ public class GameManager : Singleton<GameManager>
     {
         user = FindAnyObjectByType<UserPlayer>();
         enemy = FindAnyObjectByType<EnemyPlayer>();
+
+        turnManager = GetComponent<TurnManager>();
+        turnManager.OnInitialize(user, enemy);
     }
 
     public void CameraShake(float force)

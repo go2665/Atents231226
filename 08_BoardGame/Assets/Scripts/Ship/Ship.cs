@@ -282,7 +282,7 @@ public class Ship : MonoBehaviour
     /// </summary>
     public void OnHitted()
     {
-        Debug.Log($"{ShipName} 명중");
+        //Debug.Log($"{ShipName} 명중");
 
         onHit?.Invoke(this);
         HP--;
