@@ -123,7 +123,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ships_0
+      name: ShipSize2
       rect:
         serializedVersion: 2
         x: 272
@@ -131,7 +131,7 @@ TextureImporter:
         width: 88
         height: 44
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -144,7 +144,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ships_1
+      name: ShipSize3-2
       rect:
         serializedVersion: 2
         x: 228
@@ -152,7 +152,7 @@ TextureImporter:
         width: 132
         height: 44
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -165,7 +165,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ships_2
+      name: ShipSize3-1
       rect:
         serializedVersion: 2
         x: 228
@@ -173,7 +173,7 @@ TextureImporter:
         width: 132
         height: 45
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -186,7 +186,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ships_3
+      name: ShipSize_4
       rect:
         serializedVersion: 2
         x: 184
@@ -194,7 +194,7 @@ TextureImporter:
         width: 176
         height: 45
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -207,7 +207,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ships_4
+      name: ShipSize_5
       rect:
         serializedVersion: 2
         x: 140
@@ -215,7 +215,7 @@ TextureImporter:
         width: 220
         height: 45
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -238,11 +238,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      ships_0: -229340082
-      ships_1: 382410857
-      ships_2: -488531024
-      ships_3: 1928334316
-      ships_4: 1475275665
+      ShipSize2: -229340082
+      ShipSize3-1: -488531024
+      ShipSize3-2: 382410857
+      ShipSize_4: 1928334316
+      ShipSize_5: 1475275665
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
