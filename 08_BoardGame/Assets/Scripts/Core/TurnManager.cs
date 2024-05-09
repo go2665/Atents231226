@@ -87,13 +87,13 @@ public class TurnManager : MonoBehaviour
         if(user != null)                    // user가 있으면 행동이 끝났거나 패배했을 때 실행될 함수 연결
         {
             user.onActionEnd += PlayerTurnEnd;
-            user.onDefeat += TurnStop;
+            user.onDefeat += TurnManagerStop;
         }
 
         if(enemy != null)                   // enemy가 있으면 행동이 끝났거나 패배했을 때 실행될 함수 연결
         {
             enemy.onActionEnd += PlayerTurnEnd;
-            enemy.onDefeat += TurnStop;
+            enemy.onDefeat += TurnManagerStop;
         }
 
         OnTurnStart();                      // 턴 시작
@@ -102,51 +102,64 @@ public class TurnManager : MonoBehaviour
     private void Update()
     {
         turnRemainTime -= Time.deltaTime;
-        if(isTurnEnable && turnRemainTime < 0.0f )
+        if(isTurnEnable && turnRemainTime < 0.0f )  // 턴 매니저가 작동 중이면, 타임아웃이 되었는지 체크
         {
-            OnTurnEnd();
+            OnTurnEnd();    // 타임 아웃이 되면 턴 종료 처리
         }
     }
 
+    /// <summary>
+    /// 턴 시작 처리용 함수
+    /// </summary>
     void OnTurnStart()
     {
-        if(isTurnEnable)
+        if(isTurnEnable)    // 턴 매니저가 작동 중이면
         {
-            turnNumber++;
+            turnNumber++;                       // 턴 숫자 증가
             Debug.Log($"{turnNumber}턴 시작");
-            state = TurnProcessState.None;
-            turnRemainTime = TurnDuration;
+            state = TurnProcessState.None;      // 상태 초기화
+            turnRemainTime = TurnDuration;      // 타임 아웃용 시간 리셋
 
-            onTurnStart?.Invoke(turnNumber);
+            onTurnStart?.Invoke(turnNumber);    // 턴이 시작되었음을 알림
         }
     }
 
+    /// <summary>
+    /// 턴 종료 처리용 함수
+    /// </summary>
     void OnTurnEnd()
     {
-        if(isTurnEnable)
+        if(isTurnEnable)    // 턴 매니저가 작동 중이면
         {
-            isEndProcess = true;
-            onTurnEnd?.Invoke();
+            isEndProcess = true;    // 종료 처리 중이라고 표시
+            onTurnEnd?.Invoke();    // 턴이 종료되었다고 알림
             Debug.Log($"{turnNumber}턴 종료");
 
-            isEndProcess = false;
-            OnTurnStart();
+            isEndProcess = false;   // 종료 처리가 끝났다고 표시
+            OnTurnStart();          // 다음 턴 시작
         }
     }
 
+    /// <summary>
+    /// 플레이어가 행동을 완료하면 실행되는 함수
+    /// </summary>
     void PlayerTurnEnd()
     {
-        if(!isEndProcess)
+        if(!isEndProcess)   // 종료 처리 중이 아니면
         {
-            state++;
-            if(state >= TurnProcessState.Both)
+            state++;        // 상태를 다음 상태로 변경
+            if(state >= TurnProcessState.Both)  // Both가 되면
             {
-                OnTurnEnd();
+                OnTurnEnd();                    // 턴 종료
             }
         }
     }
 
-    void TurnStop(PlayerBase _)
+    /// <summary>
+    /// 턴 매니저를 정지 시키는 함수
+    /// </summary>
+    /// <param name="_"></param>
+    void TurnManagerStop(PlayerBase _)
     {
         isTurnEnable = false;
     }

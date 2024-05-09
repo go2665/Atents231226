@@ -758,15 +758,15 @@ public class PlayerBase : MonoBehaviour
     {
         if (criticalAttackIndices.Contains(index))  // 공격 후보지역이 있으면
         {
-            criticalAttackIndices.Remove(index);    // 공격 후보지역에서 제거
+            criticalAttackIndices.Remove(index);    // 공격 후보지역에서 제거            
+        }
 
-            // 표시용 오브젝트 삭제
-            if(criticalMarks.ContainsKey(index))    // 키가 있는지 확인
-            {
-                Destroy(criticalMarks[index]);  // 오브젝트 제거
-                criticalMarks[index] = null;    // 제거했다고 표시
-                criticalMarks.Remove(index);    // 키값 제거
-            }
+        // 표시용 오브젝트 삭제
+        if (criticalMarks.ContainsKey(index))   // 키가 있는지 확인
+        {
+            Destroy(criticalMarks[index]);      // 오브젝트 제거
+            criticalMarks[index] = null;        // 제거했다고 표시
+            criticalMarks.Remove(index);        // 키값 제거
         }
     }
 
