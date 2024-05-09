@@ -83,6 +83,11 @@ public class PlayerBase : MonoBehaviour
     public Action<PlayerBase> onDefeat;
 
     /// <summary>
+    /// 아직 침몰하지 않은 함선의 수
+    /// </summary>
+    int remainShipCount;    
+
+    /// <summary>
     /// 함선 매니저
     /// </summary>
     protected ShipManager shipManager;
@@ -131,6 +136,7 @@ public class PlayerBase : MonoBehaviour
 
             board.onShipAttacked[shipType] += ships[i].OnHitted;    // 공격 당했을 때 실행할 함수 연결
         }
+        remainShipCount = count;    // 함선 개수 초기화
 
         // 보드 초기화
         Board.ResetBoard(ships);
@@ -809,10 +815,30 @@ public class PlayerBase : MonoBehaviour
     }
 
     // 함선 침몰 빛 패배처리 함수 -------------------------------------------------------------------
+    
+    /// <summary>
+    /// 함선이 침몰했을 때 실행되는 함수
+    /// </summary>
+    /// <param name="ship">침몰된 함선</param>
     void OnShipDestroy(Ship ship)
     {
         opponent.opponentShipDestroyed = true;              // 상대방에게 (상대방의 상대방(나)) 함선이 침몰되었다고 표시
         opponent.lastSuccessAttackPosition = NOT_SUCCESS;   // 상대방의 마지막 공격 성공 위치도 초기화(함선이 침몰했으니 의미없음)
+
+        remainShipCount--;
+        if(remainShipCount < 1)
+        {
+            OnDefeat();
+        }
+    }
+
+    /// <summary>
+    /// 모든 함선이 침몰했을 때 실행되는 함수
+    /// </summary>
+    protected virtual void OnDefeat()
+    {
+        Debug.Log($"[{gameObject.name}] 패배");
+        onDefeat?.Invoke(this);
     }
 
     // 기타 ---------------------------------------------------------------------------------------
