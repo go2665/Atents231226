@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class DeploymentToggle : MonoBehaviour
 {
+    public ShipType shipType = ShipType.None;
+
     Image image;
     GameObject deployEnd;
 
@@ -33,10 +35,12 @@ public class DeploymentToggle : MonoBehaviour
                     case DeployState.NotSelect:
                         image.color = Color.white;
                         deployEnd.SetActive(false);
+                        player.UndoShipDeploy(shipType);
                         break;
                     case DeployState.Select:
                         image.color = selectColor;
                         deployEnd.SetActive(false);
+                        player.SelectShipToDeploy(shipType);
                         onSelect?.Invoke(this);
                         break;
                     case DeployState.Deployed:
@@ -48,7 +52,12 @@ public class DeploymentToggle : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 선택되었을 때 실행될 델리게이트
+    /// </summary>
     public Action<DeploymentToggle> onSelect;
+
+    UserPlayer player;
 
     private void Awake()
     {
@@ -57,6 +66,27 @@ public class DeploymentToggle : MonoBehaviour
 
         Button button = GetComponent<Button>();
         button.onClick.AddListener(OnClick);
+    }
+
+    private void Start()
+    {
+        player = GameManager.Instance.UserPlayer;
+
+        Ship targetShip = player.GetShip(shipType);
+        if (targetShip != null)
+        {
+            targetShip.onDeploy += (isDeploy) =>
+            {
+                if (isDeploy)
+                {
+                    State = DeployState.Deployed;
+                }
+                else
+                {
+                    State = DeployState.NotSelect;
+                }
+            };
+        }
     }
 
     private void OnClick()

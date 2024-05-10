@@ -7,6 +7,12 @@ public class Test_11_UserShipDeployment : TestBase
 {
     public DeploymentToggle toggle;
 
+    private void Start()
+    {
+        GameManager.Instance.GameState = GameState.ShipDeployment;
+        GameManager.Instance.UserPlayer.Test_BindInputFuncs();
+    }
+
     protected override void OnTest1(InputAction.CallbackContext context)
     {
         toggle.Test_StateChange(0);

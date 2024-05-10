@@ -790,6 +790,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13cab2f386f1569428da7a4d32214260, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shipType: 1
 --- !u!1 &203844586
 GameObject:
   m_ObjectHideFlags: 0
@@ -1042,6 +1043,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13cab2f386f1569428da7a4d32214260, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shipType: 5
 --- !u!1 &323887909
 GameObject:
   m_ObjectHideFlags: 0
@@ -2712,6 +2714,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13cab2f386f1569428da7a4d32214260, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shipType: 3
 --- !u!1 &1500703290
 GameObject:
   m_ObjectHideFlags: 0
@@ -3183,6 +3186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13cab2f386f1569428da7a4d32214260, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shipType: 2
 --- !u!1 &1702090413
 GameObject:
   m_ObjectHideFlags: 0
@@ -3317,6 +3321,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13cab2f386f1569428da7a4d32214260, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shipType: 4
 --- !u!1 &1929959612
 GameObject:
   m_ObjectHideFlags: 0

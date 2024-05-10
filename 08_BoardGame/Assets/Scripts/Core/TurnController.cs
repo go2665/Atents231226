@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TurnManager : MonoBehaviour
+public class TurnController : MonoBehaviour
 {
     /// <summary>
     /// 현재 턴 번호(몇번째 턴인지)

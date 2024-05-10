@@ -100,7 +100,7 @@ public class PlayerBase : MonoBehaviour
     /// <summary>
     /// 턴 매니저
     /// </summary>
-    protected TurnManager turnManager;
+    protected TurnController turnManager;
 
     protected virtual void Awake()
     {
@@ -115,7 +115,7 @@ public class PlayerBase : MonoBehaviour
     {
         shipManager = ShipManager.Instance;
         gameManager = GameManager.Instance;
-        turnManager = gameManager.TurnManager;
+        turnManager = gameManager.TurnController;
 
         Initialize();
     }
@@ -850,6 +850,16 @@ public class PlayerBase : MonoBehaviour
     {
         opponentShipDestroyed = false;
         Board.ResetBoard(Ships);
+    }
+
+    /// <summary>
+    /// 원하는 함선을 리턴해주는 함수
+    /// </summary>
+    /// <param name="shipType">원하는 함선의 종류</param>
+    /// <returns>함선</returns>
+    public Ship GetShip(ShipType shipType)
+    {
+        return (shipType != ShipType.None) ? Ships[(int)shipType - 1] : null;
     }
 
     // 테스트 --------------------------------------------------------------------------------------
