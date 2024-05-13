@@ -36,6 +36,26 @@ public class UserPlayer : PlayerBase
         }
     }
 
+    /// <summary>
+    /// 모든 함선이 배치되었는지 확인하는 프로퍼티(true면 모든 함선이 배치되었다)
+    /// </summary>
+    public bool IsAllDeployed
+    {
+        get
+        {
+            bool result = true;
+            foreach (var ship in Ships)
+            {
+                if(!ship.IsDeployed)
+                {
+                    result = false; // 함선이 하나라도 배치되지 않았으면 false로 끝내기
+                    break;
+                }
+            }
+            return result;
+        }
+    }
+
     protected override void Start()
     {
         base.Start();
