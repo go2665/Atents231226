@@ -284,8 +284,11 @@ public class Ship : MonoBehaviour
     {
         //Debug.Log($"{ShipName} 명중");
 
-        onHit?.Invoke(this);
         HP--;
+        if( IsAlive )
+        {
+            onHit?.Invoke(this);    // 명중을 알리는 것은 공격 당하고 죽지 않았을 때만 처리
+        }
     }
 
     /// <summary>
