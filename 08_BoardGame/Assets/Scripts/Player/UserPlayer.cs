@@ -143,6 +143,8 @@ public class UserPlayer : PlayerBase
         else if( gameManager.GameState == GameState.Battle )
         {
             // 게임이 전투 상태일 때 처리
+            Vector2Int grid = opponent.Board.GetMouseGridPosition();
+            Attack(grid);
         }
     }
 
