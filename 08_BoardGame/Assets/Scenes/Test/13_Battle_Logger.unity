@@ -216,7 +216,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 1024
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -2827,6 +2827,7 @@ GameObject:
   - component: {fileID: 883401667}
   - component: {fileID: 883401666}
   - component: {fileID: 883401665}
+  - component: {fileID: 883401668}
   m_Layer: 5
   m_Name: BattleLogger
   m_TagString: Untagged
@@ -2924,6 +2925,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 883401663}
   m_CullTransparentMesh: 1
+--- !u!114 &883401668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 883401663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 356f6781d1f6cb64e9bbe362207c04f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  userColor: {r: 0.25652552, g: 1, b: 0, a: 0}
+  enemyColor: {r: 1, g: 0, b: 0, a: 0}
+  shipColor: {r: 0.092196465, g: 0, b: 1, a: 0}
+  turnColor: {r: 1, g: 0.96657693, b: 0, a: 0}
 --- !u!1 &916242553
 GameObject:
   m_ObjectHideFlags: 0

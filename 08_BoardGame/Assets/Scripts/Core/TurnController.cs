@@ -158,8 +158,7 @@ public class TurnController : MonoBehaviour
     /// <summary>
     /// 턴 매니저를 정지 시키는 함수
     /// </summary>
-    /// <param name="_"></param>
-    void TurnManagerStop(PlayerBase _)
+    void TurnManagerStop()
     {
         isTurnEnable = false;
     }
