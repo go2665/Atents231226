@@ -90,7 +90,21 @@ public class PlayerBase : MonoBehaviour
     /// <summary>
     /// 아직 침몰하지 않은 함선의 수
     /// </summary>
-    int remainShipCount;    
+    int remainShipCount;
+
+    /// <summary>
+    /// 성공한 공격 회수
+    /// </summary>
+    int successAttackCount;
+    public int SuccessAttackCount => successAttackCount;    
+
+    /// <summary>
+    /// 실패한 공격 회수
+    /// </summary>
+    int failAttackCount;
+    public int FailAttackCount => failAttackCount;
+
+    public int TotalAttackCount => successAttackCount + failAttackCount;
 
     /// <summary>
     /// 함선 매니저
@@ -164,6 +178,10 @@ public class PlayerBase : MonoBehaviour
 
         turnManager.onTurnStart += OnPlayerTurnStart;   // 턴 시작 함수 연결
         turnManager.onTurnEnd += OnPlayerTurnEnd;       // 턴 종료 함수 연결
+
+        // 공격 성공/실패 회수 초기화
+        successAttackCount = 0;
+        failAttackCount = 0;
 
     }
 
@@ -451,6 +469,8 @@ public class PlayerBase : MonoBehaviour
             bool result = opponentBoard.OnAttacked(attackGrid);
             if(result)
             {
+                successAttackCount++;   // 공격 회수 증가
+
                 if(opponentShipDestroyed)
                 {
                     // 지금 공격으로 적의 함선이 침몰한 경우
@@ -479,6 +499,8 @@ public class PlayerBase : MonoBehaviour
             {
                 // 성공->실패->성공 순서였을 때 두번 째 성공에서 주변 모두를 추가하는 문제 수정용
                 //lastSuccessAttackPosition = NOT_SUCCESS;  
+
+                failAttackCount++;
                 onAttackFail?.Invoke(this is UserPlayer);
             }
 

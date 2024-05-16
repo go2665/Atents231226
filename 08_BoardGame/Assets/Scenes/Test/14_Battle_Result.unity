@@ -6394,6 +6394,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Managers
       objectReference: {fileID: 0}
+    - target: {fileID: 7570663526648619102, guid: aca657eb25661374aaee11522ff6bfec,
+        type: 3}
+      propertyPath: turnDuration
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7570663526648619102, guid: aca657eb25661374aaee11522ff6bfec,
+        type: 3}
+      propertyPath: timeOutEnable
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
