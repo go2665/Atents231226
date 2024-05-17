@@ -117,4 +117,33 @@ public class GameManager : Singleton<GameManager>
     {
         cameraImpulseSource.GenerateImpulseWithVelocity(force * UnityEngine.Random.insideUnitCircle.normalized);
     }
+
+    // 저장 및 불러오기 -------------------------------------------------------------------------------------------
+    
+    /// <summary>
+    /// 함선 배치 정보
+    /// </summary>
+    ShipDeployData[] shipDeployDatas;
+
+    /// <summary>
+    /// 함선 배치 정보 저장용 함수
+    /// </summary>
+    /// <returns>true면 저장 성공, false면 저장 실패</returns>
+    public bool SaveShipDeplyData()
+    {
+        bool result = false;
+        // shipDeployDatas에 함선 배치 정보 기록하기
+        return result;
+    }
+
+    /// <summary>
+    /// 함선 배치 정보를 불러오는 함수
+    /// </summary>
+    /// <returns>true면 로딩 성공, false면 로딩 실패(저장된 정보가 없다)</returns>
+    public bool LoadShipDeployData()
+    {
+        bool result = false;
+        // shipDeployDatas에 저장된 정보대로 배를 배치하기
+        return result;
+    }
 }
