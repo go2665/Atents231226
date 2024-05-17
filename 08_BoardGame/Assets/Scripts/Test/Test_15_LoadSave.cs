@@ -10,6 +10,8 @@ public class Test_15_LoadSave : TestBase
     private void Start()
     {
         gameManager = GameManager.Instance;
+        gameManager.GameState = GameState.ShipDeployment;
+        gameManager.UserPlayer.Test_BindInputFuncs();
     }
 
     protected override void OnTest1(InputAction.CallbackContext context)

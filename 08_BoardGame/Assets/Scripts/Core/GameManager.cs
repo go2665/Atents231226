@@ -133,17 +133,42 @@ public class GameManager : Singleton<GameManager>
     {
         bool result = false;
         // shipDeployDatas에 함선 배치 정보 기록하기
+
+        if(user.IsAllDeployed)      // 전부 배치 되어 있을 떄만 저장
+        {
+            shipDeployDatas = new ShipDeployData[user.Ships.Length];
+            for(int i = 0; i < shipDeployDatas.Length; i++)
+            {
+                Ship ship = user.Ships[i];
+                shipDeployDatas[i] = new ShipDeployData(ship.Direction, ship.Positions[0]); // 모든 함선의 방향과 위치(그리드) 저장
+            }
+            result = true;
+        }        
         return result;
     }
 
     /// <summary>
-    /// 함선 배치 정보를 불러오는 함수
+    /// 함선 배치 정보를 불러오고 정보에 따라 함선을 배치하는 함수
     /// </summary>
     /// <returns>true면 로딩 성공, false면 로딩 실패(저장된 정보가 없다)</returns>
     public bool LoadShipDeployData()
     {
         bool result = false;
         // shipDeployDatas에 저장된 정보대로 배를 배치하기
+        if(shipDeployDatas != null)     // 이전에 저장된 정보가 있어야 성공
+        {
+            user.UndoAllShipDeployment();   // 이전에 배치되어 있던 함선은 모두 배치 취소
+
+            for(int i = 0;i < shipDeployDatas.Length;i++)
+            {
+                Ship ship = user.Ships[i];
+                ship.Direction = shipDeployDatas[i].Direction;
+                user.Board.ShipDeployment(ship, shipDeployDatas[i].Position);   // 저장된 정보를 바탕으로 새롭게 배치
+                ship.gameObject.SetActive(true);
+            }
+            result = true;
+        }
+
         return result;
     }
 }
