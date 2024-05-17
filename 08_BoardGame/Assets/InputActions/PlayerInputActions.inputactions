@@ -90,6 +90,67 @@
                     "isPartOfComposite": true
                 }
             ]
+        },
+        {
+            "name": "Title",
+            "id": "56679d09-6240-492d-9f46-d321ac2c21cb",
+            "actions": [
+                {
+                    "name": "Anything",
+                    "type": "Button",
+                    "id": "aa82a7ce-6776-4b93-9d93-db08832f870b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "ae730f8c-9769-476c-b49d-dd41d3d359cb",
+                    "path": "<Keyboard>/anyKey",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KM",
+                    "action": "Anything",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c42b0e62-0c81-4b8a-badb-f5024a65a0e1",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KM",
+                    "action": "Anything",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7bb27903-30e0-4dbe-a4c8-b21db5bbd303",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Anything",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f8d820ef-de62-4ea0-90aa-e49f46e11bad",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Anything",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

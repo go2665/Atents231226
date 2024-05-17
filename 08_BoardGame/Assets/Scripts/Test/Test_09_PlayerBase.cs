@@ -61,8 +61,10 @@ public class Test_09_PlayerBase : TestBase
             userPlayer.UndoShipDeploy(type);
         }
 
+#if UNITY_EDITOR
         Vector2Int enemyGrid = enemy.Board.GetMouseGridPosition();
         user.Test_IsSuccessLine(enemyGrid);
+#endif
     }
 
     protected override void OnTest1(InputAction.CallbackContext context)

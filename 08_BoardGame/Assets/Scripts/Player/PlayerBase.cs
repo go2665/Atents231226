@@ -771,8 +771,8 @@ public class PlayerBase : MonoBehaviour
         {
             criticalAttackIndices.Insert(0, index); // 항상 앞에 추가(새로 추가되는 위치가 성공 확률이 더 높기 때문)
 
-            // 후보지역 표시
-            if(GameManager.Instance.IsTestMode)
+            // 후보지역 표시            
+            if(gameManager.IsTestMode)
             {
                 GameObject obj = Instantiate(criticalMarkPrefab, criticalMarkParent);   // 프리팹 생성
                 obj.transform.position = opponent.Board.IndexToWorld(index);            // 적 보드 위치에 맞게 위치 수정

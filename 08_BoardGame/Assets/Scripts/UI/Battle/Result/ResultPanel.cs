@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static UnityEngine.UIElements.UxmlAttributeDescription;
 
@@ -96,6 +97,6 @@ public class ResultPanel : MonoBehaviour
     /// </summary>
     void Restart()
     {
-
+        SceneManager.LoadScene(1);
     }
 }

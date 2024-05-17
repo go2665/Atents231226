@@ -19,7 +19,7 @@ public class Test_14_Battle_Result : TestBase
         enemy.AutoShipDeployment(true);
 
         gameManager.GameState = GameState.Battle;
-        user.Test_BindInputFuncs();
+        user.BindInputFuncs();
     }
 
     protected override void OnTest1(InputAction.CallbackContext context)

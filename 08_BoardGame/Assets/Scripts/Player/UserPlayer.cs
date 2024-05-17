@@ -62,11 +62,6 @@ public class UserPlayer : PlayerBase
 
         // 상대방 설정
         opponent = gameManager.EnemyPlayer;
-
-        // 인풋 컨트롤러에 함수 등록
-        gameManager.InputController.onMouseClick += OnMouseClick;
-        gameManager.InputController.onMouseMove += OnMouseMove;
-        gameManager.InputController.onMouseWheel += OnMouseWheel;
     }
 
     // 함선 배치 및 해제용 함수 ---------------------------------------------------------------------
@@ -187,12 +182,13 @@ public class UserPlayer : PlayerBase
         }
     }
 
-#if UNITY_EDITOR
-    public void Test_BindInputFuncs()
+    /// <summary>
+    /// 입력 연결을 하는 함수
+    /// </summary>
+    public void BindInputFuncs()
     {
         gameManager.InputController.onMouseClick += OnMouseClick;
         gameManager.InputController.onMouseMove += OnMouseMove;
         gameManager.InputController.onMouseWheel += OnMouseWheel;
     }
-#endif
 }

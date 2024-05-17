@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class FinishDeploymentButton : MonoBehaviour
@@ -11,12 +12,15 @@ public class FinishDeploymentButton : MonoBehaviour
     Button button;
     UserPlayer player;
 
+    GameManager gameManager;
+
     private void Start()
     {
         button = GetComponent<Button>();
         button.onClick.AddListener(OnClick);
 
-        player = GameManager.Instance.UserPlayer;
+        gameManager = GameManager.Instance;
+        player = gameManager.UserPlayer;
         foreach(var ship in player.Ships)
         {
             ship.onDeploy += OnShipDeployed;    // 함선의 배치 정보가 변경될 때 OnShipDeployed를 실행
@@ -42,5 +46,10 @@ public class FinishDeploymentButton : MonoBehaviour
     private void OnClick()
     {
         Debug.Log("Finish버튼 클릭 - 전투씬으로 넘어가야함");
+
+        if( gameManager.SaveShipDeplyData() )
+        {
+            SceneManager.LoadScene(2);
+        }
     }
 }

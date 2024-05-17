@@ -158,7 +158,7 @@ public class TurnController : MonoBehaviour
     /// <summary>
     /// 턴 매니저를 정지 시키는 함수
     /// </summary>
-    void TurnManagerStop()
+    public void TurnManagerStop()
     {
         isTurnEnable = false;
     }

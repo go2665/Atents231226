@@ -19,7 +19,7 @@ public class EnemyPlayer : PlayerBase
     {
         base.Start();
 
-        opponent = gameManager.UserPlayer;  // 상대방 설정하기
+        opponent = gameManager.UserPlayer;  // 상대방 설정하기        
 
         thinkingTimeMax = Mathf.Min(thinkingTimeMax, turnManager.TurnDuration); // 최대 대기 시간 설정(TurnDuration보다 작거나 같아야 한다)
     }

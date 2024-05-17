@@ -10,9 +10,9 @@ public class Test_11_UserShipDeployment : TestBase
     private void Start()
     {
         GameManager.Instance.GameState = GameState.ShipDeployment;
-        GameManager.Instance.UserPlayer.Test_BindInputFuncs();
+        GameManager.Instance.UserPlayer.BindInputFuncs();
     }
-
+#if UNITY_EDITOR
     protected override void OnTest1(InputAction.CallbackContext context)
     {
         toggle.Test_StateChange(0);
@@ -27,6 +27,7 @@ public class Test_11_UserShipDeployment : TestBase
     {
         toggle.Test_StateChange(2);
     }
+#endif
 }
 
 // 실습

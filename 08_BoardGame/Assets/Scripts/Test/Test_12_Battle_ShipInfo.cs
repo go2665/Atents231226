@@ -19,7 +19,7 @@ public class Test_12_Battle_ShipInfo : TestBase
         enemy.AutoShipDeployment(true);
 
         gameManager.GameState = GameState.Battle;
-        user.Test_BindInputFuncs();
+        user.BindInputFuncs();
 
         gameManager.TurnController.onTurnStart += (_) => user.AutoAttack();
         user.AutoAttack();
