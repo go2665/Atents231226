@@ -1,3 +1,6 @@
+using Cinemachine;
+using System;
+using System.Collections;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -20,6 +23,21 @@ namespace StarterAssets
 		[Header("Mouse Cursor Settings")]
 		public bool cursorLocked = true;
 		public bool cursorInputForLook = true;
+
+		/// <summary>
+		/// 플레이어를 따라다니는 카메라
+		/// </summary>
+		CinemachineVirtualCamera followCamera;
+
+		/// <summary>
+		/// 줌 입력이 있으 떄 실행되는 델리게이트(bool:확대될 때 true, 원상복귀될 때 false)
+		/// </summary>
+		public Action<bool> onZoom;
+
+        private void Start()
+        {
+			followCamera = GameManager.Instance.FollowCamera;
+        }
 
         public void OnMove(InputAction.CallbackContext context)
         {
@@ -46,27 +64,53 @@ namespace StarterAssets
 
 		public void OnZoom(InputAction.CallbackContext context)
 		{
-			// GameManager.Instance.FollowCamera.m_Lens.FieldOfView;
+			bool isPress = !context.canceled;
 
-			const float zoomFOV = 20.0f;
-			const float normalFOV = 40.0f;
-			const float zoomTime = 0.25f;
-
-			if (true)
-			{
-                // 마우스 오른 클릭을 눌렀을 때
-                // zoomFOV까지 FollowCamera의 FOV가 줄어든다.
-				// 총이 보이지 않아야 한다.
-            }
-            else
-			{
-                // 마우스 오른 클릭을 땠을 때
-                // normalFOV까지 FollowCamera의 FOV가 늘어난다.
-				// 총이 보여야 한다.
-            }
+            StopAllCoroutines();
+			StartCoroutine(Zoom(isPress));
+			onZoom?.Invoke(isPress);
         }
 
-		public void OnFire(InputAction.CallbackContext context)
+
+		/// <summary>
+		/// ZoomIn/ZoomOut을 처리하는 코루틴
+		/// </summary>
+		/// <param name="zoomIn">true면 확대, false면 원상복구</param>
+		/// <returns></returns>
+        IEnumerator Zoom(bool zoomIn)
+        {
+            const float zoomFOV = 20.0f;
+            const float normalFOV = 40.0f;
+            const float zoomTime = 0.25f;
+
+            float speed = (normalFOV - zoomFOV) / zoomTime;
+
+            float fov = followCamera.m_Lens.FieldOfView;
+
+			if(zoomIn)
+			{
+                while (fov > zoomFOV)
+                {
+                    fov -= Time.deltaTime * speed;
+                    followCamera.m_Lens.FieldOfView = fov;
+                    yield return null;
+                }
+                followCamera.m_Lens.FieldOfView = zoomFOV;
+            }
+			else
+			{
+                while (fov < normalFOV)
+                {
+                    fov += Time.deltaTime * speed;
+                    followCamera.m_Lens.FieldOfView = fov;
+                    yield return null;
+                }
+				followCamera.m_Lens.FieldOfView = normalFOV;
+            }            
+
+        }
+
+        public void OnFire(InputAction.CallbackContext context)
 		{
 
 		}
