@@ -44,6 +44,39 @@ namespace StarterAssets
 			SprintInput(context.ReadValue<float>() > 0.1f);
         }
 
+		public void OnZoom(InputAction.CallbackContext context)
+		{
+			// GameManager.Instance.FollowCamera.m_Lens.FieldOfView;
+
+			const float zoomFOV = 20.0f;
+			const float normalFOV = 40.0f;
+			const float zoomTime = 0.25f;
+
+			if (true)
+			{
+                // 마우스 오른 클릭을 눌렀을 때
+                // zoomFOV까지 FollowCamera의 FOV가 줄어든다.
+				// 총이 보이지 않아야 한다.
+            }
+            else
+			{
+                // 마우스 오른 클릭을 땠을 때
+                // normalFOV까지 FollowCamera의 FOV가 늘어난다.
+				// 총이 보여야 한다.
+            }
+        }
+
+		public void OnFire(InputAction.CallbackContext context)
+		{
+
+		}
+
+        public void OnReload(InputAction.CallbackContext context)
+        {
+
+        }
+
+
 #if ENABLE_INPUT_SYSTEM
         public void OnMove(InputValue value)
 		{
