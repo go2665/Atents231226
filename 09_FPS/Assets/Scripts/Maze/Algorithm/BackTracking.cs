@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class BackTrackingCell : Cell
 {
+    public bool visited;
     public BackTrackingCell(int x, int y) : base(x, y)
     {
-
+        visited = false;
     }
 }
 
 public class BackTracking : Maze
-{    
+{
+    // 참조
+    // https://weblog.jamisbuck.org/2010/12/27/maze-generation-recursive-backtracking
 
     protected override void OnSpecificAlgorithmExcute()
     {

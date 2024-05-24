@@ -152,9 +152,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e797ceb779ae2a14dbebbaf61d87c52c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seed: -1
+  seed: 7
   pathData: 13
   cellVisualizer: {fileID: 2110879143}
+  width: 5
+  height: 5
+  backtracking: {fileID: 958629605}
 --- !u!4 &133310730
 Transform:
   m_ObjectHideFlags: 0
@@ -332,6 +335,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9237e81444302b245bdc626521cf2f0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cellPrefab: {fileID: 1653866173929551432, guid: 3381c57b848ff6e45ba46fba1a65a50d,
+    type: 3}
 --- !u!1 &961739749
 GameObject:
   m_ObjectHideFlags: 0

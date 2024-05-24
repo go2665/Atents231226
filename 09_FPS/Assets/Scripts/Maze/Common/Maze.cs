@@ -19,8 +19,7 @@ public class Maze
     /// <param name="width">미로의 가로 길이</param>
     /// <param name="height">미로의 세로 길이</param>
     /// <param name="seed">랜덤용 시드. -1이아니면 지정된 시드 적용</param>
-    /// <returns>만들어진 미로</returns>
-    public Cell[] MakeMaze(int width, int height, int seed = -1)
+    public void MakeMaze(int width, int height, int seed = -1)
     {
         this.width = width;
         this.height = height;
@@ -33,8 +32,6 @@ public class Maze
         cells = new Cell[Width * Height];
 
         OnSpecificAlgorithmExcute();    // 각 알고리즘별 코드 실행
-
-        return cells;
     }
 
     /// <summary>
