@@ -49,7 +49,7 @@ public class Maze
     /// <param name="to">도착셀</param>
     protected void ConnectPath(Cell from, Cell to)
     {
-        Vector2Int dir = new(to.X - from.X, to.Y - from.X); // from에서 to로 가능 방향 구하기
+        Vector2Int dir = new(to.X - from.X, to.Y - from.Y); // from에서 to로 가능 방향 구하기
         if(dir.x > 0)
         {
             // 동쪽

@@ -152,11 +152,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e797ceb779ae2a14dbebbaf61d87c52c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seed: 7
+  seed: -1
   pathData: 13
   cellVisualizer: {fileID: 2110879143}
-  width: 5
-  height: 5
+  width: 10
+  height: 10
   backtracking: {fileID: 958629605}
 --- !u!4 &133310730
 Transform:
