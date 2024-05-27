@@ -49,31 +49,55 @@ public class Maze
     /// <param name="to">도착셀</param>
     protected void ConnectPath(Cell from, Cell to)
     {
-
+        Vector2Int dir = new(to.X - from.X, to.Y - from.X); // from에서 to로 가능 방향 구하기
+        if(dir.x > 0)
+        {
+            // 동쪽
+            from.MakePath(Direction.East);
+            to.MakePath(Direction.West);
+        }
+        else if(dir.x < 0)
+        {
+            // 서쪽
+            from.MakePath(Direction.West);
+            to.MakePath(Direction.East);
+        }
+        else if (dir.y > 0)
+        {
+            // 남쪽
+            from.MakePath(Direction.South);
+            to.MakePath(Direction.North);
+        }
+        else if( dir.y < 0)
+        {
+            // 북쪽
+            from.MakePath(Direction.North);
+            to.MakePath(Direction.South);
+        }
     }
 
     protected bool IsInGrid(int x, int y)
     {
-        return false;
+        return x >= 0 && y >= 0 && x < width && y < height;
     }
 
     protected bool IsInGrid(Vector2Int grid)
     {
-        return false;
+        return grid.x >= 0 && grid.y >= 0 && grid.x < width && grid.y < height;
     }
 
     protected Vector2Int IndexToGrid(int index)
     {
-        return Vector2Int.zero;
+        return new(index % width, index / width);
     }
 
     protected int GridToIndex(int x, int y)
     {
-        return -1;
+        return x + y * width;
     }
 
     protected int GridToIndex(Vector2Int grid)
     {
-        return -1;
+        return grid.x + grid.y * width;
     }
 }
