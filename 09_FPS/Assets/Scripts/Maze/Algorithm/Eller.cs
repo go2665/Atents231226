@@ -77,7 +77,34 @@ public class Eller : Maze
     /// <returns>새롭게 만들어진 한 줄</returns>
     EllerCell[] MakeLine(EllerCell[] prev)
     {
-        return null;
+        /// 1. 한 줄 만들기
+        ///     1.1. 위쪽 줄을 참조해서 한 줄 만들기
+        ///         1.1.1. 위쪽 셀에 벽이 없으면 위쪽 셀과 같은 집합에 포함시킨다.
+        ///         1.1.2. 위쪽 셀에 벽이 있으면 새 집합에 포함시킨다.
+        ///     1.2. 첫번째 줄은 가로 길이만큼 셀을 만들고 각각 고유한 집합에 포함시킨다.
+
+        int row = (prev != null) ? (prev[0].Y + 1) : 0;
+
+        EllerCell[] line = new EllerCell[Width];
+        for(int x = 0;x<width;x++)
+        {
+            line[x] = new EllerCell(x, row);            // 새 셀 만들기
+
+            if( prev != null && prev[x].IsPath(Direction.South))
+            {
+                // 위쪽 줄이 있고, 위쪽 줄에 남쪽 벽이 없다. => 위쪽 셀의 집합과 같은 집합
+                line[x].setGroup = prev[x].setGroup;    // 위쪽 셀과 같은 집합에 속하게 만들기
+                line[x].MakePath(Direction.North);      // 위쪽으로 길을 만들기(위쪽 셀이 남쪽으로 길이 나있기 때문에)
+            }
+            else
+            {
+                // 위쪽 줄이 없거나, 위쪽 줄에 남쪽 벽이 있다. => 유니크한 집합에 포함
+                line[x].setGroup = serial;              // 고유한 집합에 속하게 만들기
+                serial++;                               // 다음 고유한 값 만들기
+            }
+        }
+
+        return line;
     }
 
     /// <summary>
