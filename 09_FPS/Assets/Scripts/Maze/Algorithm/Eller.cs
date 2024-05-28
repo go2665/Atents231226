@@ -14,6 +14,17 @@ public class EllerCell : Cell
 
 public class Eller : Maze
 {
+    /// <summary>
+    /// 일반적으로 이웃 셀과 합쳐질 확률
+    /// </summary>
+    [Range(0f, 1f)]
+    public float mergeChance = 0.7f;
+    
+    /// <summary>
+    /// 고유한 집합을 설정하기 위한 시리얼 넘버
+    /// </summary>
+    int serial = 0;
+
     protected override void OnSpecificAlgorithmExcute()
     {
         /// 1. 한 줄 만들기
@@ -30,5 +41,70 @@ public class Eller : Maze
         /// 5. 마지막 줄 만들고 정리
         ///     5.1. 생성까진 똑같이 처리
         ///     5.2. 합칠 때 세트가 다르면 무조건 합친다.
+
+
+        int h = height - 1;     // 미리 계산해 놓기
+        EllerCell[] prevLine = null;    // 이전 줄을 저장하는 변수
+        
+        for (int y = 0;y<h;y++) // 첫줄부터 마지막줄까지 만드는 용도의 for
+        {
+            // 1. 한 줄 만들기
+            EllerCell[] line = MakeLine(prevLine);
+
+            // 2. 옆칸끼리 합치기
+            MergeAdjacent(line, mergeChance);
+
+            // 3. 아래쪽 벽 제거하기
+            RemoveSouthWall(line);
+                        
+            WriteLine(line);    // 만든 줄 기록하기
+            prevLine = line;    // 만든 줄을 이전 줄로 설정하기
+
+            // 4. 한줄 완료
+        }
+
+        // 5. 마지막 줄 만들기
+        EllerCell[] lastLine = MakeLine(prevLine);
+        const float LastMergeChange = 1.1f;         // 마지막 줄에서 이웃 셀과 합쳐질 확률(무조건 합쳐져야 함)
+        MergeAdjacent(lastLine, LastMergeChange);
+        WriteLine(lastLine);
+    }
+
+    /// <summary>
+    /// 한 줄을 만드는 함수
+    /// </summary>
+    /// <param name="prev">이전 줄</param>
+    /// <returns>새롭게 만들어진 한 줄</returns>
+    EllerCell[] MakeLine(EllerCell[] prev)
+    {
+        return null;
+    }
+
+    /// <summary>
+    /// 이웃 셀끼리 합치는 함수
+    /// </summary>
+    /// <param name="line">합치는 작업을 할 줄</param>
+    /// <param name="chance">합쳐질 확률</param>
+    void MergeAdjacent(EllerCell[] line, float chance)
+    {
+
+    }
+
+    /// <summary>
+    /// 각 집합별로 랜덤하게 하나 이상의 남쪽벽을 제거하는 함수
+    /// </summary>
+    /// <param name="line">작업 처리를 할 줄</param>
+    void RemoveSouthWall(EllerCell[] line)
+    {
+
+    }
+
+    /// <summary>
+    /// 한 줄을 Maze.cells에 저장하는 함수
+    /// </summary>
+    /// <param name="line">저장할 줄</param>
+    void WriteLine(EllerCell[] line)
+    {
+
     }
 }
