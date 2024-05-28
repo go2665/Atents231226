@@ -114,7 +114,37 @@ public class Eller : Maze
     /// <param name="chance">합쳐질 확률</param>
     void MergeAdjacent(EllerCell[] line, float chance)
     {
+        /// 2. 옆칸끼리 합치기
+        ///     2.1. 서로 집합이 다르면 랜덤하게 벽을 제거하고 같은 집합으로 만든다.(같은 줄에 있는 같은 종류의 셀이 한번에 바뀐다.)
+        ///     2.2. 서로 같은 집합이면 패스
+        ///     
 
+        int count = 1;          // 한줄이 모두 같은 집합에 속하는 것을 방지하기 위한 카운터
+        int w = width - 1;      // 미리 계산해 놓은 것
+        for (int x = 0; x<w;x++)
+        {
+            if (count < w && line[x].setGroup != line[x+1].setGroup && Random.value < chance)
+            {
+                // count가 width보다 작다 = 한줄이 모두 같은 집합에 속하지 않는다.
+                // x와 x+1번째의 셀이 같은 그룹에 속하지 않는다
+                // 설정한 확률을 통과했다.
+
+                line[x].MakePath(Direction.East);       // 서로 길을 만들기
+                line[x+1].MakePath(Direction.West);
+
+                int targetGroup = line[x + 1].setGroup;     // x+1번째의 집합을 저장해 놓기
+                line[x + 1].setGroup = line[x].setGroup;    // x+1번째를 x번째의 집합에 속하게 만들기
+                for(int i = x+2; i<width;i++)
+                {
+                    if (line[i].setGroup == targetGroup)    // x+1번째와 같은 집합에 속한 셀들을 x번째의 집합에 속하게 만들기
+                    {
+                        line[i].setGroup = line[x].setGroup;
+                    }
+                }
+
+                count++;    // 카운트 증가
+            }
+        }
     }
 
     /// <summary>
@@ -132,6 +162,10 @@ public class Eller : Maze
     /// <param name="line">저장할 줄</param>
     void WriteLine(EllerCell[] line)
     {
-
+        int index = GridToIndex(0, line[0].Y);
+        for(int x = 0; x<width;x++)
+        {
+            cells[index+x] = line[x];
+        }
     }
 }
