@@ -32,6 +32,8 @@ public class Maze
         cells = new Cell[Width * Height];
 
         OnSpecificAlgorithmExcute();    // 각 알고리즘별 코드 실행
+
+        Debug.Log("미로 만들기 완료");
     }
 
     /// <summary>

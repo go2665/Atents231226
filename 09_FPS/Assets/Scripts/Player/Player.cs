@@ -15,6 +15,11 @@ public class Player : MonoBehaviour
     /// </summary>
     GameObject gunCamera;
 
+    /// <summary>
+    /// 총은 카메라 기준으로 발사됨
+    /// </summary>
+    public Transform FireTransform => transform.GetChild(0);    // 카메라 루트
+
     private void Awake()
     {
         starterAssets = GetComponent<StarterAssetsInputs>();
