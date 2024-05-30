@@ -143,7 +143,12 @@ public class GunBase : MonoBehaviour
     /// </summary>
     protected void HitProcess()
     {
-
+        Ray ray = new(fireTransform.position, GetFireDirection());  // 레이 만들기
+        if( Physics.Raycast(ray, out RaycastHit hitInfo, range))    // 레이캐스트
+        {
+            Vector3 reflect = Vector3.Reflect(ray.direction, hitInfo.normal);
+            Factory.Instance.GetBulletHole(hitInfo.point, hitInfo.normal, reflect); // 총알 구멍 생성을 위해, 생성될 위치, 생성될 면의 노멀, 반사방향 전달
+        }
     }
 
     /// <summary>
@@ -190,6 +195,14 @@ public class GunBase : MonoBehaviour
     }
 
 #if UNITY_EDITOR
+
+    public void Test_Fire()
+    {
+        if(fireTransform == null)
+            Equip();
+        Fire();
+    }
+
     private void OnDrawGizmos()
     {
         if(fireTransform != null)

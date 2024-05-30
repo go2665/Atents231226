@@ -1226,6 +1226,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1546659106}
   m_CullTransparentMesh: 1
+--- !u!1 &1586380095
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1586380096}
+  - component: {fileID: 1586380097}
+  m_Layer: 0
+  m_Name: Test_08_Gum
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1586380096
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1586380095}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1586380097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1586380095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5a7e36bebbef21448d7624ad8ec9210, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  seed: -1
+  gun: {fileID: 2065269862}
 --- !u!1 &1625844597
 GameObject:
   m_ObjectHideFlags: 0
@@ -1532,11 +1578,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Revolver
       objectReference: {fileID: 0}
-    - target: {fileID: 276728182370442864, guid: 57e040ef6b4628d4b92b8f8ad1a43282,
-        type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     - target: {fileID: 1643092896896993518, guid: 57e040ef6b4628d4b92b8f8ad1a43282,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1587,15 +1628,35 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3890898653365710047, guid: 57e040ef6b4628d4b92b8f8ad1a43282,
+    - target: {fileID: 5930637398120036845, guid: 57e040ef6b4628d4b92b8f8ad1a43282,
         type: 3}
-      propertyPath: m_Layer
-      value: 7
+      propertyPath: range
+      value: 100
       objectReference: {fileID: 0}
-    - target: {fileID: 7299425948041587543, guid: 57e040ef6b4628d4b92b8f8ad1a43282,
+    - target: {fileID: 5930637398120036845, guid: 57e040ef6b4628d4b92b8f8ad1a43282,
         type: 3}
-      propertyPath: m_Layer
-      value: 7
+      propertyPath: damage
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5930637398120036845, guid: 57e040ef6b4628d4b92b8f8ad1a43282,
+        type: 3}
+      propertyPath: recoil
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5930637398120036845, guid: 57e040ef6b4628d4b92b8f8ad1a43282,
+        type: 3}
+      propertyPath: spread
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5930637398120036845, guid: 57e040ef6b4628d4b92b8f8ad1a43282,
+        type: 3}
+      propertyPath: clipSize
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5930637398120036845, guid: 57e040ef6b4628d4b92b8f8ad1a43282,
+        type: 3}
+      propertyPath: fireRate
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1608,6 +1669,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2065269860}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2065269862 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5930637398120036845, guid: 57e040ef6b4628d4b92b8f8ad1a43282,
+    type: 3}
+  m_PrefabInstance: {fileID: 2065269860}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80ca9882bf9d23942971b13dd7d3382c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2084445384
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2488,3 +2561,4 @@ SceneRoots:
   - {fileID: 1743292137}
   - {fileID: 1061930073}
   - {fileID: 1330828016}
+  - {fileID: 1586380096}
