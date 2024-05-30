@@ -101,18 +101,18 @@ public class GunBase : MonoBehaviour
     /// <summary>
     /// 총을 발사하는 함수
     /// </summary>
-    public void Fire()
+    public void Fire(bool isFireStart = true)
     {
         if(isFireReady && BulletCount > 0)  // 발사 가능하고 총알이 남아있으면
         {
-            FireProcess();              // 총 발상
+            FireProcess(isFireStart);       // 총 발사
         }
     }
 
     /// <summary>
     /// 발사가 성공했을 때 실행할 기능들
     /// </summary>
-    protected virtual void FireProcess()
+    protected virtual void FireProcess(bool isFireStart = true)
     {
         isFireReady = false;            // 계속 발사가 되지 않게 막기
         MuzzleEffectOn();               // 머즐 이팩트 보여주고

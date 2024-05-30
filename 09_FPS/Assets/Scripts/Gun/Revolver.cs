@@ -6,7 +6,7 @@ public class Revolver : GunBase
 {
     public float reloadDuration = 1.0f;
 
-    protected override void FireProcess()
+    protected override void FireProcess(bool isFireStart = true)
     {
         base.FireProcess();
         HitProcess();       // 명중 처리하기
@@ -15,6 +15,7 @@ public class Revolver : GunBase
 
     public void Reload()
     {
-
+        // 현재 총알 개수가 탄창크기만큼 설정된다.
+        // 재장전 중에 다시 재장전하는 것은 안된다.
     }
 }
