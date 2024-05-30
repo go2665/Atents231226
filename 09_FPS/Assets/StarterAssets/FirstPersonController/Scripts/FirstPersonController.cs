@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -53,6 +54,9 @@ namespace StarterAssets
 
 		// cinemachine
 		private float _cinemachineTargetPitch;
+
+		public AnimationCurve fireUp;
+		public AnimationCurve fireDown;
 
 		// player
 		private float _speed;
@@ -263,6 +267,20 @@ namespace StarterAssets
 
 			// when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
 			Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
+		}
+
+        /// <summary>
+        /// 총기 반동 적용하는 함수
+        /// </summary>
+        /// <param name="recoil">반동 정도</param>
+        public void FireRecoil(float recoil)
+		{
+
+		}
+
+		IEnumerator FireRecoilCoroutine(float recoil)
+		{
+			yield return null;
 		}
 	}
 }

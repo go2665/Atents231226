@@ -112,6 +112,7 @@ public class GunBase : MonoBehaviour
     /// <summary>
     /// 발사가 성공했을 때 실행할 기능들
     /// </summary>
+    /// <param name="isFireStart">발사 입력이 들어오면 true. 끝나면 false</param>
     protected virtual void FireProcess(bool isFireStart = true)
     {
         isFireReady = false;            // 계속 발사가 되지 않게 막기
@@ -196,11 +197,11 @@ public class GunBase : MonoBehaviour
 
 #if UNITY_EDITOR
 
-    public void Test_Fire()
+    public void Test_Fire(bool isFireStart = true)
     {
         if(fireTransform == null)
             Equip();
-        Fire();
+        Fire(isFireStart);
     }
 
     private void OnDrawGizmos()
