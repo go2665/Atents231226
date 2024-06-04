@@ -4,6 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 
+public enum GunType : byte
+{
+    Revolver = 0,
+    ShotGun,
+    AssaultRifle
+}
+
 public class GunBase : MonoBehaviour
 {
     /// <summary>

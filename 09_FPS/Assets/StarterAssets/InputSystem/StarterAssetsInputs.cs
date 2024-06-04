@@ -34,6 +34,16 @@ namespace StarterAssets
 		/// </summary>
 		public Action<bool> onZoom;
 
+		/// <summary>
+		/// 플레이어
+		/// </summary>
+		Player player;
+
+        private void Awake()
+        {
+            player = GetComponent<Player>();
+        }
+
         private void Start()
         {
 			followCamera = GameManager.Instance.FollowCamera;
@@ -112,12 +122,15 @@ namespace StarterAssets
 
         public void OnFire(InputAction.CallbackContext context)
 		{
-
+			player.GunFire(!context.canceled);
 		}
 
         public void OnReload(InputAction.CallbackContext context)
         {
-
+			if(context.performed)
+			{
+				player.RevolverReload();
+			}
         }
 
 
