@@ -1239,7 +1239,7 @@ GameObject:
   - component: {fileID: 1586380096}
   - component: {fileID: 1586380097}
   m_Layer: 0
-  m_Name: Test_08_Gum
+  m_Name: Test_08_Gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1944,6 +1944,11 @@ PrefabInstance:
       propertyPath: m_CullingMask.m_Bits
       value: 87
       objectReference: {fileID: 0}
+    - target: {fileID: 9005220659476430821, guid: 2d3a85ecde41a8246a79669975912b74,
+        type: 3}
+      propertyPath: m_NormalizedViewPortRect.width
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9005220659476430823, guid: 2d3a85ecde41a8246a79669975912b74,
         type: 3}
       propertyPath: m_Name
@@ -2612,6 +2617,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_CullingMask.m_Bits
       value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 7752107435350675683, guid: 8b3e81b7cc974794780fe04743efe626,
+        type: 3}
+      propertyPath: m_NormalizedViewPortRect.width
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
