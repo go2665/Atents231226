@@ -1,4 +1,5 @@
 using StarterAssets;
+using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -38,6 +39,11 @@ public class Player : MonoBehaviour
     /// </summary>
     GunBase defaultGun;
 
+    /// <summary>
+    /// 총이 변경되었음을 알리는 델리게이트
+    /// </summary>
+    public Action<GunBase> onGunChange;
+
     private void Awake()
     {
         starterAssets = GetComponent<StarterAssetsInputs>();
@@ -46,12 +52,7 @@ public class Player : MonoBehaviour
         gunCamera = transform.GetChild(2).gameObject;
 
         Transform child = transform.GetChild(3);
-        guns = child.GetComponentsInChildren<GunBase>(true);    // 모든 총 찾기
-        foreach(GunBase gun in guns)
-        {
-            gun.onFire += controller.FireRecoil;
-        }
-
+        guns = child.GetComponentsInChildren<GunBase>(true);    // 모든 총 찾기        
         defaultGun = guns[0];   // 기본총        
     }
 
@@ -59,8 +60,15 @@ public class Player : MonoBehaviour
     {
         starterAssets.onZoom += DisableGunCamera;   // 줌 할 때 실행될 함수 연결
 
+        Crosshair crosshair = FindAnyObjectByType<Crosshair>();
+        foreach (GunBase gun in guns)
+        {
+            gun.onFire += controller.FireRecoil;                        // 화면 튕기는 효과
+            gun.onFire += (expend) => crosshair.Expend(expend * 10);    // 조준선 확장 효과
+        }
         activeGun = defaultGun; // 기본총 설정
         activeGun.Equip();      // 기본총 장비
+        onGunChange?.Invoke(activeGun); // 총 변경 알림
     }
 
     /// <summary>
@@ -84,6 +92,8 @@ public class Player : MonoBehaviour
         activeGun = guns[(int)gunType];         // 새총 설정하고 장비하고 활성화하기
         activeGun.Equip();
         activeGun.gameObject.SetActive(true);
+
+        onGunChange?.Invoke(activeGun);         // 총이 변경되었음을 알림
     }
 
     /// <summary>
@@ -104,6 +114,18 @@ public class Player : MonoBehaviour
         if(revolver != null)    // activeGun이 리볼버일 때만 재장전
         {
             revolver.Reload();
+        }
+    }
+
+    /// <summary>
+    /// 총알 개수가 변경될 때 실행되는 델리게이트에 콜백함수 추가
+    /// </summary>
+    /// <param name="callback">추가할 콜백함수</param>
+    public void AddBulletCountChangeDelegate(Action<int> callback)
+    {
+        foreach(var gun in guns)
+        {
+            gun.onBulletCountChange += callback;
         }
     }
 }
