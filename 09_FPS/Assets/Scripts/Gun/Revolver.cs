@@ -24,6 +24,7 @@ public class Revolver : GunBase
     {
         if(!isReloading)                        // 리로딩 중이 아닐 때만 실행
         {
+            StopAllCoroutines();                // FireProcess에서 실행시키는 코루틴으로 isFireReady가 true가 되는 것 방지
             isReloading = true;                 // 리로딩 중이라고 표시
             isFireReady = false;                // 리로딩 중 총을 발사하는 것 방지
             StartCoroutine(ReloadCoroutine());  // 리로드 코루틴 실행
