@@ -65,6 +65,7 @@ public class Player : MonoBehaviour
         {
             gun.onFire += controller.FireRecoil;                        // 화면 튕기는 효과
             gun.onFire += (expend) => crosshair.Expend(expend * 10);    // 조준선 확장 효과
+            gun.onAmmoDepleted += () => GunChange(GunType.Revolver);    // 총알이 다 떨어지면 기본총으로 변경
         }
         activeGun = defaultGun; // 기본총 설정
         activeGun.Equip();      // 기본총 장비
@@ -86,8 +87,8 @@ public class Player : MonoBehaviour
     /// <param name="gunType">총의 종류</param>
     public void GunChange(GunType gunType)
     {
-        activeGun.gameObject.SetActive(false);  // 이전 총 비활성화하고 장비 해제하기
         activeGun.UnEquip();
+        activeGun.gameObject.SetActive(false);  // 이전 총 비활성화하고 장비 해제하기
 
         activeGun = guns[(int)gunType];         // 새총 설정하고 장비하고 활성화하기
         activeGun.Equip();
@@ -121,11 +122,11 @@ public class Player : MonoBehaviour
     /// 총알 개수가 변경될 때 실행되는 델리게이트에 콜백함수 추가
     /// </summary>
     /// <param name="callback">추가할 콜백함수</param>
-    public void AddBulletCountChangeDelegate(Action<int> callback)
+    public void AddAmmoCountChangeDelegate(Action<int> callback)
     {
         foreach(var gun in guns)
         {
-            gun.onBulletCountChange += callback;
+            gun.onAmmoCountChange += callback;
         }
     }
 }

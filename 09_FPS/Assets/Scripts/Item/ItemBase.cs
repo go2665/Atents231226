@@ -17,6 +17,16 @@ public class ItemBase : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // OnItemConsum 실행
+         if(other.CompareTag("Player"))
+        {
+            Player player = other.GetComponent<Player>();
+            if(player != null)
+            {
+                OnItemConsum(player);
+
+                Destroy(this.gameObject);
+            }
+        }
     }
 
     /// <summary>
@@ -27,3 +37,10 @@ public class ItemBase : MonoBehaviour
     {
     }
 }
+
+// 총기 아이템 획득하기
+// 1. 라이플과 샷건 아이템 만들기
+//  1.1. 획득하면  획득시 무기가 변경됨
+// 2. 라이플과 샷건을 사용할 때 총알이 다 떨어지면 기본총으로 변경
+
+// 아이템도 풀에 추가하기

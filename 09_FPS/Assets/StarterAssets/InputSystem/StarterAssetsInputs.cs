@@ -122,6 +122,7 @@ namespace StarterAssets
 
         public void OnFire(InputAction.CallbackContext context)
 		{
+			Debug.Log("Fire");
 			player.GunFire(!context.canceled);
 		}
 
