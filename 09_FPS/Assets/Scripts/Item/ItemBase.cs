@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemBase : MonoBehaviour
+public class ItemBase : RecycleObject
 {
     /// <summary>
     /// 1초에 회전하는 속도
@@ -14,6 +14,22 @@ public class ItemBase : MonoBehaviour
     /// </summary>
     Transform meshTransform;
 
+    private void Awake()
+    {
+        meshTransform = transform.GetChild(0);
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        StartCoroutine(LifeOver(30));   // 30초 후에 자동으로 사라지기
+    }
+
+    private void Update()
+    {
+        meshTransform.Rotate(Time.deltaTime * spinSpeed * Vector3.up, Space.World);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         // OnItemConsum 실행
@@ -23,8 +39,7 @@ public class ItemBase : MonoBehaviour
             if(player != null)
             {
                 OnItemConsum(player);
-
-                Destroy(this.gameObject);
+                gameObject.SetActive(false);
             }
         }
     }

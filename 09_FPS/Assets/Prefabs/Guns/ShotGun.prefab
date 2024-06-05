@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   range: 30
-  clipSize: 2
+  clipSize: 10
   damage: 5
   fireRate: 0.5
   spread: 10

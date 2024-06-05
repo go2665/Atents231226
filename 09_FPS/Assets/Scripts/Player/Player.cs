@@ -35,11 +35,6 @@ public class Player : MonoBehaviour
     GunBase activeGun;
 
     /// <summary>
-    /// 기본 총(리볼버)
-    /// </summary>
-    GunBase defaultGun;
-
-    /// <summary>
     /// 총이 변경되었음을 알리는 델리게이트
     /// </summary>
     public Action<GunBase> onGunChange;
@@ -53,7 +48,6 @@ public class Player : MonoBehaviour
 
         Transform child = transform.GetChild(3);
         guns = child.GetComponentsInChildren<GunBase>(true);    // 모든 총 찾기        
-        defaultGun = guns[0];   // 기본총        
     }
 
     private void Start()
@@ -67,7 +61,7 @@ public class Player : MonoBehaviour
             gun.onFire += (expend) => crosshair.Expend(expend * 10);    // 조준선 확장 효과
             gun.onAmmoDepleted += () => GunChange(GunType.Revolver);    // 총알이 다 떨어지면 기본총으로 변경
         }
-        activeGun = defaultGun; // 기본총 설정
+        activeGun = guns[0];    // 기본총 설정
         activeGun.Equip();      // 기본총 장비
         onGunChange?.Invoke(activeGun); // 총 변경 알림
     }
