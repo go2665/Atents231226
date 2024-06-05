@@ -155,8 +155,8 @@ MonoBehaviour:
   seed: -1
   pathData: 13
   cellVisualizer: {fileID: 2110879143}
-  width: 10
-  height: 10
+  width: 20
+  height: 20
   backtracking: {fileID: 958629605}
   eller: {fileID: 473205564}
   wilson: {fileID: 280151283}
