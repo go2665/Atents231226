@@ -77,9 +77,9 @@ public class Enemy : MonoBehaviour
         {
             if(state != value)          // 상태가 달라지면
             {
-                OnStateExit(value);     // 이전 상태에서 나가기 처리 실행
+                OnStateExit(state);     // 이전 상태에서 나가기 처리 실행
                 state = value;
-                OnStateEnter(value);    // 새 상태에 들어가기 처리 실행
+                OnStateEnter(state);    // 새 상태에 들어가기 처리 실행
             }
         }
     }
@@ -166,7 +166,7 @@ public class Enemy : MonoBehaviour
 
     private void Awake()
     {
-        
+        agent = GetComponent<NavMeshAgent>();
     }
 
     private void OnEnable()
@@ -191,7 +191,10 @@ public class Enemy : MonoBehaviour
 
     void Update_Wander()
     {
-
+        if(!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+        {
+            agent.SetDestination(GetRandomDestination());
+        }
     }
 
     void Update_Chase()
@@ -220,7 +223,24 @@ public class Enemy : MonoBehaviour
     /// <param name="newState">새 상태</param>
     void OnStateEnter(BehaviorState newState)
     {
-
+        switch (newState)
+        {
+            case BehaviorState.Wander:
+                onUpdate = Update_Wander;
+                agent.speed = walkSpeed;
+                agent.SetDestination(GetRandomDestination());
+                break;
+            case BehaviorState.Chase:
+                break;
+            case BehaviorState.Find:
+                break;
+            case BehaviorState.Attack:
+                break;
+            case BehaviorState.Dead:
+                break;
+            default:
+                break;
+        }
     }
 
     /// <summary>
@@ -229,7 +249,23 @@ public class Enemy : MonoBehaviour
     /// <param name="oldState">옛 상태</param>
     void OnStateExit(BehaviorState oldState)
     {
-
+        switch (oldState)
+        {
+            case BehaviorState.Wander:
+                break;
+            case BehaviorState.Chase:
+                break;
+            case BehaviorState.Find:
+                break;
+            case BehaviorState.Attack:
+                break;
+            case BehaviorState.Dead:
+                gameObject.SetActive(true);
+                HP = maxHP;
+                break;
+            default:
+                break;
+        }
     }
 
     /// <summary>
@@ -238,7 +274,13 @@ public class Enemy : MonoBehaviour
     /// <returns>랜덤한 배회용 목적지</returns>
     Vector3 GetRandomDestination()
     {
-        return Vector3.zero;
+        int range = 3;
+
+        Vector2Int current = MazeVisualizer.WorldToGrid(transform.position);
+        int x = UnityEngine.Random.Range(current.x - range, current.x + range + 1);
+        int y = UnityEngine.Random.Range(current.y - range, current.y + range + 1);
+
+        return MazeVisualizer.GridToWorld(x, y);
     }
 
     /// <summary>
@@ -295,6 +337,7 @@ public class Enemy : MonoBehaviour
     /// <param name="spawnPosition">리스폰할 위치</param>
     public void Respawn(Vector3 spawnPosition)
     {
+        agent.Warp(spawnPosition);
         State = BehaviorState.Wander;
     }
 
