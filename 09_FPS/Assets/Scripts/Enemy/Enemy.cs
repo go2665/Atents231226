@@ -367,5 +367,10 @@ public class Enemy : MonoBehaviour
         // 시야 각 그리기(상태별로 시야각 다른 색으로 그리기)
         
     }
+
+    public Vector3 Test_GetRandomPosition()
+    {
+        return GetRandomDestination();
+    }
 #endif
 }

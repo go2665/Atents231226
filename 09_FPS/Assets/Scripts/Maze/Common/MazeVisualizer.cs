@@ -54,7 +54,7 @@ public class MazeVisualizer : MonoBehaviour
         float size = CellVisualizer.CellSize;
         float sizeHalf = size * 0.5f;
 
-        return new(size * x + sizeHalf, size * -y - sizeHalf);
+        return new(size * x + sizeHalf, 0, size * -y - sizeHalf);
     }
 
     /// <summary>
