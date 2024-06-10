@@ -157,6 +157,11 @@ public class Enemy : MonoBehaviour
     /// </summary>
     float findTimeElapsed = 0.0f;
 
+    /// <summary>
+    /// 추적 대상
+    /// </summary>
+    Transform chaseTarget = null;
+
     // 기타 -------------------------------------------------------------------------------------------------
         
     NavMeshAgent agent;
@@ -167,6 +172,8 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        SphereCollider sc = GetComponent<SphereCollider>();
+        sc.radius = sightRange;
     }
 
     private void OnEnable()
@@ -176,12 +183,21 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag("Player"))
+        {
+            chaseTarget = other.transform;
+            //Debug.Log("In : " + chaseTarget);
+        }
         
     }
 
     private void OnTriggerExit(Collider other)
     {
-        
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("Out : " + chaseTarget);
+            //chaseTarget = null;
+        }
     }
 
     private void Update()
@@ -191,15 +207,27 @@ public class Enemy : MonoBehaviour
 
     void Update_Wander()
     {
-        if(!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+        if(FindPlayer())
+        {            
+            State = BehaviorState.Chase;                    // 플레이어를 찾았으면 Chase 상태로 변경
+        }
+        else if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
         {
-            agent.SetDestination(GetRandomDestination());
+            agent.SetDestination(GetRandomDestination());   // 목적지에 도착했으면 다시 랜덤 위치로 이동
         }
     }
 
     void Update_Chase()
     {
-
+        if(IsPlayerInSight(out Vector3 position))
+        {
+            agent.SetDestination(position); // 마지막 목격 장소를 목적지로 새로 설정
+        }
+        else if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+        {
+            // 플레이어가 안보이고 마지막 목격지에 도착했다 => 찾기 상태로 전화
+            State = BehaviorState.Find;
+        }
     }
 
     void Update_Find()
@@ -231,6 +259,8 @@ public class Enemy : MonoBehaviour
                 agent.SetDestination(GetRandomDestination());
                 break;
             case BehaviorState.Chase:
+                onUpdate = Update_Chase;
+                agent.speed = runSpeed;
                 break;
             case BehaviorState.Find:
                 break;
@@ -250,11 +280,7 @@ public class Enemy : MonoBehaviour
     void OnStateExit(BehaviorState oldState)
     {
         switch (oldState)
-        {
-            case BehaviorState.Wander:
-                break;
-            case BehaviorState.Chase:
-                break;
+        {            
             case BehaviorState.Find:
                 break;
             case BehaviorState.Attack:
@@ -264,6 +290,8 @@ public class Enemy : MonoBehaviour
                 HP = maxHP;
                 break;
             default:
+            //case BehaviorState.Wander:    // 사용하지 않음
+            //case BehaviorState.Chase:
                 break;
         }
     }
@@ -307,7 +335,15 @@ public class Enemy : MonoBehaviour
     /// <returns>true면 플레이어를 찾았다. false면 못찾았다.</returns>
     bool FindPlayer()
     {
-        return false;
+        bool result = false;
+
+        if(chaseTarget != null)                 // 추적 대상이 존재하고
+        {
+            result = IsPlayerInSight(out _);    // 시야범위 안에 있으면 플레이어를 찾은 것
+            //Debug.Log("Find : " + result);
+        }
+
+        return result;
     }
 
     /// <summary>
@@ -317,8 +353,28 @@ public class Enemy : MonoBehaviour
     /// <returns>true면 시야범위 안에 있다. false면 시야범위 안에 없다.</returns>
     bool IsPlayerInSight(out Vector3 position)
     {
+        bool result = false;
         position = Vector3.zero;
-        return false;
+        if(chaseTarget != null) // 시야 범위 트리거 안에 들어왔는지 확인
+        {
+            Vector3 dir = chaseTarget.position - transform.position;
+            Ray ray = new(transform.position + Vector3.up * 1.9f, dir);     // 적 눈높이에서 시작되는 레이 생성
+            if(Physics.Raycast(ray, out RaycastHit hit, sightRange, LayerMask.GetMask("Player", "Wall")))
+            {
+                if(hit.transform == chaseTarget)    
+                {
+                    // 플레이어와 적 사이에 가리는 것이 없다.
+                    float angle = Vector3.Angle(transform.forward, dir);
+                    if(angle * 2 < sightAngle)
+                    {
+                        // 플레이어가 시야각 안에 있다.
+                        position = chaseTarget.position;
+                        result = true;
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     /// <summary>
