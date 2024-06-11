@@ -87,7 +87,18 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// 상태별 적의 눈 색상
     /// </summary>
+    [ColorUsage(false, true)]
     public Color[] stateEyeColors;
+
+    /// <summary>
+    /// 눈의 머티리얼
+    /// </summary>
+    Material eyeMaterial;
+
+    /// <summary>
+    /// 눈 색의 ID
+    /// </summary>
+    readonly int EyeColorID = Shader.PropertyToID("_EyeColor");
 
     /// <summary>
     /// 각 상태가 되었을때 상태별 업데이트 함수를 저장하는 델리게이트(함수포인터의 역할)
@@ -191,6 +202,14 @@ public class Enemy : MonoBehaviour
                 State = BehaviorState.Attack;
             }
         };
+
+        child = transform.GetChild(0);  // root
+        child = child.GetChild(0);      // head
+        child = child.GetChild(0);      // eye
+
+        Renderer eyeRenderer = child.GetComponent<Renderer>();
+        eyeMaterial = eyeRenderer.material;
+        eyeMaterial.SetColor(EyeColorID, stateEyeColors[(int)BehaviorState.Wander]);
     }
 
     private void OnEnable()
@@ -283,9 +302,10 @@ public class Enemy : MonoBehaviour
     /// <param name="newState">새 상태</param>
     void OnStateEnter(BehaviorState newState)
     {
+        eyeMaterial.SetColor(EyeColorID, stateEyeColors[(int)newState]);
         switch (newState)
         {
-            case BehaviorState.Wander:
+            case BehaviorState.Wander:                
                 onUpdate = Update_Wander;
                 agent.speed = walkSpeed;
                 agent.SetDestination(GetRandomDestination());

@@ -4734,6 +4734,46 @@ PrefabInstance:
       propertyPath: stateEyeColors.Array.size
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 3391636546160300959, guid: 1153dc817bf7f954f97a4d9fff9dc1cf,
+        type: 3}
+      propertyPath: stateEyeColors.Array.data[0].b
+      value: 0.095304474
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391636546160300959, guid: 1153dc817bf7f954f97a4d9fff9dc1cf,
+        type: 3}
+      propertyPath: stateEyeColors.Array.data[0].g
+      value: 3.9999995
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391636546160300959, guid: 1153dc817bf7f954f97a4d9fff9dc1cf,
+        type: 3}
+      propertyPath: stateEyeColors.Array.data[0].r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391636546160300959, guid: 1153dc817bf7f954f97a4d9fff9dc1cf,
+        type: 3}
+      propertyPath: stateEyeColors.Array.data[1].g
+      value: 3.303353
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391636546160300959, guid: 1153dc817bf7f954f97a4d9fff9dc1cf,
+        type: 3}
+      propertyPath: stateEyeColors.Array.data[1].r
+      value: 3.9999995
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391636546160300959, guid: 1153dc817bf7f954f97a4d9fff9dc1cf,
+        type: 3}
+      propertyPath: stateEyeColors.Array.data[2].b
+      value: 3.9999995
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391636546160300959, guid: 1153dc817bf7f954f97a4d9fff9dc1cf,
+        type: 3}
+      propertyPath: stateEyeColors.Array.data[2].g
+      value: 0.067590706
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391636546160300959, guid: 1153dc817bf7f954f97a4d9fff9dc1cf,
+        type: 3}
+      propertyPath: stateEyeColors.Array.data[3].r
+      value: 3.9999995
+      objectReference: {fileID: 0}
     - target: {fileID: 4060939569572197020, guid: 1153dc817bf7f954f97a4d9fff9dc1cf,
         type: 3}
       propertyPath: m_Layer
