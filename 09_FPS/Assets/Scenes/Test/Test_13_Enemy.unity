@@ -3477,6 +3477,7 @@ MonoBehaviour:
   seed: -1
   enemy: {fileID: 1408703429}
   respawn: {fileID: 1626051433}
+  behaviorState: 0
 --- !u!1 &1909720132
 GameObject:
   m_ObjectHideFlags: 0
@@ -4727,6 +4728,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391636546160300959, guid: 1153dc817bf7f954f97a4d9fff9dc1cf,
+        type: 3}
+      propertyPath: stateEyeColors.Array.size
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4060939569572197020, guid: 1153dc817bf7f954f97a4d9fff9dc1cf,
         type: 3}

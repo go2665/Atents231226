@@ -85,6 +85,11 @@ public class Enemy : MonoBehaviour
     }
 
     /// <summary>
+    /// 상태별 적의 눈 색상
+    /// </summary>
+    public Color[] stateEyeColors;
+
+    /// <summary>
     /// 각 상태가 되었을때 상태별 업데이트 함수를 저장하는 델리게이트(함수포인터의 역할)
     /// </summary>
     Action onUpdate = null;
@@ -179,9 +184,12 @@ public class Enemy : MonoBehaviour
         AttackSensor attackSensor = child.GetComponent<AttackSensor>();
         attackSensor.onSensorTriggered += (target) =>
         {
-            attackTarget = target.GetComponent<Player>();
-            attackTarget.onDie += () => State = BehaviorState.Wander;   // enemy는 리스폰으로 위치만 변경되고 객체가 사라지지 않으니 델리게이트에서 제거할 필요가 없음
-            State = BehaviorState.Attack;
+            if(attackTarget == null)    // Attack 상태에서 한번만 실행됨
+            { 
+                attackTarget = target.GetComponent<Player>();
+                attackTarget.onDie += ReturnWander;   
+                State = BehaviorState.Attack;
+            }
         };
     }
 
@@ -266,7 +274,7 @@ public class Enemy : MonoBehaviour
 
     void Update_Dead()
     {
-
+        
     }
 
     /// <summary>
@@ -297,6 +305,11 @@ public class Enemy : MonoBehaviour
                 onUpdate = Update_Attack;
                 break;
             case BehaviorState.Dead:
+                DropItem();
+                agent.speed = 0.0f;
+                agent.velocity = Vector3.zero;
+                onDie?.Invoke(this);            // 스포너에게 부활 요청용
+                gameObject.SetActive(false);
                 break;
             default:
                 break;
@@ -316,6 +329,7 @@ public class Enemy : MonoBehaviour
                 StopAllCoroutines();
                 break;
             case BehaviorState.Attack:
+                attackTarget.onDie -= ReturnWander;
                 attackTarget = null;
                 break;
             case BehaviorState.Dead:
@@ -351,6 +365,14 @@ public class Enemy : MonoBehaviour
     {
         Debug.Log("플레이어 공격");
         attackTarget.OnAttacked(this);  // 피격 방향 표시를 위해 enemy 자체를 넘김
+    }
+
+    /// <summary>
+    /// 공격 상태에서 배회 상태로 되돌리는 함수
+    /// </summary>
+    void ReturnWander()
+    {
+        State = BehaviorState.Wander;
     }
 
     /// <summary>
@@ -482,6 +504,13 @@ public class Enemy : MonoBehaviour
     public Vector3 Test_GetRandomPosition()
     {
         return GetRandomDestination();
+    }
+
+    public void Test_StateChange(BehaviorState state)
+    {
+        State = state;
+        agent.speed = 0.0f;
+        agent.velocity = Vector3.zero;
     }
 #endif
 }

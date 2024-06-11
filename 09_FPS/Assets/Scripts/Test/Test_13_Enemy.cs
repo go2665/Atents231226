@@ -8,6 +8,8 @@ public class Test_13_Enemy : TestBase
     public Enemy enemy;
     public Transform respawn;
 
+    public Enemy.BehaviorState behaviorState = Enemy.BehaviorState.Wander;
+
     private void Start()
     {
         enemy.Respawn(respawn.position);
@@ -21,6 +23,14 @@ public class Test_13_Enemy : TestBase
 
     protected override void OnTest2(InputAction.CallbackContext context)
     {
+        enemy.Test_StateChange(behaviorState);
+
+        // OnStateEnter에서 눈 색깔 변경하기
+        // 배회 : 녹색
+        // 추적 : 주황색
+        // 탐색 : 파랑색
+        // 공격 : 빨강색
+        // 사망 : 검정색
     }
 
 }
