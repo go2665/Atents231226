@@ -64,7 +64,13 @@ public class Player : MonoBehaviour
         {
             gun.onFire += controller.FireRecoil;                        // 화면 튕기는 효과
             gun.onFire += (expend) => crosshair.Expend(expend * 10);    // 조준선 확장 효과
-            gun.onAmmoDepleted += () => GunChange(GunType.Revolver);    // 총알이 다 떨어지면 기본총으로 변경
+            gun.onAmmoDepleted += () =>
+            {
+                if (!(activeGun is Revolver))
+                {
+                    GunChange(GunType.Revolver);    // 총알이 다 떨어지면 기본총으로 변경
+                }
+            };
         }
         activeGun = guns[0];    // 기본총 설정
         activeGun.Equip();      // 기본총 장비

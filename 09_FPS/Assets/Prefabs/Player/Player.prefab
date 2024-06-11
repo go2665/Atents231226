@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1741508087040968029}
   - component: {fileID: 2214240023779503331}
   - component: {fileID: 496915410092057867}
+  - component: {fileID: 8575384620160355409}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -64,7 +65,7 @@ CharacterController:
   m_Radius: 0.5
   m_SlopeLimit: 45
   m_StepOffset: 0.25
-  m_SkinWidth: 0.02
+  m_SkinWidth: 0.0001
   m_MinMoveDistance: 0
   m_Center: {x: 0, y: 0.93, z: 0}
 --- !u!114 &1314723864322275392
@@ -335,6 +336,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8703779ca5aac743b32fdb26913a084, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!136 &8575384620160355409
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 313628994639192190}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &454535206991975473
 GameObject:
   m_ObjectHideFlags: 0
@@ -411,7 +435,6 @@ GameObject:
   - component: {fileID: 7491072476667241190}
   - component: {fileID: 5696531090554262963}
   - component: {fileID: 2476428344405307146}
-  - component: {fileID: 6731314952675500122}
   m_Layer: 8
   m_Name: Capsule
   m_TagString: Untagged
@@ -484,29 +507,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &6731314952675500122
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5430305312738545151}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &124714983560017770
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -574,6 +574,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5930637398120036845, guid: 57e040ef6b4628d4b92b8f8ad1a43282,
+        type: 3}
+      propertyPath: damage
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 6241069571160607829, guid: 57e040ef6b4628d4b92b8f8ad1a43282,
         type: 3}

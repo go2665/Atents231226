@@ -355,6 +355,8 @@ public class Enemy : MonoBehaviour
             case BehaviorState.Dead:
                 gameObject.SetActive(true);
                 HP = maxHP;
+                speedPenalty = 0.0f;
+                attackPowerPenalty = 0.0f;
                 break;
             default:
             //case BehaviorState.Wander:    // 사용하지 않음
@@ -525,7 +527,7 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// 적이 드랍할 아이템의 종류를 나타내는 enum
     /// </summary>
-    enum ItemTable : byte
+    public enum ItemTable : byte
     {
         Heal,           // 힐 아이템
         AssaultRifle,   // 돌격소총
@@ -539,7 +541,24 @@ public class Enemy : MonoBehaviour
     /// <param name="table">드랍할 아이템</param>
     void DropItem(ItemTable table = ItemTable.Random)
     {
-
+        ItemTable select = table;
+        if(table == ItemTable.Random)
+        {
+            float random = UnityEngine.Random.value;
+            if(random < 0.8f)
+            {
+                select = ItemTable.Heal;
+            }
+            else if(random < 0.9f)
+            {
+                select = ItemTable.AssaultRifle;
+            }
+            else
+            {
+                select = ItemTable.Shotgun;
+            }
+        }
+        Factory.Instance.GetDropItem(select, transform.position);        
     }
 
 #if UNITY_EDITOR

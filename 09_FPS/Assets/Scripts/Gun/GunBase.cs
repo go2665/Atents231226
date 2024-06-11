@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -169,24 +170,28 @@ public class GunBase : MonoBehaviour
             if( hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
             {
                 Enemy target = hitInfo.collider.GetComponentInParent<Enemy>();
-                HitLocation location = HitLocation.Body;
                 if (hitInfo.collider.CompareTag("Head"))
                 {
-                    location = HitLocation.Head;
+                    target.OnAttacked(HitLocation.Head, damage);    // 맞은 부위와 데미지 넘겨주기
                 }
                 else if(hitInfo.collider.CompareTag("Arm"))
                 {
-                    location = HitLocation.Arm;
+                    target.OnAttacked(HitLocation.Arm, damage);
                 }
                 else if (hitInfo.collider.CompareTag("Leg"))
                 {
-                    location = HitLocation.Leg;
+                    target.OnAttacked(HitLocation.Leg, damage);
                 }
-                target.OnAttacked(location, damage);    // 맞은 부위와 데미지 넘겨주기
+                else if (hitInfo.collider.CompareTag("Body"))
+                {
+                    target.OnAttacked(HitLocation.Body, damage);
+                }
             }
-
-            Vector3 reflect = Vector3.Reflect(ray.direction, hitInfo.normal);
-            Factory.Instance.GetBulletHole(hitInfo.point, hitInfo.normal, reflect); // 총알 구멍 생성을 위해, 생성될 위치, 생성될 면의 노멀, 반사방향 전달
+            else
+            {
+                Vector3 reflect = Vector3.Reflect(ray.direction, hitInfo.normal);
+                Factory.Instance.GetBulletHole(hitInfo.point, hitInfo.normal, reflect); // 총알 구멍 생성을 위해, 생성될 위치, 생성될 면의 노멀, 반사방향 전달
+            }
         }
     }
 

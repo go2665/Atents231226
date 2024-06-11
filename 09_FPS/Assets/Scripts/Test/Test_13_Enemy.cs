@@ -38,6 +38,11 @@ public class Test_13_Enemy : TestBase
         enemy.Test_EnemyStop();
     }
 
+    protected override void OnTest4(InputAction.CallbackContext context)
+    {
+        Factory.Instance.GetDropItem(Enemy.ItemTable.Shotgun, respawn.position);
+    }
+
 }
 
 // 적의 상태 구현하기
