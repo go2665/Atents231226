@@ -6,6 +6,10 @@ TagManager:
   tags:
   - CinemachineTarget
   - FollowCamera
+  - Head
+  - Arm
+  - Leg
+  - Body
   layers:
   - Default
   - TransparentFX
@@ -17,7 +21,7 @@ TagManager:
   - Gun
   - Player
   - Wall
-  - 
+  - Enemy
   - 
   - 
   - 

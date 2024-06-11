@@ -307,17 +307,17 @@ public class Enemy : MonoBehaviour
         {
             case BehaviorState.Wander:                
                 onUpdate = Update_Wander;
-                agent.speed = walkSpeed;
+                agent.speed = walkSpeed * (1 - speedPenalty);
                 agent.SetDestination(GetRandomDestination());
                 break;
             case BehaviorState.Chase:
                 onUpdate = Update_Chase;
-                agent.speed = runSpeed;                
+                agent.speed = runSpeed * (1 - speedPenalty);                
                 break;
             case BehaviorState.Find:
                 onUpdate = Update_Find;
                 findTimeElapsed = 0.0f;
-                agent.speed = walkSpeed;
+                agent.speed = walkSpeed * (1 - speedPenalty);
                 agent.angularSpeed = 360.0f;
                 StartCoroutine(LookAround());
                 break;
@@ -402,7 +402,35 @@ public class Enemy : MonoBehaviour
     /// <param name="damage">데미지</param>
     public void OnAttacked(HitLocation hit, float damage)
     {
-        // 맞으면 즉시 추적에 돌입한다.
+        HP -= damage;
+        switch(hit)
+        {
+            case HitLocation.Body:
+                Debug.Log("몸통에 맞았다");
+                break;                
+            case HitLocation.Head:
+                HP -= damage;
+                Debug.Log("머리에 맞았다");
+                break;                
+            case HitLocation.Arm:
+                attackPowerPenalty += 0.1f;
+                Debug.Log("팔에 맞았다");
+                break;                
+            case HitLocation.Leg:
+                speedPenalty += 0.3f;
+                Debug.Log("다리에 맞았다");
+                break;
+        }
+
+        if( State == BehaviorState.Wander || State == BehaviorState.Find)
+        {
+            State = BehaviorState.Chase;        // 맞으면 즉시 추적에 돌입한다.
+            agent.SetDestination(GameManager.Instance.Player.transform.position);
+        }
+        else
+        {
+            agent.speed = runSpeed * (1 - speedPenalty);
+        }
     }
 
     /// <summary>
@@ -529,6 +557,12 @@ public class Enemy : MonoBehaviour
     public void Test_StateChange(BehaviorState state)
     {
         State = state;
+        agent.speed = 0.0f;
+        agent.velocity = Vector3.zero;
+    }
+
+    public void Test_EnemyStop()
+    {
         agent.speed = 0.0f;
         agent.velocity = Vector3.zero;
     }

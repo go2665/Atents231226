@@ -162,8 +162,29 @@ public class GunBase : MonoBehaviour
     protected void HitProcess()
     {
         Ray ray = new(fireTransform.position, GetFireDirection());  // 레이 만들기
-        if( Physics.Raycast(ray, out RaycastHit hitInfo, range))    // 레이캐스트
+
+        //int i = ~LayerMask.GetMask("Default");    // Default레이어 빼고 체크
+        if ( Physics.Raycast(ray, out RaycastHit hitInfo, range, ~LayerMask.GetMask("Default")))    // 레이캐스트
         {
+            if( hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+            {
+                Enemy target = hitInfo.collider.GetComponentInParent<Enemy>();
+                HitLocation location = HitLocation.Body;
+                if (hitInfo.collider.CompareTag("Head"))
+                {
+                    location = HitLocation.Head;
+                }
+                else if(hitInfo.collider.CompareTag("Arm"))
+                {
+                    location = HitLocation.Arm;
+                }
+                else if (hitInfo.collider.CompareTag("Leg"))
+                {
+                    location = HitLocation.Leg;
+                }
+                target.OnAttacked(location, damage);    // 맞은 부위와 데미지 넘겨주기
+            }
+
             Vector3 reflect = Vector3.Reflect(ray.direction, hitInfo.normal);
             Factory.Instance.GetBulletHole(hitInfo.point, hitInfo.normal, reflect); // 총알 구멍 생성을 위해, 생성될 위치, 생성될 면의 노멀, 반사방향 전달
         }

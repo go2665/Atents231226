@@ -33,6 +33,11 @@ public class Test_13_Enemy : TestBase
         // 사망 : 검정색
     }
 
+    protected override void OnTest3(InputAction.CallbackContext context)
+    {
+        enemy.Test_EnemyStop();
+    }
+
 }
 
 // 적의 상태 구현하기

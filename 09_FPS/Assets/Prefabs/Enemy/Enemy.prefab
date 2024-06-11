@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 666754403159405260}
   - component: {fileID: 428911125686324783}
   - component: {fileID: 8771892124128850048}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Arm_L
-  m_TagString: Untagged
+  m_TagString: Arm
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -117,9 +117,9 @@ GameObject:
   - component: {fileID: 6826269829669954408}
   - component: {fileID: 2544847322664472328}
   - component: {fileID: 2594013387292296346}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Head
-  m_TagString: Untagged
+  m_TagString: Head
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -222,8 +222,7 @@ GameObject:
   - component: {fileID: 7198167420213559804}
   - component: {fileID: 1790625307976949240}
   - component: {fileID: 3809360492270151465}
-  - component: {fileID: 506462761154242999}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -295,28 +294,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &506462761154242999
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1626850591613851255}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &3014644547637584128
 GameObject:
   m_ObjectHideFlags: 0
@@ -326,7 +303,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4808357942106063249}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -366,9 +343,9 @@ GameObject:
   - component: {fileID: 7868821272747478291}
   - component: {fileID: 6145616256724086474}
   - component: {fileID: 4899479151007707437}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Leg_L
-  m_TagString: Untagged
+  m_TagString: Leg
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -470,7 +447,7 @@ GameObject:
   - component: {fileID: 7000437238880668350}
   - component: {fileID: 6176202874403418720}
   - component: {fileID: 4618598001096838958}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -554,9 +531,9 @@ GameObject:
   - component: {fileID: 5555076512481409739}
   - component: {fileID: 3800678316092798183}
   - component: {fileID: 6421803108374166957}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Body
-  m_TagString: Untagged
+  m_TagString: Body
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -659,9 +636,9 @@ GameObject:
   - component: {fileID: 2217771621000327759}
   - component: {fileID: 8192220744232650923}
   - component: {fileID: 8336051599075735091}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Leg_R
-  m_TagString: Untagged
+  m_TagString: Leg
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -765,7 +742,7 @@ GameObject:
   - component: {fileID: 5204231314780227749}
   - component: {fileID: 8148468154391055651}
   - component: {fileID: 3391636546160300959}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -872,6 +849,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6657a15e0261604aa6f4bea5d16d379, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hp: 30
+  maxHP: 30
+  stateEyeColors:
+  - {r: 0, g: 3.9999995, b: 0.095304474, a: 0}
+  - {r: 3.9999995, g: 3.303353, b: 0, a: 0}
+  - {r: 0, g: 0.067590706, b: 3.9999995, a: 0}
+  - {r: 3.9999995, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  walkSpeed: 2
+  runSpeed: 7
+  sightAngle: 90
+  sightRange: 20
+  attackPower: 10
+  attackInterval: 1
+  findTime: 5
 --- !u!1 &5564096618824801845
 GameObject:
   m_ObjectHideFlags: 0
@@ -950,9 +942,9 @@ GameObject:
   - component: {fileID: 215580610135331419}
   - component: {fileID: 6809287722856943302}
   - component: {fileID: 4281331037582887961}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Arm_R
-  m_TagString: Untagged
+  m_TagString: Arm
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

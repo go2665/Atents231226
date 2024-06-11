@@ -33,7 +33,7 @@ public class ItemBase : RecycleObject
     private void OnTriggerEnter(Collider other)
     {
         // OnItemConsum 실행
-         if(other.CompareTag("Player"))
+        if(other.CompareTag("Player"))
         {
             Player player = other.GetComponent<Player>();
             if(player != null)
