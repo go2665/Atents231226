@@ -39,6 +39,11 @@ public class Player : MonoBehaviour
     /// </summary>
     public Action<GunBase> onGunChange;
 
+    /// <summary>
+    /// 플레이어가 죽었을 때 실행될 델리게이트
+    /// </summary>
+    public Action onDie;
+
     private void Awake()
     {
         starterAssets = GetComponent<StarterAssetsInputs>();
@@ -122,5 +127,14 @@ public class Player : MonoBehaviour
         {
             gun.onAmmoCountChange += callback;
         }
+    }
+
+    /// <summary>
+    /// 공격을 받았을 때 실행되는 함수
+    /// </summary>
+    /// <param name="enemy">공격을 한 적</param>
+    public void OnAttacked(Enemy enemy)
+    {
+
     }
 }

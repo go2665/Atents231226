@@ -174,6 +174,15 @@ public class Enemy : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         SphereCollider sc = GetComponent<SphereCollider>();
         sc.radius = sightRange;
+
+        Transform child = transform.GetChild(1);
+        AttackSensor attackSensor = child.GetComponent<AttackSensor>();
+        attackSensor.onSensorTriggered += (target) =>
+        {
+            attackTarget = target.GetComponent<Player>();
+            attackTarget.onDie += () => State = BehaviorState.Wander;   // enemy는 리스폰으로 위치만 변경되고 객체가 사라지지 않으니 델리게이트에서 제거할 필요가 없음
+            State = BehaviorState.Attack;
+        };
     }
 
     private void OnEnable()
@@ -232,12 +241,27 @@ public class Enemy : MonoBehaviour
 
     void Update_Find()
     {
-
+        findTimeElapsed += Time.deltaTime;
+        if(findTimeElapsed > findTime)
+        {
+            State = BehaviorState.Wander;   // 일정 시간이 지날때까지 플레이어를 못찾음 -> 배회 상태로 변경
+        }
+        else if(FindPlayer())
+        {
+            State = BehaviorState.Chase;    // 플레이어 찾았다 -> 추적
+        }
     }
 
     void Update_Attack()
     {
+        agent.SetDestination(attackTarget.transform.position);  // 한번 공격 상태에 들어가면 끝까지 쫓아온다.
 
+        attackElapsed += Time.deltaTime;
+        if(attackElapsed > attackInterval)
+        {
+            Attack();
+            attackElapsed = 0.0f;
+        }
     }
 
     void Update_Dead()
@@ -260,11 +284,17 @@ public class Enemy : MonoBehaviour
                 break;
             case BehaviorState.Chase:
                 onUpdate = Update_Chase;
-                agent.speed = runSpeed;
+                agent.speed = runSpeed;                
                 break;
             case BehaviorState.Find:
+                onUpdate = Update_Find;
+                findTimeElapsed = 0.0f;
+                agent.speed = walkSpeed;
+                agent.angularSpeed = 360.0f;
+                StartCoroutine(LookAround());
                 break;
             case BehaviorState.Attack:
+                onUpdate = Update_Attack;
                 break;
             case BehaviorState.Dead:
                 break;
@@ -282,8 +312,11 @@ public class Enemy : MonoBehaviour
         switch (oldState)
         {            
             case BehaviorState.Find:
+                agent.angularSpeed = 120.0f;
+                StopAllCoroutines();
                 break;
             case BehaviorState.Attack:
+                attackTarget = null;
                 break;
             case BehaviorState.Dead:
                 gameObject.SetActive(true);
@@ -316,7 +349,8 @@ public class Enemy : MonoBehaviour
     /// </summary>
     void Attack()
     {
-
+        Debug.Log("플레이어 공격");
+        attackTarget.OnAttacked(this);  // 피격 방향 표시를 위해 enemy 자체를 넘김
     }
 
     /// <summary>
@@ -383,7 +417,28 @@ public class Enemy : MonoBehaviour
     /// <returns></returns>
     IEnumerator LookAround()
     {
-        yield return null;
+        Vector3[] positions =
+        {
+            transform.position + transform.forward * 1.5f, // 앞
+            transform.position - transform.forward * 1.5f, // 뒤
+            transform.position + transform.right * 1.5f,   // 오른쪽
+            transform.position - transform.right * 1.5f    // 왼쪽
+        };
+
+        int current;
+        int prev = 0;
+        int length = positions.Length;
+        while(true)
+        {
+            do
+            {
+                current = UnityEngine.Random.Range(0, length);
+            } while (current == prev);
+            agent.SetDestination(positions[current]);
+            prev = current;
+            
+            yield return new WaitForSeconds(1);
+        }
     }
 
 

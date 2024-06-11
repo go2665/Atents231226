@@ -28,6 +28,7 @@ public class Test_13_Enemy : TestBase
 // 적의 상태 구현하기
 // 1. Wander : 랜덤으로 계속 이동(자기 현재 위치에서 일정 반경 안을 랜덤하게 계속 이동하기)
 // 2. Chase : 플레이어가 마지막으로 목격된 장소를 향해 계속 이동하기(IsPlayerInSight 구현하기)
+// 3. Find : 플레이어가 시야범위에서 벗어나면 몇초동안 두리번거리기(시간이 다되면 Wander 상태로 변경, 플레이어를 찾으면 다시 Chase로 변경)
 
 //public enum BehaviorState : byte
 //{
