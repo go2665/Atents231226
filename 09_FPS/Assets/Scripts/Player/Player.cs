@@ -35,9 +35,48 @@ public class Player : MonoBehaviour
     GunBase activeGun;
 
     /// <summary>
+    /// 최대 HP
+    /// </summary>
+    public float MaxHP = 100.0f;
+
+    /// <summary>
+    /// 현재 HP
+    /// </summary>
+    float hp;
+
+    /// <summary>
+    /// 현재 HP 확인 및 설정용 프로퍼티
+    /// </summary>
+    public float HP
+    {
+        get => hp;
+        set
+        {
+            hp = value;
+            if(hp <= 0)
+            {
+                Die();  // HP가 0 이하면 사망
+            }
+            hp = Mathf.Clamp(hp, 0, MaxHP); // HP 최대 최소 안벗어나게 만들기
+            onHPChange?.Invoke(hp);         // HP 변화 알리기
+        }
+    }
+
+
+    /// <summary>
     /// 총이 변경되었음을 알리는 델리게이트
     /// </summary>
     public Action<GunBase> onGunChange;
+
+    /// <summary>
+    /// 공격을 받았을 때 실행될 델리게이트(float:공격 받은 각도. 플레이어 forward와 적으로 가는 방향 벡터 사이의 각도. 시계방향)
+    /// </summary>
+    Action<float> onAttacked;
+
+    /// <summary>
+    /// HP가 변경되었을 때 실행될 델리게이트(float:현재 HP)
+    /// </summary>
+    Action<float> onHPChange;
 
     /// <summary>
     /// 플레이어가 죽었을 때 실행될 델리게이트
@@ -141,6 +180,17 @@ public class Player : MonoBehaviour
     /// <param name="enemy">공격을 한 적</param>
     public void OnAttacked(Enemy enemy)
     {
+        float angle = 0.0f;         // 공격당한 각도(시계방향)
+        onAttacked?.Invoke(angle);
+        HP -= enemy.attackPower;
+    }
 
+    /// <summary>
+    /// 플레이어 사망 처리용 함수
+    /// </summary>
+    private void Die()
+    {
+        onDie?.Invoke();                // 죽었음을 알림
+        gameObject.SetActive(false);    // 플레이어 오브젝트 비활성화
     }
 }
