@@ -14,7 +14,7 @@ public class BackTrackingCell : Cell
 public class BackTracking : Maze
 {
     // 참조
-    // https://weblog.jamisbuck.org/2010/12/27/maze-generation-recursive-backtracking
+    // https://weblog.jamisbuck.org/2010/12/27/mazeGenerator-generation-recursive-backtracking
 
     protected override void OnSpecificAlgorithmExcute()
     {
