@@ -5,19 +5,34 @@ using UnityEngine.InputSystem;
 
 public class Test_15_PlayerHP : TestBase
 {
+    Enemy enemy;
+
+    private void Start()
+    {
+        if (enemy == null)
+        {
+            enemy = FindAnyObjectByType<Enemy>();
+        }
+        enemy.Respawn(transform.GetChild(0).position);
+        StartCoroutine(EnemyStop());
+    }
+
+    IEnumerator EnemyStop()
+    {
+        yield return new WaitForSeconds(0.1f);
+        enemy.Test_EnemyStop();
+    }
+
     protected override void OnTest1(InputAction.CallbackContext context)
     {
-        // 1. Player HP 감소
+        // Player HP 감소
+        GameManager.Instance.Player.HP -= 10;
     }
 
     protected override void OnTest2(InputAction.CallbackContext context)
     {
-        // 2. Player HP 증가
-    }
-
-    protected override void OnTest3(InputAction.CallbackContext context)
-    {
-        // 적 안움직이게 만들기
+        // Player HP 증가
+        GameManager.Instance.Player.HP += 10;
     }
 }
 

@@ -9,5 +9,6 @@ public class HealItem : ItemBase
     protected override void OnItemConsum(Player player)
     {
         // heal만큼 HP 회복
+        player.HP += heal;
     }
 }

@@ -58,6 +58,9 @@ public class Player : MonoBehaviour
                 Die();  // HP가 0 이하면 사망
             }
             hp = Mathf.Clamp(hp, 0, MaxHP); // HP 최대 최소 안벗어나게 만들기
+
+            Debug.Log($"HP : {hp}");
+
             onHPChange?.Invoke(hp);         // HP 변화 알리기
         }
     }
@@ -71,12 +74,12 @@ public class Player : MonoBehaviour
     /// <summary>
     /// 공격을 받았을 때 실행될 델리게이트(float:공격 받은 각도. 플레이어 forward와 적으로 가는 방향 벡터 사이의 각도. 시계방향)
     /// </summary>
-    Action<float> onAttacked;
+    public Action<float> onAttacked;
 
     /// <summary>
     /// HP가 변경되었을 때 실행될 델리게이트(float:현재 HP)
     /// </summary>
-    Action<float> onHPChange;
+    public Action<float> onHPChange;
 
     /// <summary>
     /// 플레이어가 죽었을 때 실행될 델리게이트
@@ -114,6 +117,8 @@ public class Player : MonoBehaviour
         activeGun = guns[0];    // 기본총 설정
         activeGun.Equip();      // 기본총 장비
         onGunChange?.Invoke(activeGun); // 총 변경 알림
+
+        HP = MaxHP;
     }
 
     /// <summary>
@@ -180,8 +185,11 @@ public class Player : MonoBehaviour
     /// <param name="enemy">공격을 한 적</param>
     public void OnAttacked(Enemy enemy)
     {
-        float angle = 0.0f;         // 공격당한 각도(시계방향)
-        onAttacked?.Invoke(angle);
+        Vector3 dir = enemy.transform.position - transform.position;
+
+        // 공격당한 각도(시계방향)
+        float angle = Vector3.SignedAngle(transform.forward, dir, Vector3.up);
+        onAttacked?.Invoke(-angle);
         HP -= enemy.attackPower;
     }
 
