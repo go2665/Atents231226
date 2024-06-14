@@ -27,6 +27,7 @@ public class EnemySpawner : MonoBehaviour
             Enemy enemy = obj.GetComponent<Enemy>();
             enemy.onDie += (target) =>
             {
+                GameManager.Instance.IncreaseKillCount();
                 StartCoroutine(Respawn(target));
             };
             enemy.Respawn(GetRandomSpawnPosition(true));

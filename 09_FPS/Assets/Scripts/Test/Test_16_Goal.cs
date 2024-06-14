@@ -14,6 +14,9 @@ public class Test_16_Goal : TestBase
     protected override void OnTest2(InputAction.CallbackContext context)
     {
         Goal goal = FindAnyObjectByType<Goal>();
+        
+        int size = GameManager.Instance.MazeWidth * GameManager.Instance.MazeHeight;
+        int[] counter = new int[size];
 
         for (int i = 0; i < 10000000; i++)
         {
@@ -23,8 +26,16 @@ public class Test_16_Goal : TestBase
                 Debug.LogError("Not Valid");
             }
 
+            int index = result.x + result.y * GameManager.Instance.MazeWidth;
+            counter[index]++;
+
         }
         Debug.Log("Check complete");
+
+        for(int i = 0;i < size;i++)
+        {
+            Debug.Log($"{i} : {counter[i]}");
+        }
     }
 
     protected override void OnTest3(InputAction.CallbackContext context)
@@ -32,4 +43,14 @@ public class Test_16_Goal : TestBase
         Goal goal = FindAnyObjectByType<Goal>();
         goal.SetRandomPosition(GameManager.Instance.MazeWidth, GameManager.Instance.MazeHeight);
     }
+
+    protected override void OnTest4(InputAction.CallbackContext context)
+    {
+        Goal goal = FindAnyObjectByType<Goal>();
+        goal.onGameClear += () => Debug.Log("Goal In");
+    }
 }
+
+// 1. TestSetRandomPosition 이용해서 각 그리드별로 몇번씩 선택되는지 확인하기
+// 2. Goal지점에 플레이어가 들어가면 onGameClear 델리게이트 실행하기
+// 3. 결과 패널 구상하기

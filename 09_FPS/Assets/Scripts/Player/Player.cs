@@ -201,4 +201,13 @@ public class Player : MonoBehaviour
         onDie?.Invoke();                // 죽었음을 알림
         gameObject.SetActive(false);    // 플레이어 오브젝트 비활성화
     }
+
+    /// <summary>
+    /// 입력을 막는 함수
+    /// </summary>
+    public void InputDisable()
+    {
+        starterAssets.enabled = false;
+
+    }
 }

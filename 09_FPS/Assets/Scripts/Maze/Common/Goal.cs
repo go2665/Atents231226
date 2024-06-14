@@ -2,8 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(SphereCollider))]
 public class Goal : MonoBehaviour
 {
+    /// <summary>
+    /// 게임 클리어를 알리는 델리게이트
+    /// </summary>
+    public System.Action onGameClear;
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Player"))
+        {
+            onGameClear?.Invoke();
+        }
+    }
+
     public void SetRandomPosition(int width, int height)
     {
         // 랜덤하게 가장자리 Grid 위치 구하기
