@@ -32,6 +32,11 @@ public class MazeGenerator : MonoBehaviour
     public Maze Maze => maze;
 
     /// <summary>
+    /// 미로의 골인 지점
+    /// </summary>
+    Goal goal;
+
+    /// <summary>
     /// 미로 생성이 끝났음을 알리는 델리게이트
     /// </summary>
     public Action onMazeGenerated;
@@ -62,6 +67,8 @@ public class MazeGenerator : MonoBehaviour
         visualizer.Clear();
         visualizer.Draw(maze);
 
+
+
         StartCoroutine(UpdateSurface());
 
     }
@@ -75,7 +82,7 @@ public class MazeGenerator : MonoBehaviour
         }
         Debug.Log("Nav Surface Updated!");
 
-        // 오클루전 컬링도 새로 베이크 필요
+        // 오클루전 컬링도 새로 베이크 필요        
 
         onMazeGenerated?.Invoke();  // 미로 생성이 끝났음을 알림
     }
