@@ -10,6 +10,12 @@ public class EnemySpawner : MonoBehaviour
     int mazeWidth;
     int mazeHeight;
     Player player;
+    Enemy[] enemies;
+
+    private void Awake()
+    {
+        enemies = new Enemy[enemyCount];
+    }
 
     private void Start()
     {
@@ -19,18 +25,41 @@ public class EnemySpawner : MonoBehaviour
 
         player = GameManager.Instance.Player;
 
+        GameManager.Instance.onGameStart += EnemyAll_Play;
+        GameManager.Instance.onGameClear += EnemyAll_Stop;
+    }
+
+    public void EnemyAll_Spawn()
+    {
         // 적 생성
         for (int i = 0; i < enemyCount; i++)
         {
             GameObject obj = Instantiate(enemyPrefab, transform);
             obj.name = $"Enemy_{i}";
             Enemy enemy = obj.GetComponent<Enemy>();
+            enemies[i] = enemy;
             enemy.onDie += (target) =>
             {
                 GameManager.Instance.IncreaseKillCount();
                 StartCoroutine(Respawn(target));
             };
             enemy.Respawn(GetRandomSpawnPosition(true));
+        }
+    }
+
+    void EnemyAll_Play()
+    {
+        foreach (var enemy in enemies)
+        {
+            enemy.Play();
+        }
+    }
+
+    void EnemyAll_Stop()
+    {
+        foreach (var enemy in enemies)
+        {
+            enemy.Stop();
         }
     }
 

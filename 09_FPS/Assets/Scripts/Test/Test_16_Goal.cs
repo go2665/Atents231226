@@ -5,6 +5,12 @@ using UnityEngine.InputSystem;
 
 public class Test_16_Goal : TestBase
 {
+    private void Start()
+    {
+        Goal goal = FindAnyObjectByType<Goal>();
+        goal.SetRandomPosition(GameManager.Instance.MazeWidth, GameManager.Instance.MazeHeight);
+    }
+
     protected override void OnTest1(InputAction.CallbackContext context)
     {
         Enemy enemy = FindAnyObjectByType<Enemy>();
@@ -46,8 +52,12 @@ public class Test_16_Goal : TestBase
 
     protected override void OnTest4(InputAction.CallbackContext context)
     {
-        Goal goal = FindAnyObjectByType<Goal>();
-        goal.onGameClear += () => Debug.Log("Goal In");
+        GameManager.Instance.onGameClear += () => Debug.Log("Goal In");
+    }
+
+    protected override void OnTest5(InputAction.CallbackContext context)
+    {
+        GameManager.Instance.GameStart();
     }
 }
 

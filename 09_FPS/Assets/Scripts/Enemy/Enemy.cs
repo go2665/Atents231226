@@ -55,11 +55,12 @@ public class Enemy : MonoBehaviour
     // 상태 관련 ------------------------------------------------------------------------------------------
     public enum BehaviorState : byte
     {
-        Wander = 0, // 배회상태. 주변을 왔다갔다한다.
+        Idle = 0,   // 대기상태. 제자리에서 가만히 있기
+        Wander,     // 배회상태. 주변을 왔다갔다한다.
         Chase,      // 추적상태. 플레이어가 마지막으로 목격된 장소를 향해 계속 이동한다.
         Find,       // 탐색상태. 추적 도중에 플레이어가 시야에서 사라지면 두리번 거리며 주변을 찾는다.
         Attack,     // 공격상태. 추적 상태일 때 플레이어가 일정범위안에 들어오면 일정 주기로 공격을 한다.
-        Dead        // 사망상태. 죽는다.(일정 시간 후에 재생성)
+        Dead,       // 사망상태. 죽는다.(일정 시간 후에 재생성)
     }
 
     /// <summary>
@@ -210,6 +211,8 @@ public class Enemy : MonoBehaviour
         Renderer eyeRenderer = child.GetComponent<Renderer>();
         eyeMaterial = eyeRenderer.material;
         eyeMaterial.SetColor(EyeColorID, stateEyeColors[(int)BehaviorState.Wander]);
+
+        onUpdate = Update_Idle;
     }
 
     private void OnEnable()
@@ -239,6 +242,10 @@ public class Enemy : MonoBehaviour
     private void Update()
     {
         onUpdate();
+    }
+
+    void Update_Idle()
+    {        
     }
 
     void Update_Wander()
@@ -305,6 +312,11 @@ public class Enemy : MonoBehaviour
         eyeMaterial.SetColor(EyeColorID, stateEyeColors[(int)newState]);
         switch (newState)
         {
+            case BehaviorState.Idle:
+                onUpdate = Update_Idle;
+                agent.speed = 0.0f;
+                // 공격 정지 시키기
+                break;
             case BehaviorState.Wander:                
                 onUpdate = Update_Wander;
                 agent.speed = walkSpeed * (1 - speedPenalty);
@@ -331,7 +343,7 @@ public class Enemy : MonoBehaviour
                 onDie?.Invoke(this);            // 스포너에게 부활 요청용
                 gameObject.SetActive(false);
                 break;
-            default:
+            default:            
                 break;
         }
     }
@@ -521,7 +533,23 @@ public class Enemy : MonoBehaviour
     public void Respawn(Vector3 spawnPosition)
     {
         agent.Warp(spawnPosition);
+        State = BehaviorState.Idle;
+    }
+
+    /// <summary>
+    /// 적을 움직이기 시작하게 만드는 함수
+    /// </summary>
+    public void Play()
+    {
         State = BehaviorState.Wander;
+    }
+
+    /// <summary>
+    /// 적을 안움직이게 만드는 함수
+    /// </summary>
+    public void Stop()
+    {
+        State = BehaviorState.Idle;
     }
 
     /// <summary>
