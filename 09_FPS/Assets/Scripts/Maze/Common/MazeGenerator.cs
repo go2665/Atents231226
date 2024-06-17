@@ -67,10 +67,7 @@ public class MazeGenerator : MonoBehaviour
         visualizer.Clear();
         visualizer.Draw(maze);
 
-
-
         StartCoroutine(UpdateSurface());
-
     }
 
     IEnumerator UpdateSurface()

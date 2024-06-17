@@ -62,15 +62,16 @@ public class GameManager : Singleton<GameManager>
     public Action onGameStart;
 
     /// <summary>
-    /// 게임 종료를 알리는 델리게이트
+    /// 게임 종료를 알리는 델리게이트(bool:true면 클리어, false면 over)
     /// </summary>
-    public Action onGameClear;
+    public Action<bool> onGameEnd;
 
     protected override void OnInitialize()
-    {
-        Crosshair crosshair = FindAnyObjectByType<Crosshair>();
-
-        player = FindAnyObjectByType<Player>();
+    {     
+        player = FindAnyObjectByType<Player>();        
+        Vector3 centerPos = MazeVisualizer.GridToWorld(MazeWidth / 2, MazeHeight / 2);  
+        player.transform.position = centerPos;  // 플레이어를 미로의 가운데 위치로 옮기기
+        player.onDie += GameOver;
 
         GameObject obj = GameObject.FindWithTag("FollowCamera");
         if (obj != null)
@@ -83,15 +84,11 @@ public class GameManager : Singleton<GameManager>
         mazeGenerator = FindAnyObjectByType<MazeGenerator>();
         if(mazeGenerator != null)
         {
-            mazeGenerator.Generate(mazeWidth, mazeHeight);
+            mazeGenerator.Generate(MazeWidth, MazeHeight);
             mazeGenerator.onMazeGenerated += () =>
             {
                 // 적 스폰
                 spawner?.EnemyAll_Spawn();
-
-                // 플레이어를 미로의 가운데 위치로 옮기기
-                Vector3 centerPos = MazeVisualizer.GridToWorld(mazeWidth / 2, mazeHeight / 2);
-                player.transform.position = centerPos;
 
                 playTime = 0;   // 플레이 시간 초기화
                 killCount = 0;  // 킬카운트 초기화
@@ -101,11 +98,12 @@ public class GameManager : Singleton<GameManager>
         ResultPanel resultPanel = FindAnyObjectByType<ResultPanel>();
         resultPanel.gameObject.SetActive(false);
 
-        onGameClear += () =>
+        onGameEnd += (isClear) =>
         {
             //Time.timeSinceLevelLoad : 씬이 로딩되고 지난 시간
+            Crosshair crosshair = FindAnyObjectByType<Crosshair>();
             crosshair.gameObject.SetActive(false);          // 크로스 해어 안보이게 만들기
-            resultPanel.Open(true, killCount, playTime);
+            resultPanel.Open(isClear, killCount, playTime);
         };
 
         Cursor.lockState = CursorLockMode.Locked;   // 커서 안보이게 만들기
@@ -134,6 +132,14 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void GameClear()
     {
-        onGameClear?.Invoke();
+        onGameEnd?.Invoke(true);
+    }
+
+    /// <summary>
+    /// 게임 오버시 실행될 함수
+    /// </summary>
+    public void GameOver()
+    {
+        onGameEnd?.Invoke(false);
     }
 }
