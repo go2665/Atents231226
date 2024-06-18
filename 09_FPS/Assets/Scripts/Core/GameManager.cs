@@ -68,9 +68,7 @@ public class GameManager : Singleton<GameManager>
 
     protected override void OnInitialize()
     {     
-        player = FindAnyObjectByType<Player>();        
-        Vector3 centerPos = MazeVisualizer.GridToWorld(MazeWidth / 2, MazeHeight / 2);  
-        player.transform.position = centerPos;  // 플레이어를 미로의 가운데 위치로 옮기기
+        player = FindAnyObjectByType<Player>();  
         player.onDie += GameOver;
 
         GameObject obj = GameObject.FindWithTag("FollowCamera");

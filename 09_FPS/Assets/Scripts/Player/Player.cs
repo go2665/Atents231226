@@ -88,6 +88,11 @@ public class Player : MonoBehaviour
     public Action<float> onHPChange;
 
     /// <summary>
+    /// 플레이어가 맵의 가운데 배치되었을 때 실행될 델리게이트
+    /// </summary>
+    public Action onSpawn;
+
+    /// <summary>
     /// 플레이어가 죽었을 때 실행될 델리게이트
     /// </summary>
     public Action onDie;
@@ -128,6 +133,8 @@ public class Player : MonoBehaviour
         HP = MaxHP;
 
         GameManager.Instance.onGameEnd += (_) => InputDisable();           // 게임이 클리어되면 입력 막기
+
+        Spawn();
     }
 
     /// <summary>
@@ -200,6 +207,17 @@ public class Player : MonoBehaviour
         float angle = Vector3.SignedAngle(transform.forward, dir, Vector3.up);
         onAttacked?.Invoke(-angle);
         HP -= enemy.attackPower;
+    }
+
+    /// <summary>
+    /// 플레이어를 맵에 배치시키는 함수
+    /// </summary>
+    public void Spawn()
+    {
+        GameManager gameManager = GameManager.Instance;
+        Vector3 centerPos = MazeVisualizer.GridToWorld(gameManager.MazeWidth / 2, gameManager.MazeHeight / 2);
+        transform.position = centerPos;  // 플레이어를 미로의 가운데 위치로 옮기기
+        onSpawn?.Invoke();
     }
 
     /// <summary>

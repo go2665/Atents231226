@@ -21,6 +21,8 @@ public class MazeVisualizer : MonoBehaviour
     public void Draw(Maze maze)
     {
         float size = CellVisualizer.CellSize;
+
+        // 기본 벽 처리
         foreach(var cell in maze.Cells)
         {
             GameObject obj = Instantiate(cellPrefab, transform);
@@ -31,6 +33,10 @@ public class MazeVisualizer : MonoBehaviour
             cellVisualizer.RefreshWall(cell.Path);
         }
 
+        // 코너 마감하기
+        // - 필요한 코너만 남겨놓기
+
+        // 골 지점 추가
         GameObject goalObj = Instantiate(goalPrefab, transform);
         Goal goal = goalObj.GetComponent<Goal>();
         goal.SetRandomPosition(maze.Width, maze.Height);
