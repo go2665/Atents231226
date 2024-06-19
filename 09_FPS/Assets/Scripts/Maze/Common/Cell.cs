@@ -78,4 +78,25 @@ public class Cell
         return (path & (byte)pathDirection) == 0; 
     }
 
+    /// <summary>
+    /// 코너 체크용 함수(양 방향에 모두 길이 있어야 true)
+    /// </summary>
+    /// <param name="dir1"></param>
+    /// <param name="dir2"></param>
+    /// <returns>dir1과 dir2가 코너를 만드는 방향이고 둘 다 길이 있을 때만 true</returns>
+    public bool CornerPathCheck(Direction dir1, Direction dir2)
+    {
+        bool result = false;
+        Direction corner = dir1 | dir2;
+        if (corner == (Direction.North | Direction.East)
+            || corner == (Direction.North | Direction.West)
+            || corner == (Direction.South | Direction.East)
+            || corner == (Direction.South | Direction.West))    // 코너 인지 확인
+        {
+            result = IsPath(dir1) && IsPath(dir2);  // 양쪽다 길이 있는지 확인
+        }
+
+        return result;
+    }
+
 }
