@@ -2,6 +2,7 @@ using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation.Samples;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
@@ -71,13 +72,17 @@ public class GameManager : Singleton<GameManager>
         player = FindAnyObjectByType<Player>();  
         player.onDie += GameOver;
 
+        LoadingScreen loadingScreen = FindAnyObjectByType<LoadingScreen>();
+        loadingScreen.Initialize();
+
         GameObject obj = GameObject.FindWithTag("FollowCamera");
         if (obj != null)
         {
             followCamera = obj.GetComponent<CinemachineVirtualCamera>();
         }
 
-        spawner = FindAnyObjectByType<EnemySpawner>();        
+        spawner = FindAnyObjectByType<EnemySpawner>();
+        spawner.onSpawnCompleted += () => loadingScreen.OnLoadginProgress(1.0f);
 
         mazeGenerator = FindAnyObjectByType<MazeGenerator>();
         if(mazeGenerator != null)
@@ -85,6 +90,8 @@ public class GameManager : Singleton<GameManager>
             mazeGenerator.Generate(MazeWidth, MazeHeight);
             mazeGenerator.onMazeGenerated += () =>
             {
+                loadingScreen.OnLoadginProgress(0.7f);
+
                 // 적 스폰
                 spawner?.EnemyAll_Spawn();
 
