@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class Test_15_PlayerHP : TestBase
 {
     Enemy enemy;
-
+#if UNITY_EDITOR
     private void Start()
     {
         if (enemy == null)
@@ -34,6 +34,7 @@ public class Test_15_PlayerHP : TestBase
         // Player HP 증가
         GameManager.Instance.Player.HP += 10;
     }
+#endif
 }
 
 // HealthPoint 완성하기

@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public class Test_16_Goal : TestBase
 {
+#if UNITY_EDITOR
     private void Start()
     {
         //Goal goal = FindAnyObjectByType<Goal>();
@@ -59,6 +60,7 @@ public class Test_16_Goal : TestBase
     {
         GameManager.Instance.GameStart();
     }
+#endif
 }
 
 // 1. TestSetRandomPosition 이용해서 각 그리드별로 몇번씩 선택되는지 확인하기

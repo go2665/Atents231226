@@ -46,9 +46,11 @@ public class MinimapCamera : MonoBehaviour
 
     private void Start()
     {
-        zoomTarget = zoomMin;
+        zoomTarget = zoomMin;        
+    }
 
-        Player player = GameManager.Instance.Player;
+    public void Initialize(Player player)
+    {
         offset = transform.position;    // 플레이어가 0,0,0이어서 별다른 계산 안함
         target = player.transform;
         transform.position = target.position + offset;

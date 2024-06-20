@@ -9,6 +9,7 @@ public class Test_08_Gun : TestBase
     public Shotgun shotgun;
     public AssaultRifle assaultRifle;
 
+#if UNITY_EDITOR
     protected override void OnTest1(InputAction.CallbackContext context)
     {
         revoler.Test_Fire();
@@ -28,4 +29,5 @@ public class Test_08_Gun : TestBase
     {
         assaultRifle.Test_Fire(!context.canceled);        
     }
+#endif
 }

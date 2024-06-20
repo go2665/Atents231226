@@ -68,7 +68,11 @@ public class GameManager : Singleton<GameManager>
 
     protected override void OnInitialize()
     {
+        player = FindAnyObjectByType<Player>();
         player.onDie += GameOver;
+
+        MinimapCamera minimapCamera = FindAnyObjectByType<MinimapCamera>();
+        minimapCamera.Initialize(player);
 
         LoadingScreen loadingScreen = FindAnyObjectByType<LoadingScreen>();
         loadingScreen.Initialize();

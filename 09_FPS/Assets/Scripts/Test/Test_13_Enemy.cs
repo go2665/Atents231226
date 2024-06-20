@@ -14,7 +14,7 @@ public class Test_13_Enemy : TestBase
     {
         enemy.Respawn(respawn.position);
     }
-
+#if UNITY_EDITOR
     protected override void OnTest1(InputAction.CallbackContext context)
     {
         Vector3 pos = enemy.Test_GetRandomPosition();
@@ -42,7 +42,7 @@ public class Test_13_Enemy : TestBase
     {
         Factory.Instance.GetDropItem(Enemy.ItemTable.Shotgun, respawn.position);
     }
-
+#endif
 }
 
 // 적의 상태 구현하기
