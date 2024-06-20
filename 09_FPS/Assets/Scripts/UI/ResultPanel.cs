@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ResultPanel : MonoBehaviour
@@ -20,7 +22,7 @@ public class ResultPanel : MonoBehaviour
         time = child.GetComponent<TextMeshProUGUI>();
         child = transform.GetChild(5);
         Button restart = child.GetComponent<Button>();
-        //
+        restart.onClick.AddListener(() => SceneManager.LoadScene(0));
     }
 
     /// <summary>

@@ -39,6 +39,11 @@ namespace StarterAssets
 		/// </summary>
 		Player player;
 
+		/// <summary>
+		/// 게임이 끝났는지 확인하기 위한 용도
+		/// </summary>
+		bool isGameEnd = false;
+
         private void Awake()
         {
             player = GetComponent<Player>();
@@ -47,6 +52,7 @@ namespace StarterAssets
         private void Start()
         {
 			followCamera = GameManager.Instance.FollowCamera;
+			GameManager.Instance.onGameEnd += (_) => isGameEnd = true;
         }
 
         public void OnMove(InputAction.CallbackContext context)
@@ -190,7 +196,10 @@ namespace StarterAssets
 		
 		private void OnApplicationFocus(bool hasFocus)
 		{
-			SetCursorState(cursorLocked);
+            if (!isGameEnd)
+            {
+				SetCursorState(cursorLocked);                
+            }
 		}
 
 		private void SetCursorState(bool newState)

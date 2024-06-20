@@ -77,7 +77,7 @@ public class MazeGenerator : MonoBehaviour
         {
             yield return null;
         }
-        Debug.Log("Nav Surface Updated!");
+        //Debug.Log("Nav Surface Updated!");
 
         // 오클루전 컬링도 새로 베이크 필요        
 

@@ -86,7 +86,7 @@ public class MazeVisualizer : MonoBehaviour
         Goal goal = goalObj.GetComponent<Goal>();
         goal.SetRandomPosition(maze.Width, maze.Height);
 
-        Debug.Log("미로 비주얼라이저 그리기 완료");
+        //Debug.Log("미로 비주얼라이저 그리기 완료");
     }
 
     /// <summary>
@@ -100,7 +100,7 @@ public class MazeVisualizer : MonoBehaviour
             child.SetParent(null);
             Destroy(child.gameObject);
         }
-        Debug.Log("미로 비주얼라이저 초기화");
+        //Debug.Log("미로 비주얼라이저 초기화");
     }
 
     /// <summary>

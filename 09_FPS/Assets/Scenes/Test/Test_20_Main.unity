@@ -660,6 +660,51 @@ Camera:
     type: 3}
   m_PrefabInstance: {fileID: 1358012071471599283}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1107482452
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1107482454}
+  - component: {fileID: 1107482453}
+  m_Layer: 0
+  m_Name: Test_20_Main
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1107482453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1107482452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 015251efefb54fd4694526e097b7b9e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  seed: -1
+--- !u!4 &1107482454
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1107482452}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 23.256145, y: 40.570263, z: -40.711796}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1442133657
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -721,12 +766,12 @@ PrefabInstance:
     - target: {fileID: 3196833281297197096, guid: 06f924b68b581674da585599a97c63b5,
         type: 3}
       propertyPath: mazeWidth
-      value: 20
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3196833281297197096, guid: 06f924b68b581674da585599a97c63b5,
         type: 3}
       propertyPath: mazeHeight
-      value: 20
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7995730913735524011, guid: 06f924b68b581674da585599a97c63b5,
         type: 3}
@@ -1704,7 +1749,7 @@ PrefabInstance:
     - target: {fileID: 4624738245309835588, guid: 825e5e874b1e4a94dbbf69d1f5121606,
         type: 3}
       propertyPath: enemyCount
-      value: 15
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5235089988543549447, guid: 825e5e874b1e4a94dbbf69d1f5121606,
         type: 3}
@@ -2308,3 +2353,4 @@ SceneRoots:
   - {fileID: 867279489}
   - {fileID: 4230011659443097254}
   - {fileID: 1701626345}
+  - {fileID: 1107482454}

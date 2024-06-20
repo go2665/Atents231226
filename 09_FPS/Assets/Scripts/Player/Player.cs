@@ -65,7 +65,7 @@ public class Player : MonoBehaviour
             }
             hp = Mathf.Clamp(hp, 0, MaxHP); // HP 최대 최소 안벗어나게 만들기
 
-            Debug.Log($"HP : {hp}");
+            //Debug.Log($"HP : {hp}");
 
             onHPChange?.Invoke(hp);         // HP 변화 알리기
         }
@@ -217,6 +217,7 @@ public class Player : MonoBehaviour
         GameManager gameManager = GameManager.Instance;
         Vector3 centerPos = MazeVisualizer.GridToWorld(gameManager.MazeWidth / 2, gameManager.MazeHeight / 2);
         transform.position = centerPos;  // 플레이어를 미로의 가운데 위치로 옮기기
+        Debug.Log("Player Pos : "+centerPos);
         onSpawn?.Invoke();
     }
 

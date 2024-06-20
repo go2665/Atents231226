@@ -2,7 +2,6 @@ using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.AI.Navigation.Samples;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
@@ -102,6 +101,10 @@ public class GameManager : Singleton<GameManager>
 
         ResultPanel resultPanel = FindAnyObjectByType<ResultPanel>();
         resultPanel.gameObject.SetActive(false);
+
+        // 델리게이트 초기화(삭제되지 않는 게임 오브젝트이기 때문에)
+        onGameStart = null;
+        onGameEnd = null; 
 
         onGameEnd += (isClear) =>
         {
