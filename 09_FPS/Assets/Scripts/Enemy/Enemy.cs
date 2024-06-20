@@ -413,7 +413,7 @@ public class Enemy : MonoBehaviour
     /// </summary>
     void Attack()
     {
-        Debug.Log("플레이어 공격");
+        //Debug.Log("플레이어 공격");
         attackTarget.OnAttacked(this);  // 피격 방향 표시를 위해 enemy 자체를 넘김
     }
 

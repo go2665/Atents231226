@@ -133,8 +133,7 @@ public class Player : MonoBehaviour
         HP = MaxHP;
 
         GameManager.Instance.onGameEnd += (_) => InputDisable();           // 게임이 클리어되면 입력 막기
-
-        Spawn();
+        
     }
 
     /// <summary>
@@ -217,7 +216,6 @@ public class Player : MonoBehaviour
         GameManager gameManager = GameManager.Instance;
         Vector3 centerPos = MazeVisualizer.GridToWorld(gameManager.MazeWidth / 2, gameManager.MazeHeight / 2);
         transform.position = centerPos;  // 플레이어를 미로의 가운데 위치로 옮기기
-        Debug.Log("Player Pos : "+centerPos);
         onSpawn?.Invoke();
     }
 

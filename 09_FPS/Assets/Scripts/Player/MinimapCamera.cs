@@ -51,6 +51,7 @@ public class MinimapCamera : MonoBehaviour
         Player player = GameManager.Instance.Player;
         offset = transform.position;    // 플레이어가 0,0,0이어서 별다른 계산 안함
         target = player.transform;
+        transform.position = target.position + offset;
         player.onSpawn += () =>
         {
             transform.position = target.position + offset;

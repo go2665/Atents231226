@@ -67,8 +67,7 @@ public class GameManager : Singleton<GameManager>
     public Action<bool> onGameEnd;
 
     protected override void OnInitialize()
-    {     
-        player = FindAnyObjectByType<Player>();  
+    {
         player.onDie += GameOver;
 
         LoadingScreen loadingScreen = FindAnyObjectByType<LoadingScreen>();
@@ -81,7 +80,11 @@ public class GameManager : Singleton<GameManager>
         }
 
         spawner = FindAnyObjectByType<EnemySpawner>();
-        spawner.onSpawnCompleted += () => loadingScreen.OnLoadginProgress(1.0f);
+        spawner.onSpawnCompleted += () =>
+        {
+            loadingScreen.OnLoadginProgress(1.0f);
+            player.Spawn(); // 적 스폰이 끝나면 플레이어 스폰
+        };
 
         mazeGenerator = FindAnyObjectByType<MazeGenerator>();
         if(mazeGenerator != null)
@@ -115,6 +118,7 @@ public class GameManager : Singleton<GameManager>
         };
 
         Cursor.lockState = CursorLockMode.Locked;   // 커서 안보이게 만들기
+        //Debug.Log("OnInitialize - end");
     }
 
     public void IncreaseKillCount()
