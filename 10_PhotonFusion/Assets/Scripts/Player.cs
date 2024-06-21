@@ -7,6 +7,8 @@ public class Player : NetworkBehaviour
 {
     public float moveSpeed = 5.0f;
 
+    Vector3 forward = Vector3.forward;
+
     NetworkCharacterController cc;
 
     private void Awake()
@@ -21,9 +23,15 @@ public class Player : NetworkBehaviour
     {
         if(GetInput(out NetworkInputData data))     // 서버쪽에서 입력 정보 받아오기
         {
-            data.direction.Normalize();             // 유닛벡터로 만들기
+            //data.direction.Normalize();             // 유닛벡터로 만들기
 
             cc.Move(Runner.DeltaTime * moveSpeed * data.direction); // 초당 moveSpeed의 속도로 data.direction방향으로 이동
+
+            if(data.direction.sqrMagnitude > 0)
+            {
+                forward = data.direction;           // 회전 도중에 forward방향으로 공이 발사되는 것을 방지
+            }
+
         }
     }
 }

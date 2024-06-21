@@ -31,6 +31,11 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     Vector3 inputDirection = Vector3.zero;
 
     /// <summary>
+    /// 발사 버튼 눌려졌는지 여부
+    /// </summary>
+    bool isShootPress = false;
+
+    /// <summary>
     /// 인풋액션
     /// </summary>
     PlayerInputActions inputActions;
@@ -78,10 +83,14 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         inputActions.Player.Enable();
         inputActions.Player.Move.performed += OnMove;
         inputActions.Player.Move.canceled += OnMove;
+        inputActions.Player.Shoot.performed += OnShootPress;
+        inputActions.Player.Shoot.canceled += OnShootRelease;
     }
 
     void InputDisable()
     {
+        inputActions.Player.Shoot.canceled -= OnShootRelease;
+        inputActions.Player.Shoot.performed -= OnShootPress;
         inputActions.Player.Move.canceled -= OnMove;
         inputActions.Player.Move.performed -= OnMove;
         inputActions.Player.Disable();
@@ -91,6 +100,16 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         Vector2 read = context.ReadValue<Vector2>();
         inputDirection.Set(read.x, 0, read.y);
+    }
+
+    private void OnShootPress(InputAction.CallbackContext context)
+    {
+        isShootPress = true;
+    }
+
+    private void OnShootRelease(InputAction.CallbackContext context)
+    {
+        isShootPress = false;
     }
 
     /// <summary>
@@ -193,6 +212,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         // https://doc.photonengine.com/ko-kr/fusion/current/manual/data-transfer/player-input#unity-new-input-system
 
         data.direction = inputDirection;
+        data.buttons.Set(NetworkInputData.MouseButtonLeft, isShootPress);
 
         input.Set(data);    // 결정된 입력을 서버쪽으로 전달
     }
