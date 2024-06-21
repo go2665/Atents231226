@@ -5,15 +5,40 @@ using Fusion;
 using Fusion.Sockets;
 using System;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
+    /// <summary>
+    /// 이 오브젝트가 만드는 네트워크 러너
+    /// </summary>
     private NetworkRunner myRunner = null;
 
+    /// <summary>
+    /// 플레이어 오브젝트 프리팹
+    /// </summary>
     [SerializeField]
     private NetworkPrefabRef playerPrefab;
 
+    /// <summary>
+    /// 접속자 오브젝트 딕셔너리
+    /// </summary>
     private Dictionary<PlayerRef, NetworkObject> spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
+
+    /// <summary>
+    /// 입력받은 방향
+    /// </summary>
+    Vector3 inputDirection = Vector3.zero;
+
+    /// <summary>
+    /// 인풋액션
+    /// </summary>
+    PlayerInputActions inputActions;
+
+    void Awake()
+    {
+        inputActions = new PlayerInputActions();
+    }
 
     /// <summary>
     /// 게임 세션을 열거나 접속하는 함수
@@ -39,6 +64,33 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
             Scene = scene,
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
         });
+
+        InputEnable();
+    }
+
+    private void OnDisable()
+    {
+        InputDisable();
+    }
+
+    void InputEnable()
+    {
+        inputActions.Player.Enable();
+        inputActions.Player.Move.performed += OnMove;
+        inputActions.Player.Move.canceled += OnMove;
+    }
+
+    void InputDisable()
+    {
+        inputActions.Player.Move.canceled -= OnMove;
+        inputActions.Player.Move.performed -= OnMove;
+        inputActions.Player.Disable();
+    }
+
+    private void OnMove(InputAction.CallbackContext context)
+    {
+        Vector2 read = context.ReadValue<Vector2>();
+        inputDirection.Set(read.x, 0, read.y);
     }
 
     /// <summary>
@@ -102,22 +154,45 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     { 
         NetworkInputData data = new NetworkInputData(); // 우리가 만든 데이터타입을 new하기
 
-        if(Input.GetKey(KeyCode.W)) // 이 순간 W키가 눌려져 있는지 확인(결과가 true면 W키가 눌려져 있다. false면 안눌려져 있다)
-        {
-            data.direction += Vector3.forward;
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            data.direction += Vector3.left;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            data.direction += Vector3.back;
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            data.direction += Vector3.right;
-        }
+        //if(Input.GetKey(KeyCode.W)) // 이 순간 W키가 눌려져 있는지 확인(결과가 true면 W키가 눌려져 있다. false면 안눌려져 있다)
+        //{
+        //    data.direction += Vector3.forward;
+        //}
+        //if (Input.GetKey(KeyCode.A))
+        //{
+        //    data.direction += Vector3.left;
+        //}
+        //if (Input.GetKey(KeyCode.S))
+        //{
+        //    data.direction += Vector3.back;
+        //}
+        //if (Input.GetKey(KeyCode.D))
+        //{
+        //    data.direction += Vector3.right;
+        //}
+
+        // 인풋 시스템으로 키 입력상태 확인하는 방식
+        //if( Keyboard.current.wKey.isPressed )
+        //{
+        //    data.direction += Vector3.forward;
+        //}
+        //if (Keyboard.current.aKey.isPressed)
+        //{
+        //    data.direction += Vector3.left;
+        //}
+        //if (Keyboard.current.sKey.isPressed)
+        //{
+        //    data.direction += Vector3.back;
+        //}
+        //if (Keyboard.current.dKey.isPressed)
+        //{
+        //    data.direction += Vector3.right;
+        //}
+
+        // 인풋 시스템 적용하기
+        // https://doc.photonengine.com/ko-kr/fusion/current/manual/data-transfer/player-input#unity-new-input-system
+
+        data.direction = inputDirection;
 
         input.Set(data);    // 결정된 입력을 서버쪽으로 전달
     }
