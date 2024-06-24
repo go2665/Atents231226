@@ -32,9 +32,14 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     Vector3 inputDirection = Vector3.zero;
 
     /// <summary>
-    /// 발사 버튼 눌려졌는지 여부
+    /// 발사 버튼 눌려졌는지 여부(마우스 왼쪽 버튼)
     /// </summary>
     bool isShootPress = false;
+
+    /// <summary>
+    /// 마우스 오른쪽 버튼이 눌려졌는지 여부
+    /// </summary>
+    bool isPhysxPress = false;
 
     /// <summary>
     /// 인풋액션
@@ -87,10 +92,14 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         inputActions.Player.Move.canceled += OnMove;
         inputActions.Player.Shoot.performed += OnShootPress;
         inputActions.Player.Shoot.canceled += OnShootRelease;
+        inputActions.Player.PhysxShoot.performed += OnPhysxPress;
+        inputActions.Player.PhysxShoot.canceled += OnPhysxRelease;
     }
 
     void InputDisable()
     {
+        inputActions.Player.PhysxShoot.canceled -= OnPhysxRelease;
+        inputActions.Player.PhysxShoot.performed -= OnPhysxPress;
         inputActions.Player.Shoot.canceled -= OnShootRelease;
         inputActions.Player.Shoot.performed -= OnShootPress;
         inputActions.Player.Move.canceled -= OnMove;
@@ -113,6 +122,17 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         isShootPress = false;
     }
+
+    private void OnPhysxPress(InputAction.CallbackContext context)
+    {
+        isPhysxPress = true;
+    }
+
+    private void OnPhysxRelease(InputAction.CallbackContext context)
+    {
+        isPhysxPress = false;
+    }
+
 
     /// <summary>
     /// GUI를 그리기 위한 이벤트 함수
@@ -215,6 +235,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         data.direction = inputDirection;
         data.buttons.Set(NetworkInputData.MouseButtonLeft, isShootPress);
+        data.buttons.Set(NetworkInputData.MouseButtonRight, isPhysxPress);
 
         input.Set(data);    // 결정된 입력을 서버쪽으로 전달
     }

@@ -113,6 +113,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 10
   prefabBall: {fileID: 2983179646419298499, guid: 980abe36b797691448bba603971d6a9d, type: 3}
+  prefabPhysxBall: {fileID: 4704660888550193844, guid: 905dc1dc95d8b24409a25e5046ecfe9b, type: 3}
 --- !u!1 &5761556975951921475
 GameObject:
   m_ObjectHideFlags: 0
