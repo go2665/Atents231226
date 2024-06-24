@@ -6,6 +6,7 @@ using Fusion.Sockets;
 using System;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
+using Fusion.Addons.Physics;
 
 public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -51,8 +52,9 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     /// <param name="mode">게임에 접속하는 방식(Host or Client)</param>
     async void StartGame(GameMode mode) // async : 비동기 메서드임을 알림(내부에 await가 있음)
     {
-        myRunner = this.gameObject.AddComponent<NetworkRunner>(); // 네트워크 러너 컴포넌트 추가
-        myRunner.ProvideInput = true;                             // 유저 입력을 제공할 것이라고 설정
+        myRunner = this.gameObject.AddComponent<NetworkRunner>();   // 네트워크 러너 컴포넌트 추가
+        this.gameObject.AddComponent<RunnerSimulatePhysics3D>();    // 물리 시뮬레이션 처리용 컴포넌트 추가
+        myRunner.ProvideInput = true;                               // 유저 입력을 제공할 것이라고 설정
 
         // 현재 씬을 기반으로 NetworkSceneInfo 생성
         SceneRef scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex);

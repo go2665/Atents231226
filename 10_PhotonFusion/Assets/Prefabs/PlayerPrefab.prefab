@@ -112,6 +112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 10
+  prefabBall: {fileID: 2983179646419298499, guid: 980abe36b797691448bba603971d6a9d, type: 3}
 --- !u!1 &5761556975951921475
 GameObject:
   m_ObjectHideFlags: 0
