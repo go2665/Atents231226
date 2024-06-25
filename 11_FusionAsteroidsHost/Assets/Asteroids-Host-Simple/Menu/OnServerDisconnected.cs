@@ -9,13 +9,16 @@ using UnityEngine.SceneManagement;
 
 namespace Asteroids.HostSimple
 {
+    // 서버에서 끊겼을 때 메뉴씬으로 보내는 클래스
     public class OnServerDisconnected : MonoBehaviour, INetworkRunnerCallbacks
     {
+        // 메뉴씬의 이름
         [SerializeField] private string _menuSceneName = String.Empty;
 
+        // 러너가 셧다운되었을 때 실행됨
         public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
         {
-            // When the local NetworkRunner has shut down, the menu scene is loaded.
+            // 로컬 네트워크 러너가 셧다운되면 메뉴씬이 로딩된다.
             SceneManager.LoadScene(_menuSceneName);
         }
 
@@ -47,9 +50,10 @@ namespace Asteroids.HostSimple
         {
         }
 
+        // 러너가 호스트에서 연결이 끊어졌을 때 실행됨
         public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
         {
-            // Shuts down the local NetworkRunner when the client is disconnected from the server.
+            // 클라이언트가 서버에서 끊기면 러너를 셧다운 시킨다.
             GetComponent<NetworkRunner>().Shutdown();
         }
 

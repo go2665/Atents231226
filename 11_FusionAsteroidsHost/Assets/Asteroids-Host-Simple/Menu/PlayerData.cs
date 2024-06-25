@@ -4,9 +4,6 @@ using Random = UnityEngine.Random;
 
 namespace Asteroids.HostSimple
 {
-    // This class functions as an Instance Singleton (no-static references)
-    // and holds information about the local player in-between scene loads.
-
     // 아주 간단한 싱글톤으로 사용(스테틱 레퍼런스 없음)
     // 로컬 플레이어의 정보를 씬 전환할 때 유지하는 용도
     public class PlayerData : MonoBehaviour

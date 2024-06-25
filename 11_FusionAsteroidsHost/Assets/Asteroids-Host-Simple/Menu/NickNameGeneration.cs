@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Asteroids.HostSimple
 {
-    // Used in the Start Menu scene to general a random placeholder player name
+    // 메뉴씬의 플레이어 이름용 플레이스 홀더에 랜덤한 이름 설정하는 클래스
     public class NickNameGeneration : MonoBehaviour
     {
         private void Awake()

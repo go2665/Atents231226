@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Asteroids.HostSimple
 {
-    // 오브젝트 풀을 관리하기 위한 클래스?
+    // 오브젝트 풀을 관리하기 위한 클래스
     public class NetworkObjectPoolDefault : NetworkObjectProviderDefault
     {
         // 풀에 들어갈 오브젝트들, 모든 네트워크 오브젝트를 풀에서 관리한다면 비워두면 된다

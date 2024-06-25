@@ -87,21 +87,24 @@ namespace Asteroids.HostSimple
         private void UpdateStartingDisplay()
         {
             // --- Host & Client
-            // Display the remaining time until the game starts in seconds (rounded down to the closest full second)
 
+            // 게임 시작까지 남아있는 시간 출력(소수점 없이)
             _startEndDisplay.text = $"Game Starts In {Mathf.RoundToInt(_timer.RemainingTime(Runner) ?? 0)}";
 
             // --- Host
+            // 호스트가 아니면 이후는 진행하지 말것
             if (Object.HasStateAuthority == false) return;
+            // 시작 딜레이 타이머가 만료되지 않았고 동작 중일 때 이후는 진행하지 말 것
             if (_timer.ExpiredOrNotRunning(Runner) == false) return;
-
-            // Starts the Spaceship and Asteroids spawners once the game start delay has expired
+            
+            // 여기부터는 호스트이면서 타이머가 만료되거나 실행되고 있지 않을 때 처리
+            
+            // 우주선과 운석 스포너를 작동시킨다(게임 시작 딜레이가 만료되면 한번만 실행된다)
             FindObjectOfType<SpaceshipSpawner>().StartSpaceshipSpawner(this);
             FindObjectOfType<AsteroidSpawner>().StartAsteroidSpawner();
 
-            // Switches to the Running GameState and sets the time to the length of a game session
-            _gameState = GameState.Running;
-            _timer = TickTimer.CreateFromSeconds(Runner, _gameSessionLength);
+            _gameState = GameState.Running;                                     // 게임 상태를 Running으로 변경
+            _timer = TickTimer.CreateFromSeconds(Runner, _gameSessionLength);   // 타이머를 세션 길이로 재시작
         }
 
         private void UpdateRunningDisplay()
