@@ -3,16 +3,19 @@ using UnityEngine;
 
 namespace Asteroids.HostSimple
 {
-    // The SpaceshipSpawner, just like the AsteroidSpawner, only executes on the Host.
-    // Therefore none of its parameters need to be [Networked].
+    // SpaceshipSpawner도 호스트에서만 실행되고 파라메터도 네트워크로 공유될 필요가 없다.
     public class SpaceshipSpawner : NetworkBehaviour, IPlayerJoined, IPlayerLeft
     {
-        // References to the NetworkObject prefab to be used for the players' spaceships.
+        // 플레이어의 우주선용 프리팹(네트워크 오브젝트이어야 한다.)
         [SerializeField] private NetworkPrefabRef _spaceshipNetworkPrefab = NetworkPrefabRef.Empty;
 
+        // 게임이 준비되었는지 표시용(SpaceshipSpawner가 시작되면 true로 설정된다)
         private bool _gameIsReady = false;
+
+        // 게임 상태 컨트롤러
         private GameStateController _gameStateController = null;
 
+        // 우주선이 배치될 위치
         private SpawnPoint[] _spawnPoints = null;
 
         public override void Spawned()

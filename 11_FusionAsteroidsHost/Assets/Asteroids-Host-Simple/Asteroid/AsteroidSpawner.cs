@@ -6,11 +6,8 @@ using UnityEngine;
 
 namespace Asteroids.HostSimple
 {
-    // The AsteroidSpawner does not execute any behaviour on the clients.
-    // Therefore all of its parameters can remained local and not networked.
-
-    // AsteroidSpawner는 네트워크와 아무런 연관이 없다?
-    // 그래서 모든 파라메터는 로컬에만 있고 네트워크로 공유되지 않는다.
+    // AsteroidSpawner는 호스트에서만 실행된다.
+    // 그래서 모든 파라메터는 로컬에만 있고 네트워크로 공유되지 않는다.(호스트에서만 실행되니까)
     public class AsteroidSpawner : NetworkBehaviour
     {
         // 크고 작은 운석의 네트워크 오브젝트 프리팹(NetworkObject컴포넌트를 가지고 있어야만 NetworkPrefabRef에 할당 가능)
