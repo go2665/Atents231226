@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Asteroids.HostSimple
 {
-    // The class is dedicated to controlling the Spaceship's movement
+    // 우주선의 이동 제어 전용 클래스
     public class SpaceshipMovementController : NetworkBehaviour
     {
         // Game Session AGNOSTIC Settings

@@ -8,7 +8,7 @@ using NetworkTransform = Fusion.NetworkTransform;
 
 namespace Asteroids.HostSimple
 {
-    // The class is dedicated to controlling the Spaceship's Firing
+    // 우주선의 발사 제어 전용 클래스
     public class SpaceshipFireController : NetworkBehaviour
     {
         // Game Session AGNOSTIC Settings
