@@ -78,6 +78,23 @@ namespace Asteroids.HostSimple
                     UpdateRunningDisplay();
                     if (_timer.ExpiredOrNotRunning(Runner))     // _gameSessionLength 시간이 만료되면 게임 종료
                     {
+                        // _playerDataNetworkedIds를 순회하면서 점수가 가장 높은 사람을 승리자로 선정
+                        PlayerDataNetworked winner;
+                        Runner.TryFindBehaviour(_playerDataNetworkedIds[0], out winner);    // 우선 첫번째 사람을 무조건 승리자로 설정하기
+
+                        for (int i = 1; i < _playerDataNetworkedIds.Count; i++)     // 남은 사람들 순회하기
+                        {
+                            if (Runner.TryFindBehaviour(_playerDataNetworkedIds[i],
+                                    out PlayerDataNetworked playerDataNetworkedComponent))
+                            {
+                                if( winner.Score <= playerDataNetworkedComponent.Score)     // 순회중에 승리자보다 점수가 높은 사람이 있으면 승리자 변경
+                                {
+                                    winner = playerDataNetworkedComponent;
+                                }
+                            }
+                        }
+                        _winner = winner.Id;
+
                         GameHasEnded(); 
                     }
                     break;
