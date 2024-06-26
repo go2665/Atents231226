@@ -210,6 +210,7 @@ namespace Asteroids.HostSimple
             _gameState = GameState.Ending;  // 게임 상태를 Ending으로 변경
         }
 
+        // 새 플레이어를 리스트에 추가(종료 체크용)
         public void TrackNewPlayer(NetworkBehaviourId playerDataNetworkedId)
         {
             _playerDataNetworkedIds.Add(playerDataNetworkedId);
