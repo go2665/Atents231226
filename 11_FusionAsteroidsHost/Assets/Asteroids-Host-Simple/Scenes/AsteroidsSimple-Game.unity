@@ -529,7 +529,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _startDelay: 4
   _endDelay: 4
-  _gameSessionLength: 15
+  _gameSessionLength: 180
   _startEndDisplay: {fileID: 1624626487}
   _ingameTimerDisplay: {fileID: 967459720}
 --- !u!114 &909896850
