@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9362703c34d778a4eb03312b2ba2f7f3, type: 3}
+  m_Name: ParticleManager
+  m_EditorClassIdentifier: 
+  DeathParticle: {fileID: 1997089707971052363, guid: 3913e3d2cf816bf4890ff6a14c840840, type: 3}
+  JumpParticle: {fileID: 828572142745261735, guid: f118fbc0fb6a5f14cb5568252375476b, type: 3}
