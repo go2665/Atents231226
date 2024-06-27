@@ -15,7 +15,7 @@ public class InputController : NetworkBehaviour, INetworkRunnerCallbacks
     {
         if (Object.HasInputAuthority)
         {
-            Runner.AddCallbacks(this);
+            Runner.AddCallbacks(this);  // 러너에서 콜백을 받기 위해 등록
         }
     }
 
