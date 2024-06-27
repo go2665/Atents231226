@@ -101,53 +101,55 @@ namespace Asteroids.HostSimple
             }
         }
 
-        // Check asteroid collision using a lag compensated OverlapSphere
+        // 우주선이 운석과 직접 충돌 확인(LagCompensation의 OverlapSphere를 이용해서 확인)
         private bool HasHitAsteroid()
         {
-            _lagCompensatedHits.Clear();
+            _lagCompensatedHits.Clear();    // 리스트 비우기
 
-            var count = Runner.LagCompensation.OverlapSphere(_rigidbody.position, _spaceshipDamageRadius,
-                Object.InputAuthority, _lagCompensatedHits,
-                _asteroidCollisionLayer.value);
+            var count = Runner.LagCompensation.OverlapSphere(
+                _rigidbody.position,        // 구의 중심
+                _spaceshipDamageRadius,     // 구의 반경
+                Object.InputAuthority,      // 우주선의 입력권한을 어떤 플레이어가 가지는지에 대한 값(=플레이어)
+                _lagCompensatedHits,        // 모든 겹침에 대한 정보
+                _asteroidCollisionLayer.value); // 오버랩으로 체크할 대상 레이어
 
-            if (count <= 0) return false;
+            if (count <= 0) return false;   // 겹친게 없으면 종료
 
-            _lagCompensatedHits.SortDistance();
+            _lagCompensatedHits.SortDistance(); // 거리별로 정렬
 
-            var asteroidBehaviour = _lagCompensatedHits[0].GameObject.GetComponent<AsteroidBehaviour>();
-            if (asteroidBehaviour.IsAlive == false)
+            var asteroidBehaviour = _lagCompensatedHits[0].GameObject.GetComponent<AsteroidBehaviour>();    // 가장 가까이에 있는 운석의 스크립트 가져오기
+            if (asteroidBehaviour.IsAlive == false) // 이미 터진 운석이면 종료
                 return false;
 
-            asteroidBehaviour.HitAsteroid(PlayerRef.None);
+            asteroidBehaviour.HitAsteroid(PlayerRef.None);  // 운석 파괴 처리(몸으로 부딪치는 상황이니 점수를 안받기 위해서 PlayerRef.None을 파라메터로 넘김)
 
             return true;
         }
 
-        // Toggle the _isAlive boolean if the spaceship was hit and check whether the player has any lives left.
-        // If they do, then the _respawnTimer is activated.
+        // 우주선이 운석에 맞았을 때 처리
         private void ShipWasHit()
         {
-            _isAlive = false;
+            _isAlive = false;   // 일단 죽었다고 표시
 
-            ResetShip();
+            ResetShip();        // 리지드바디 운동량 초기화
 
-            if (Object.HasStateAuthority == false) return;
+            if (Object.HasStateAuthority == false) return;  // 이 이후는 호스트만 처리
 
-            if (_playerDataNetworked.Lives > 1)
+            if (_playerDataNetworked.Lives > 1) // 플레이어의 생명이 남아있으면
             {
-                _respawnTimer = TickTimer.CreateFromSeconds(Runner, _respawnDelay);
+                _respawnTimer = TickTimer.CreateFromSeconds(Runner, _respawnDelay); // 리스폰 타이머 작동시키기
             }
             else
             {
-                _respawnTimer = default;
+                _respawnTimer = default;        // 생명이 없으면 리스폰 타이머 제거
             }
 
-            _playerDataNetworked.SubtractLife();
+            _playerDataNetworked.SubtractLife();    // 플레이어의 생명 1감소
 
-            FindObjectOfType<GameStateController>().CheckIfGameHasEnded();
+            FindObjectOfType<GameStateController>().CheckIfGameHasEnded();  // 게임이 끝났는지 체크
         }
 
-        // Resets the spaceships movement velocity
+        // 우주선의 운동량 초기화
         private void ResetShip()
         {
             _rigidbody.velocity = Vector3.zero;
